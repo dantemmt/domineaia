@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galeria Vertical Tela Cheia</title>
+<title>Domine a IA</title>
 <style>
     body, html {
         margin: 0;
@@ -29,9 +29,9 @@
     }
 
     img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* mantém proporção */
+        max-width: 100vw;
+        max-height: 100vh;
+        object-fit: contain; /* mantém proporção sem cortar */
         display: block;
     }
 
@@ -39,6 +39,8 @@
         position: absolute;
         background: transparent;
         /* para debug: outline: 2px dashed lime; */
+        /* garante clique mesmo transparente */
+        pointer-events: auto;
     }
 </style>
 </head>
@@ -75,29 +77,40 @@
 (function() {
   const naturalW = 1920, naturalH = 1080;
 
+  // Debounce simples para resize/orientation
+  let rafId = null;
+  function schedule(fn) {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(fn);
+  }
+
   function positionLink(imgId, linkId, sectionId, coords) {
     const [x1, y1, x2, y2] = coords;
     const img = document.getElementById(imgId);
     const link = document.getElementById(linkId);
     const section = document.getElementById(sectionId);
-
     if (!img || !link || !section) return;
 
     function update() {
-      if (!img.complete) return;
+      // garante que rect reflita imagem carregada
+      if (!img.naturalWidth || !img.complete) return;
 
-      const rect = img.getBoundingClientRect();
-      const displayedW = rect.width;
-      const displayedH = rect.height;
+      const imgRect = img.getBoundingClientRect();
+      const secRect = section.getBoundingClientRect();
 
+      // tamanho exibido da imagem
+      const displayedW = imgRect.width;
+      const displayedH = imgRect.height;
+
+      // escala relativa à imagem original
       const scaleX = displayedW / naturalW;
       const scaleY = displayedH / naturalH;
 
-      const sectionRect = section.getBoundingClientRect();
-      const offsetLeft = (sectionRect.width - displayedW) / 2;
-      const offsetTop  = (sectionRect.height - displayedH) / 2;
+      // deslocamento da imagem dentro da seção (contém centralização e faixas pretas)
+      const offsetLeft = imgRect.left - secRect.left;
+      const offsetTop  = imgRect.top  - secRect.top;
 
-      // cálculo proporcional
+      // posicionamento final
       const left = offsetLeft + x1 * scaleX;
       const top  = offsetTop  + y1 * scaleY;
       const width  = (x2 - x1) * scaleX;
@@ -109,10 +122,21 @@
       link.style.height = height + 'px';
     }
 
-    if (img.complete) update();
-    img.addEventListener('load', update);
-    window.addEventListener('resize', update);
-    window.addEventListener('orientationchange', update); // garante ajuste no mobile
+    // atualiza quando a imagem carrega
+    img.addEventListener('load', () => schedule(update));
+
+    // atualiza em resize e mudança de orientação
+    window.addEventListener('resize', () => schedule(update));
+    window.addEventListener('orientationchange', () => schedule(update));
+
+    // atualiza ao entrar na tela (útil com scroll-snap)
+    const obs = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) schedule(update);
+    }, { root: document.querySelector('main'), threshold: 0.1 });
+    obs.observe(section);
+
+    // se já carregou, tenta posicionar
+    if (img.complete) schedule(update);
   }
 
   // Foto 11 → coords (100,734)-(464,820)
