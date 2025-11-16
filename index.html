@@ -29,9 +29,9 @@
     }
 
     img {
-        max-width: 100vw;
-        max-height: 100vh;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* mantém proporção */
         display: block;
     }
 
@@ -75,7 +75,6 @@
 (function() {
   const naturalW = 1920, naturalH = 1080;
 
-  // Função para posicionar overlay
   function positionLink(imgId, linkId, sectionId, coords) {
     const [x1, y1, x2, y2] = coords;
     const img = document.getElementById(imgId);
@@ -98,6 +97,7 @@
       const offsetLeft = (sectionRect.width - displayedW) / 2;
       const offsetTop  = (sectionRect.height - displayedH) / 2;
 
+      // cálculo proporcional
       const left = offsetLeft + x1 * scaleX;
       const top  = offsetTop  + y1 * scaleY;
       const width  = (x2 - x1) * scaleX;
@@ -112,6 +112,7 @@
     if (img.complete) update();
     img.addEventListener('load', update);
     window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update); // garante ajuste no mobile
   }
 
   // Foto 11 → coords (100,734)-(464,820)
@@ -123,5 +124,5 @@
 </script>
 
 </body>
-
 </html>
+
