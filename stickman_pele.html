@@ -214,7 +214,7 @@ function drawStickIt(ctx, it) {
   const q = toCam(it.p); if (q[2] < .15) return; const s = proj(q);
   const S = it.h * focal() / q[2]; const f = it.o.fog || FOG; const fk = fogK(f, Math.hypot(q[0], q[1], q[2]));
   ctx.save(); ctx.translate(s[0], s[1]); if (cam.roll) ctx.rotate(cam.roll);
-  drawStick(ctx, 0, 0, S, Object.assign({}, it.o, { fk, fc: f.c })); ctx.restore();
+  drawStick(ctx, 0, 0, S, Object.assign({}, it.o, { fk, fc: f.c, _h: it.h })); ctx.restore();
   it._screen = { x: s[0], y: s[1], S };
 }
 function drawIt(ctx, it) {
@@ -260,6 +260,7 @@ function stickJ(o) {
   };
 }
 function drawStick(ctx, x, y, S, o) {
+  if (typeof STYLE !== 'undefined' && STYLE === 'doll' && !o.stick) return drawDoll(ctx, x, y, S, o);
   const J = stickJ(o), fk = o.fk || 0, fc = o.fc || [128, 128, 128];
   const base = o.col ? C(o.col) : [11, 11, 13];
   const col = css(mix(base, fc, fk));
@@ -2003,7 +2004,7 @@ function crowdTex(seed, up, pal) {
   for (let row = 0; row < 10; row++) { const y = 16 + row * 18.5, s = .7 + row * .05;
     for (let i = 0; i < 160; i++) { const px = i * 6.45 + (row % 2) * 3.2 + (R() - .5) * 2, col = pal[Math.floor(R() * pal.length)], jump = up && R() < .6 ? -4 * s : 0;
       x.fillStyle = col; x.fillRect(px - 2.6 * s, y + jump, 5.2 * s, 9 * s);
-      x.fillStyle = '#121214'; x.beginPath(); x.arc(px, y - 2.5 * s + jump, 2.6 * s, 0, 7); x.fill();
+      x.fillStyle = ['#5a3a26', '#8e5c3c', '#c98f66', '#e8c09a', '#3f2a1c'][Math.floor(R() * 5)]; x.beginPath(); x.arc(px, y - 2.5 * s + jump, 2.6 * s, 0, 7); x.fill(); x.fillStyle = '#1b1512'; x.beginPath(); x.arc(px, y - 3.3 * s + jump, 2.6 * s, Math.PI, 0); x.fill();
       if (up && R() < .55) { x.strokeStyle = '#121214'; x.lineWidth = 1; x.beginPath(); x.moveTo(px - 2.4 * s, y + jump); x.lineTo(px - 4 * s, y - 7 * s + jump); x.moveTo(px + 2.4 * s, y + jump); x.lineTo(px + 4 * s, y - 7 * s + jump); x.stroke(); } } }
   for (let i = 0; i < 9; i++) { const fx = R() * 1000, fy = 20 + R() * 150; x.fillStyle = R() < .5 ? '#1f8a3a' : '#f3d23a'; x.fillRect(fx, fy - (up ? 6 : 0), 26, 15); x.fillStyle = '#1f4fa0'; x.beginPath(); x.arc(fx + 13, fy + 7.5 - (up ? 6 : 0), 4, 0, 7); x.fill(); }
   return c;
@@ -2116,9 +2117,9 @@ function buildRoom50() {
   R50 = { base, L };
 }
 function room50(t, extra) {
-  if (!R50) buildRoom50(); FOG = { c: [30, 22, 16], d: .08, m: .6 }; LIGHT = { top: 1.0, bot: .5, l: .8, r: .9, f: .92, bk: .78 };
+  if (!R50) buildRoom50(); FOG = { c: [60, 44, 30], d: .08, m: .35 }; LIGHT = { top: 1.0, bot: .5, l: .8, r: .9, f: .92, bk: .78 };
   b.fillStyle = '#120d09'; b.fillRect(0, 0, W, H); render3D(b, R50.base, [...R50.L, ...(extra || [])]);
-  const lp = P3([.5, 1.1, 3.55]); if (lp) { b.globalCompositeOperation = 'lighter'; const g2 = b.createRadialGradient(lp[0], lp[1], 0, lp[0], lp[1], 520); g2.addColorStop(0, `rgba(255,170,80,${.32 + .04 * Math.sin(t * 13)})`); g2.addColorStop(1, 'rgba(255,170,80,0)'); b.fillStyle = g2; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; }
+  const lp = P3([.5, 1.1, 3.55]); if (lp) { b.globalCompositeOperation = 'lighter'; const g2 = b.createRadialGradient(lp[0], lp[1], 0, lp[0], lp[1], 520); g2.addColorStop(0, `rgba(255,170,80,${.42 + .04 * Math.sin(t * 13)})`); g2.addColorStop(1, 'rgba(255,170,80,0)'); b.fillStyle = g2; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; }
 }
 
 function plyr(p, h, o) { return St(p, h || 1.75, o); }
@@ -2128,14 +2129,14 @@ function U1(t) {
   const kids = [plyr([2.2, 0, 22], 1.1, Object.assign({ walk: t * 5, armL: [.6, .3], armR: [.6, .3], look: -.4 }, KF)), plyr([-1.8, 0, 26], 1.05, Object.assign({ look: .5, armL: [.3, .2], armR: [1.2, 1.6] }, KF)), plyr([.6, 0, 34], 1.15, Object.assign({ walk: t * 6 }, KF))];
   if (t < 15.7) { const p = sm(9, 15.7, t); aimCam(lerp(-1.2, .2, p), lerp(2.6, 1.4, p), lerp(0, 6, p), [0, 1.0, 26], 56, t); bauru(t, [...kids, sockBall([2.5 + Math.sin(t * 3) * .6, .1, 21.6])]); bigTxt('TRÊS CORAÇÕES • 1940', 9.4, 15.4, t, 130, '#fff', 52); }
   else { const bh = Math.abs(Math.sin(t * 3.6)) * .55; aimCam(-.9, .9, 12.6, [0, .7, 15.4], 44, t);
-    bauru(t, [plyr([0, 0, 15.5], 1.1, Object.assign({ walk: Math.sin(t * 3.6) * .9, armL: [.7, .4], armR: [.7, .4], look: .1, lookY: .5 }, KF)), sockBall([.12, .12 + bh, 15.2]), plyr([-1.6, 0, 17.4], 1.05, Object.assign({ look: .6, armL: [.3, 1.8], armR: [.3, 1.8] }, KF)), ...kids.slice(1)]);
+    bauru(t, [plyr([0, 0, 15.5], 1.1, Object.assign({ skin: '#4e3222', barefoot: true, cloth: '#b9a27a', walk: Math.sin(t * 3.6) * .9, armL: [.7, .4], armR: [.7, .4], look: .1, lookY: .5 }, KF)), sockBall([.12, .12 + bh, 15.2]), plyr([-1.6, 0, 17.4], 1.05, Object.assign({ look: .6, armL: [.3, 1.8], armR: [.3, 1.8] }, KF)), ...kids.slice(1)]);
     bigTxt('BAURU • BOLA DE MEIA', 15.9, 21, t, 130, '#ffd76a', 50); }
   sepia(.25); POST.vig = .6; POST.black = 1 - ss(9, 9.3, t);
 }
 function U2(t) { // engraxate
   aimCam(-2.2, 1.1, 7.6, [-4.0, 1.0, 12.3], 54, t);
   const sh = Math.sin(t * 8) * .35;
-  const kid = plyr([-4.2, 0, 12.2], .78, Object.assign({ look: .4, lookY: .8, armR: [1.2 + sh, 1.6 + sh, .17, .16], armL: [1.1, 1.7, .17, .15] }, KF));
+  const kid = plyr([-4.2, 0, 12.2], .78, Object.assign({ skin: '#4e3222', barefoot: true, cloth: '#b9a27a', look: .4, lookY: .8, armR: [1.2 + sh, 1.6 + sh, .17, .16], armL: [1.1, 1.7, .17, .15] }, KF));
   const man = plyr([-3.7, 0, 12.8], 1.8, Object.assign({ hat: '#3a2a1c', look: -.5, lookY: .4, armR: [.2, .5], armL: [.15, .1], shirt: { c: '#d8d0bc', s: '#3a3a40' } }, KF));
   const walkers = [plyr([2.5, 0, 20 + (t - 21) * 1.1], 1.78, Object.assign({ hat: '#222', walk: t * 4, back: true }, KF)), plyr([-1.5, 0, 30 - (t - 21) * 1.2], 1.7, Object.assign({ walk: t * 4, hat: '#555' }, KF))];
   bauru(t, [kid, man, ...walkers, Bx(-4.05, 0, 12.35, -3.8, .24, 12.6, '#5a3f2a', { fog: KF.fog }), Bx(-4.4, 0, 11.9, -4.25, .12, 12.0, '#c9a640')]);
@@ -2144,17 +2145,17 @@ function U2(t) { // engraxate
 function U3(t) { // Dondinho, a lesão
   const run = sm(27, 29.8, t), fall = sm(29.8, 30.5, t);
   aimCam(2.2, 1.3, 32, [0, .9, 39], 50, t);
-  const dad = plyr([lerp(-1, 0, run), 0, lerp(36, 40, run)], 1.8, Object.assign({ walk: fall < 1 ? t * 8 : 0, sway: fall * .9 - ss(31.5, 33, t) * .5, armL: [lerp(.6, 2.2, fall), lerp(.4, 2.8, fall)], armR: [lerp(.6, 1.4, fall), lerp(.4, 2.6, fall)], look: .3, shirt: { c: '#f0ece0', s: '#2a2a2a', num: '' }, mouth: fall > .5 ? 'open' : undefined, mo: .5 }, KF));
-  const kid = plyr([2, 0, 36.5], 1.05, Object.assign({ look: -.8, lookY: fall > .5 ? .1 : 0, armL: [.3, .2], armR: [.3, .2] }, KF));
+  const dad = plyr([lerp(-1, 0, run), 0, lerp(36, 40, run)], 1.8, Object.assign({ walk: fall < 1 ? t * 8 : 0, sway: fall * .9 - ss(31.5, 33, t) * .5, armL: [lerp(.6, 2.2, fall), lerp(.4, 2.8, fall)], armR: [lerp(.6, 1.4, fall), lerp(.4, 2.6, fall)], look: .3, skin: '#4e3222', shirt: { c: '#f0ece0', s: '#2a2a2a', num: '' }, mouth: fall > .5 ? 'open' : undefined, mo: .5 }, KF));
+  const kid = plyr([2, 0, 36.5], 1.05, Object.assign({ skin: '#4e3222', barefoot: true, cloth: '#b9a27a', look: -.8, lookY: fall > .5 ? .1 : 0, armL: [.3, .2], armR: [.3, .2] }, KF));
   bauru(t, [dad, kid, sockBall([lerp(-.8, 1, run) + fall * 1.2, .1, lerp(36.2, 41, run) + fall * 1.5])], .3);
   sepia(.35); bigTxt('O PAI, DONDINHO', 27.3, 33, t, 130, '#fff', 54);
   if (t > 30.2 && t < 30.6) { POST.shx += (Math.random() - .5) * 14; } POST.vig = .65; POST.black = 1 - ss(27, 27.3, t);
 }
 function U4(t) { // 1950: o rádio, o choro, a promessa
   const close = sm(38.6, 41, t);
-  const dad = plyr([-.6, 0, 2.9], 1.8, { lookY: 1, hy: .25, armL: [.35, 2.7, .17, .14], armR: [.35, 2.7, .17, .14], sway: Math.sin(t * 1.4) * .02, shirt: { c: '#d8d0bc', s: '#3a3a40' } });
-  const mom = plyr([-1.25, 0, 3.15], 1.66, { hair: true, look: .6, lookY: .5, armR: [1.3, .9], armL: [.2, .1], shirt: { c: '#8a5a7a', s: '#8a5a7a' } });
-  const kid = plyr([.3, 0, 2.7], 1.1, { look: -.7, lookY: -.5, armL: [.3, .2], armR: [t > 40 ? 1.2 : .3, t > 40 ? 1.6 : .2] });
+  const dad = plyr([-.6, 0, 2.9], 1.8, { skin: '#4e3222', lookY: 1, hy: .25, armL: [.35, 2.7, .17, .14], armR: [.35, 2.7, .17, .14], sway: Math.sin(t * 1.4) * .02, shirt: { c: '#d8d0bc', s: '#3a3a40' } });
+  const mom = plyr([-1.25, 0, 3.15], 1.66, { skin: '#5e3d2a', hair: true, look: .6, lookY: .5, armR: [1.3, .9], armL: [.2, .1], shirt: { c: '#8a5a7a', s: '#8a5a7a' } });
+  const kid = plyr([.3, 0, 2.7], 1.1, { skin: '#4e3222', barefoot: true, cloth: '#b9a27a', look: -.7, lookY: -.5, armL: [.3, .2], armR: [t > 40 ? 1.2 : .3, t > 40 ? 1.6 : .2] });
   aimCam(lerp(1.2, .6, close), lerp(1.45, 1.3, close), lerp(.6, 1.0, close), [lerp(-.4, -.15, close), lerp(1.2, 1.2, close), 2.85], lerp(56, 42, close), t);
   room50(t, [dad, mom, kid]);
   if (t < 39) { const q = toCam(dad.p); if (q[2] > .2) { const s = proj(q), S = 1.8 * focal() / q[2], J = stickJ(dad.o); tears(s[0] + J.head[0] * S, s[1] + (J.head[1] + .02) * S, S, t); } }
@@ -2163,7 +2164,7 @@ function U4(t) { // 1950: o rádio, o choro, a promessa
 }
 function U5(t) { // guarda essa promessa
   aimCam(.4, 1.0, 1.0, [.3, .95, 2.7], lerp(36, 26, sm(45, 50, t)), t, .3);
-  room50(t, [plyr([.3, 0, 2.7], 1.1, { look: -.7, lookY: -.5, armL: [.3, .2], armR: [1.2, 1.6] }), plyr([-.6, 0, 2.9], 1.8, { lookY: .2, look: .6, armL: [.35, .2], armR: [.35, .2] })]);
+  room50(t, [plyr([.3, 0, 2.7], 1.1, { skin: '#4e3222', cloth: '#b9a27a', look: -.7, lookY: -.5, armL: [.3, .2], armR: [1.2, 1.6] }), plyr([-.6, 0, 2.9], 1.8, { skin: '#4e3222', lookY: .2, look: .6, armL: [.35, .2], armR: [.35, .2] })]);
   b.globalCompositeOperation = 'saturation'; b.fillStyle = '#808080'; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
   bigTxt('GUARDE ESSA PROMESSA', 45.3, 50, t, 130, '#ffd76a', 58); bigTxt('ELA VOLTA NO FINAL', 46.4, 50, t, 600, '#fff', 40);
   POST.vig = .9; POST.black = 1 - ss(45, 45.2, t) + ss(49.7, 50, t);
@@ -2260,6 +2261,70 @@ function scheduleQ() {
   for (let t = 76.9; t < 79.5; t += .12 + R() * .2) { const s = nsrc(NW, t, t + .05), f = filt('highpass', 4000), e = gn(0); chain(s, f, e, sfx); env(e.gain, t, .001, .06, .03); }
   sfx.gain.setValueAtTime(1, T(100)); sfx.gain.setValueAtTime(0, T(100.02));
   { const t0 = 100.3, o = A.createOscillator(); o.frequency.setValueAtTime(58, T(t0)); o.frequency.exponentialRampToValueAtTime(30, T(t0 + 2.5)); const e = gn(0); chain(o, e, master); env(e.gain, t0, .01, .4, 3); o.start(T(t0)); o.stop(T(t0 + 3.2)); }
+}
+
+/* =========================================================================
+   BONECOS SIMPLES (substituem os palitos): corpo, pele, cabelo e rosto
+   ========================================================================= */
+let STYLE = 'doll';
+const SKINS = ['#5a3a26', '#7a4e32', '#8e5c3c', '#b47a52', '#c98f66', '#3f2a1c', '#a06a46'];
+function hashS(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; }
+function dollLook(o) {
+  const k = o.shirt || {}, sd = hashS((k.num || '') + (k.c || '') + (o.hat || '') + (o._h || 0));
+  let skin = o.skin, hair = o.hairC, style = o.hairS;
+  if (!skin) { if (k.num === '10') skin = '#4e3222'; else if (k === KIT.swe) skin = sd < .5 ? '#f0cfae' : '#e6c09a'; else if (k === KIT.por || k === KIT.ita) skin = sd < .5 ? '#dcae86' : '#c99a72'; else skin = SKINS[Math.floor(sd * SKINS.length)]; }
+  if (!hair) hair = k === KIT.swe ? (sd < .6 ? '#d9b45a' : '#8a6a3a') : (sd > .85 ? '#5a3a22' : '#1b1512');
+  if (!style) style = o.hair ? 'long' : o.bun ? 'bun' : (sd > .9 && k.num !== '10' ? 'bald' : 'short');
+  return { skin, hair, style };
+}
+function drawDoll(ctx, x, y, S, o) {
+  const J = stickJ(o), fk = o.fk || 0, fc = o.fc || [128, 128, 128], L = dollLook(o);
+  const cc = c => css(mix(C(c), fc, fk));
+  const skin = cc(L.skin), hairC = cc(L.hair), k = o.shirt;
+  ctx.save(); ctx.translate(x, y); if (o.sway) ctx.rotate(o.sway); ctx.scale(S, S);
+  if (o.alpha !== undefined) ctx.globalAlpha = o.alpha;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const limb = (pts, w, col) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); };
+  // pernas (pele ou meião) + sapatos
+  const sock = k ? cc(k.c === '#f4f4f0' ? '#f4f4f0' : k === KIT.br70 ? '#f4f4f0' : k.c) : skin;
+  for (const f of [J.fL, J.fR]) { const hipP = [f[0] * .45, J.hip[1]]; limb([hipP, [lerp(hipP[0], f[0], .5), lerp(J.hip[1], 0, .5)]], .048, skin); limb([[lerp(hipP[0], f[0], .5), lerp(J.hip[1], 0, .5)], [f[0], -.02]], .046, k ? sock : skin);
+    if (!o.barefoot) { ctx.fillStyle = cc('#161616'); ctx.beginPath(); ctx.ellipse(f[0] + .01, -.012, .035, .016, 0, 0, 7); ctx.fill(); } }
+  // calção / calça
+  ctx.fillStyle = cc(k ? k.s : (o.pants || '#3b3f4a')); ctx.beginPath(); ctx.moveTo(-.078, J.hip[1] - .01); ctx.lineTo(.078, J.hip[1] - .01); ctx.lineTo(.085, J.hip[1] + (k ? .1 : .16)); ctx.lineTo(.004, J.hip[1] + (k ? .1 : .16)); ctx.lineTo(0, J.hip[1] + .03); ctx.lineTo(-.004, J.hip[1] + (k ? .1 : .16)); ctx.lineTo(-.085, J.hip[1] + (k ? .1 : .16)); ctx.closePath(); ctx.fill();
+  // tronco
+  const top = cc(k ? k.c : (o.cloth || '#c9b48a')), sh = J.sh[1] - .01;
+  ctx.fillStyle = top; ctx.beginPath(); ctx.moveTo(-.09, sh); ctx.quadraticCurveTo(0, sh - .02, .09, sh); ctx.lineTo(.08, J.hip[1] + .005); ctx.lineTo(-.08, J.hip[1] + .005); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.lineWidth = .004; ctx.stroke();
+  if (k) { ctx.save(); ctx.scale(.001, .001); ctx.textAlign = 'center'; ctx.fillStyle = cc(k.n || '#111');
+    if (o.back && k.num) { if (k.name) { ctx.font = 'bold 30px Arial'; ctx.fillText(k.name, 0, (sh + .05) * 1000); } ctx.font = 'bold 76px Arial'; ctx.fillText(k.num, 0, (sh + .135) * 1000); }
+    else { if (k.t) { ctx.strokeStyle = cc(k.t); ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(-40, (sh + .004) * 1000); ctx.lineTo(0, (sh + .03) * 1000); ctx.lineTo(40, (sh + .004) * 1000); ctx.stroke(); } if (k.num) { ctx.font = 'bold 26px Arial'; ctx.fillText(k.num, 38, (sh + .065) * 1000); } }
+    ctx.restore(); }
+  // braços: manga + pele + mão
+  for (const a of [J.aL, J.aR]) { const m = [lerp(a[0][0], a[1][0], .5), lerp(a[0][1], a[1][1], .5)]; limb([a[0], m], .05, top); limb([m, a[1], a[2]], .036, skin); ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(a[2][0], a[2][1], .022, 0, 7); ctx.fill(); }
+  if (o.bandage) drawBandage(ctx, o.bandage.side < 0 ? J.aL : J.aR, .02, o.bandage);
+  // pescoço e cabeça
+  const r = .118, hd = [J.head[0], J.head[1] + .035];
+  limb([[0, sh + .005], [hd[0] * .5, hd[1] + r * .8]], .045, skin);
+  if (L.style === 'long') { ctx.fillStyle = hairC; ctx.beginPath(); ctx.ellipse(hd[0], hd[1] + r * .45, r * 1.18, r * 1.45, 0, 0, 7); ctx.fill(); }
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(hd[0], hd[1], r * .92, r, 0, 0, 7); ctx.fill();
+  if (!o.back) { ctx.beginPath(); ctx.ellipse(hd[0] - r * .92, hd[1] + r * .08, r * .16, r * .22, 0, 0, 7); ctx.ellipse(hd[0] + r * .92, hd[1] + r * .08, r * .16, r * .22, 0, 0, 7); ctx.fill(); }
+  ctx.fillStyle = hairC;
+  if (o.back) { if (L.style !== 'bald') { ctx.beginPath(); ctx.ellipse(hd[0], hd[1] - r * .05, r * .95, r * .92, 0, Math.PI * 1.02, Math.PI * 1.98 + Math.PI); ctx.fill(); } }
+  else if (L.style === 'short' || L.style === 'long' || L.style === 'bun') { ctx.beginPath(); ctx.ellipse(hd[0], hd[1] - r * .18, r * .98, r * .86, 0, Math.PI, Math.PI * 2); ctx.fill(); }
+  if (L.style === 'bun') { ctx.beginPath(); ctx.arc(hd[0], hd[1] - r * 1.05, r * .38, 0, 7); ctx.fill(); }
+  if (o.hat) { ctx.fillStyle = cc(o.hat); ctx.fillRect(hd[0] - r * 1.3, hd[1] - r * .62, r * 2.6, r * .2); ctx.fillRect(hd[0] - r * .82, hd[1] - r * 1.3, r * 1.64, r * .72); ctx.fillStyle = cc('#8a2a20'); ctx.fillRect(hd[0] - r * .82, hd[1] - r * .78, r * 1.64, r * .14); }
+  if (!o.back) { // rosto
+    const lk = o.look || 0, ex = hd[0] + lk * r * .35, ey = hd[1] + r * .08 + (o.lookY || 0) * r * .18, sp = r * .34 * (1 - Math.abs(lk) * .2);
+    ctx.fillStyle = cc('#f6f2ea'); for (const s of [-sp, sp]) { ctx.beginPath(); ctx.ellipse(ex + s, ey, r * .17, r * .13, 0, 0, 7); ctx.fill(); }
+    ctx.fillStyle = cc('#1a1410'); for (const s of [-sp, sp]) { ctx.beginPath(); ctx.arc(ex + s + lk * r * .06, ey + (o.lookY || 0) * r * .04, r * .085, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = hairC; ctx.lineWidth = r * .09; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(ex + s * sp - r * .14, ey - r * .25 + (s < 0 ? 0 : 0)); ctx.lineTo(ex + s * sp + r * .14, ey - r * .27); ctx.stroke(); }
+    ctx.strokeStyle = cc('#3a2016'); ctx.fillStyle = cc('#3a1612'); ctx.lineWidth = r * .07; const mx = hd[0] + lk * r * .3, my = hd[1] + r * .52;
+    if (o.mouth === 'open') { ctx.beginPath(); ctx.ellipse(mx, my, r * .17, r * .2 * (o.mo ?? 1), 0, 0, 7); ctx.fill(); }
+    else if (o.mouth === 'pant') { ctx.beginPath(); ctx.ellipse(mx, my, r * .11, r * .08 + r * .06 * (o.mo ?? .5), 0, 0, 7); ctx.fill(); }
+    else if (o.lookY > .6) { ctx.beginPath(); ctx.arc(mx, my + r * .12, r * .2, 1.15 * Math.PI, 1.85 * Math.PI); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.arc(mx, my - r * .1, r * .22, .2 * Math.PI, .8 * Math.PI); ctx.stroke(); }
+  }
+  ctx.restore();
 }
 
 /* =========================================================================
