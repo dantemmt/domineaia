@@ -22,3 +22,7 @@
 - Gancho nos primeiros 3s, curiosidade e perguntas diretas ao espectador ao longo do vídeo.
 - Uma promessa no começo/meio ("fica até o final...") que só é entregue no final. Não entregar tudo no início.
 - Terminar com pergunta para comentários. Texto grande na tela nos pontos-chave.
+
+## Estilo de personagens (a partir do vídeo do Pelé)
+- Padrão novo: bonecos simples (não mais palitos), com pele, cabelo, rosto e roupa, parecidos com as pessoas reais (`drawDoll`, `STYLE = 'doll'` em `stickman_pele.html`). Cenários continuam os mesmos.
+- Vídeos sempre em duas versões: em pé 9:16 (TikTok/Reels, com frase-gancho no topo) e normal 16:9.
