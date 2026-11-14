@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stickman Zumbi — Episódio 2</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+  #stage{position:relative;width:1280px;height:720px;flex:none;transform-origin:center center;overflow:hidden;background:#000}
+  #c{display:block;width:1280px;height:720px}
+  #sub{position:absolute;left:0;right:0;bottom:66px;text-align:center;pointer-events:none}
+  #sub span{display:inline-block;max-width:1040px;background:rgba(12,12,14,.66);color:#fff;font-size:27px;font-weight:500;
+    line-height:1.36;padding:5px 15px 6px;border-radius:5px;letter-spacing:.005em;opacity:0;transition:opacity .18s linear}
+  #sub span.on{opacity:1}
+  #cta{position:absolute;left:0;right:0;bottom:16px;text-align:center;pointer-events:none;opacity:0}
+  #cta .in{position:relative;display:inline-block;padding-top:7px;font-size:15px;font-weight:400;letter-spacing:.085em;
+    color:rgba(255,255,255,.75);text-shadow:0 1px 7px rgba(0,0,0,.7),0 0 2px rgba(0,0,0,.45)}
+  #cta .ln{position:absolute;left:0;top:0;width:100%;height:1px;background:rgba(255,255,255,.6);
+    transform-origin:left center;transform:scaleX(0);box-shadow:0 0 4px rgba(0,0,0,.4)}
+  #title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;
+    font-family:Georgia,"Times New Roman",Times,serif;color:#fff;font-size:68px;letter-spacing:.16em;font-weight:400}
+  #start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    background:radial-gradient(ellipse at center,#1b1d22 0%,#060607 75%);color:#eee;z-index:5}
+  #start h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:44px;letter-spacing:.08em}
+  #start p{margin:0;color:#9a9ca3;font-size:16px;letter-spacing:.12em;text-transform:uppercase}
+  #play{margin-top:14px;font:600 20px Inter,-apple-system,"Segoe UI",Arial,sans-serif;color:#111;background:#f2f2f2;border:0;
+    padding:14px 46px;border-radius:40px;cursor:pointer;letter-spacing:.04em;box-shadow:0 6px 30px rgba(0,0,0,.6)}
+  #play:hover{background:#fff}
+  #vrow{display:flex;gap:10px;align-items:center;color:#8d9097;font-size:13px;letter-spacing:.04em}
+  #voice{background:#15161a;color:#ddd;border:1px solid #33353b;border-radius:6px;padding:6px 8px;font-size:13px;max-width:330px}
+  .hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="c" width="1280" height="720"></canvas>
+  <div id="sub"><span></span></div>
+  <div id="cta"><div class="in"><div class="ln"></div>quer aprender a fazer vídeos como esse? link na bio</div></div>
+  <div id="title">CONTINUA...</div>
+  <div id="start">
+    <p>Stickman Zumbi</p>
+    <h1>Episódio 2</h1>
+    <button id="play">Assistir</button>
+    <div id="vrow"><label for="voice">Voz da narração</label><select id="voice"></select></div>
+  </div>
+</div></div>
+
+<script>
+'use strict';
+/* =========================================================================
+   STICKMAN ZUMBI — EPISÓDIO 2
+   Tudo sintetizado: imagem (canvas 2D + mini motor 3D), som (Web Audio),
+   narração (speechSynthesis pt-BR).
+   ========================================================================= */
+const W = 1280, H = 720, DUR = 92;
+const $ = id => document.getElementById(id);
+function mk(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+
+const cv = $('c'), g = cv.getContext('2d');
+const buf = mk(W, H), b = buf.getContext('2d');
+const tmpA = mk(W, H), ta = tmpA.getContext('2d'), SMALL = mk(160, 90);
+
+/* ---------------- utilidades ---------------- */
+const clamp = (x, a = 0, c = 1) => x < a ? a : x > c ? c : x;
+const lerp = (a, c, t) => a + (c - a) * t;
+const ss = (a, c, x) => { const t = clamp((x - a) / (c - a)); return t * t * (3 - 2 * t); };
+const eio = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const sm = (a, c, x) => eio(clamp((x - a) / (c - a)));
+function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const CC = {};
+function hex(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+function C(h) { return Array.isArray(h) ? h : (CC[h] || (CC[h] = hex(h))); }
+const mix = (c1, c2, t) => [lerp(c1[0], c2[0], t), lerp(c1[1], c2[1], t), lerp(c1[2], c2[2], t)];
+const shade = (c, k) => [c[0] * k, c[1] * k, c[2] * k];
+const css = (c, a) => a === undefined ? `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})` : `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+// ruído suave determinístico (para tremores de câmera)
+function nz(t, s) { return Math.sin(t * 1.7 + s) * .5 + Math.sin(t * 3.1 + s * 2.3) * .3 + Math.sin(t * 7.3 + s * 4.1) * .2; }
+
+/* =========================================================================
+   MINI MOTOR 3D (projeção perspectiva + painter's algorithm + névoa)
+   ========================================================================= */
+const cam = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0, roll: 0, fov: 1.2 };
+let FOG = { c: [180, 180, 180], d: .03, m: .85 };
+let LIGHT = { top: 1.05, bot: .55, l: .78, r: .9, f: .94, bk: .8 };
+let VW = W, VH = H;
+const NEAR = .04;
+function focal() { return (VW / 2) / Math.tan(cam.fov / 2); }
+function toCam(p) {
+  const dx = p[0] - cam.x, dy = p[1] - cam.y, dz = p[2] - cam.z;
+  const cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw);
+  const x1 = dx * cy - dz * sy, z1 = dx * sy + dz * cy;
+  const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  return [x1, dy * cp - z1 * sp, dy * sp + z1 * cp];
+}
+function proj(c) {
+  const F = focal(); let x = c[0] * F / c[2], y = -c[1] * F / c[2];
+  if (cam.roll) { const cr = Math.cos(cam.roll), sr = Math.sin(cam.roll); const nx = x * cr - y * sr; y = x * sr + y * cr; x = nx; }
+  return [VW / 2 + x, VH / 2 + y];
+}
+function P3(p) { const q = toCam(p); return q[2] > NEAR ? proj(q) : null; }
+function clipNear(poly) {
+  const out = [];
+  for (let i = 0; i < poly.length; i++) {
+    const a = poly[i], c = poly[(i + 1) % poly.length];
+    const ai = a[2] >= NEAR, ci = c[2] >= NEAR;
+    if (ai) out.push(a);
+    if (ai !== ci) { const t = (NEAR - a[2]) / (c[2] - a[2]); out.push([a[0] + (c[0] - a[0]) * t, a[1] + (c[1] - a[1]) * t, NEAR]); }
+  }
+  return out;
+}
+function fogK(f, d) { return f.m * (1 - Math.exp(-d * f.d)); }
+function softPoly(ctx, sp, fill, a, r) {
+  let cx = 0, cy = 0; for (const p of sp) { cx += p[0]; cy += p[1]; } cx /= sp.length; cy /= sp.length;
+  ctx.fillStyle = fill;
+  for (let k = 0; k < 4; k++) { const e = r * (k - 1.5) * .9; ctx.globalAlpha = a * .25;
+    ctx.beginPath(); sp.forEach((p, i) => { const dx = p[0] - cx, dy = p[1] - cy, l = Math.hypot(dx, dy) || 1, x = p[0] + dx / l * e, y = p[1] + dy / l * e; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); ctx.fill(); }
+}
+function shaft(ctx, pts, col, a, r) { if (pts.some(p => !p)) return; ctx.save(); ctx.globalCompositeOperation = 'lighter'; softPoly(ctx, pts, col, a, r); ctx.restore(); }
+function pathPts(ctx, sp) { ctx.beginPath(); ctx.moveTo(sp[0][0], sp[0][1]); for (let i = 1; i < sp.length; i++) ctx.lineTo(sp[i][0], sp[i][1]); ctx.closePath(); }
+
+// mapeamento afim de textura em triângulo
+function texTri(ctx, img, s0, s1, s2, d0, d1, d2) {
+  const cx = (d0[0] + d1[0] + d2[0]) / 3, cy = (d0[1] + d1[1] + d2[1]) / 3;
+  const inf = p => { const dx = p[0] - cx, dy = p[1] - cy, l = Math.hypot(dx, dy) || 1; return [p[0] + dx / l * .7, p[1] + dy / l * .7]; };
+  ctx.save(); ctx.beginPath(); const a0 = inf(d0), a1 = inf(d1), a2 = inf(d2);
+  ctx.moveTo(a0[0], a0[1]); ctx.lineTo(a1[0], a1[1]); ctx.lineTo(a2[0], a2[1]); ctx.closePath(); ctx.clip();
+  const D = (s1[0] - s0[0]) * (s2[1] - s0[1]) - (s2[0] - s0[0]) * (s1[1] - s0[1]);
+  const a = ((d1[0] - d0[0]) * (s2[1] - s0[1]) - (d2[0] - d0[0]) * (s1[1] - s0[1])) / D;
+  const bb = ((d1[1] - d0[1]) * (s2[1] - s0[1]) - (d2[1] - d0[1]) * (s1[1] - s0[1])) / D;
+  const c = ((s1[0] - s0[0]) * (d2[0] - d0[0]) - (s2[0] - s0[0]) * (d1[0] - d0[0])) / D;
+  const d = ((s1[0] - s0[0]) * (d2[1] - d0[1]) - (s2[0] - s0[0]) * (d1[1] - d0[1])) / D;
+  const e = d0[0] - a * s0[0] - c * s0[1], f = d0[1] - bb * s0[0] - d * s0[1];
+  ctx.transform(a, bb, c, d, e, f); ctx.drawImage(img, 0, 0); ctx.restore();
+}
+
+// construtores de itens
+const Pp = (pts, col, o) => ({ k: 'p', pts, col, o: o || {} });
+const Bx = (x0, y0, z0, x1, y1, z1, col, o) => ({ k: 'b', a: [Math.min(x0, x1), Math.min(y0, y1), Math.min(z0, z1)], b: [Math.max(x0, x1), Math.max(y0, y1), Math.max(z0, z1)], col, o: o || {} });
+const St = (p, h, o) => ({ k: 's', p, h, o: o || {} });
+const Gl = (p, r, col, a, o) => ({ k: 'g', p, r, col, a, o: o || {} });
+const Ln = (p, q, col, w, o) => ({ k: 'l', p, q, col, w, o: o || {} });
+const Fn = (p, fn, o) => ({ k: 'f', p, fn, o: o || {} });
+// polígonos utilitários
+const quadX = (x, y0, y1, z0, z1, col, o) => Pp([[x, y1, z0], [x, y1, z1], [x, y0, z1], [x, y0, z0]], col, o);
+const quadZ = (z, x0, x1, y0, y1, col, o) => Pp([[x0, y1, z], [x1, y1, z], [x1, y0, z], [x0, y0, z]], col, o);
+const quadY = (y, x0, x1, z0, z1, col, o) => Pp([[x0, y, z1], [x1, y, z1], [x1, y, z0], [x0, y, z0]], col, o);
+const zs = (z0, z1, n) => { const r = []; for (let i = 0; i <= n; i++) r.push(z0 + (z1 - z0) * Math.pow(i / n, 1.8)); return r; };
+function segY(arr, y, x0, x1, z0, z1, col, o, n = 12) { const z = zs(z0, z1, n); for (let i = 0; i < n; i++) arr.push(quadY(y, x0, x1, z[i], z[i + 1], col, o)); }
+function segX(arr, x, y0, y1, z0, z1, col, o, n = 8) { const z = zs(z0, z1, n); for (let i = 0; i < n; i++) arr.push(quadX(x, y0, y1, z[i], z[i + 1], col, o)); }
+
+function drawPoly(ctx, pts, col, o) {
+  const cs = pts.map(toCam); const cl = clipNear(cs); if (cl.length < 3) return;
+  const sp = cl.map(proj);
+  let mx = 0, my = 0, mz = 0; for (const q of cs) { mx += q[0]; my += q[1]; mz += q[2]; }
+  const n = cs.length, dist = Math.hypot(mx / n, my / n, mz / n);
+  const f = o.fog || FOG; const fk = o.nofog ? 0 : fogK(f, dist);
+  const c = o.sh ? shade(col, o.sh) : col;
+  ctx.save();
+  if (o.blend) ctx.globalCompositeOperation = o.blend;
+  if (o.a !== undefined) ctx.globalAlpha = o.a;
+  if (o.tex) {
+    if (cl.length === 4 && cs.every(q => q[2] > NEAR)) {
+      const tw = o.tex.width, th = o.tex.height, p = sp;
+      texTri(ctx, o.tex, [0, 0], [tw, 0], [0, th], p[0], p[1], p[3]);
+      texTri(ctx, o.tex, [tw, th], [0, th], [tw, 0], p[2], p[3], p[1]);
+      if (fk > .01) { pathPts(ctx, sp); ctx.fillStyle = css(f.c, fk); ctx.fill(); }
+      if (o.dim) { pathPts(ctx, sp); ctx.fillStyle = `rgba(0,0,0,${o.dim})`; ctx.fill(); }
+    }
+  } else {
+    if (o.blur) { softPoly(ctx, sp, css(mix(c, f.c, fk)), o.a ?? 1, o.blur); ctx.restore(); return; }
+    pathPts(ctx, sp);
+    if (o.grad) {
+      const gg = o.grad(ctx, sp); ctx.fillStyle = gg;
+    } else ctx.fillStyle = css(mix(c, f.c, fk));
+    ctx.fill();
+    if (o.stroke) { ctx.filter = 'none'; ctx.strokeStyle = o.stroke; ctx.lineWidth = o.sw || 1; ctx.stroke(); }
+  }
+  ctx.restore();
+}
+function drawBox(ctx, it) {
+  const a = it.a, c = it.b, col = C(it.col), o = it.o, L = o.light || LIGHT;
+  const F = [];
+  if (cam.y > c[1] && !o.notop) F.push([[a[0], c[1], a[2]], [c[0], c[1], a[2]], [c[0], c[1], c[2]], [a[0], c[1], c[2]], L.top]);
+  if (cam.y < a[1]) F.push([[a[0], a[1], a[2]], [c[0], a[1], a[2]], [c[0], a[1], c[2]], [a[0], a[1], c[2]], L.bot]);
+  if (cam.x < a[0]) F.push([[a[0], a[1], a[2]], [a[0], c[1], a[2]], [a[0], c[1], c[2]], [a[0], a[1], c[2]], L.l]);
+  if (cam.x > c[0]) F.push([[c[0], a[1], a[2]], [c[0], c[1], a[2]], [c[0], c[1], c[2]], [c[0], a[1], c[2]], L.r]);
+  if (cam.z < a[2]) F.push([[a[0], a[1], a[2]], [c[0], a[1], a[2]], [c[0], c[1], a[2]], [a[0], c[1], a[2]], L.f]);
+  if (cam.z > c[2]) F.push([[a[0], a[1], c[2]], [c[0], a[1], c[2]], [c[0], c[1], c[2]], [a[0], c[1], c[2]], L.bk]);
+  for (const fc of F) drawPoly(ctx, fc.slice(0, 4), shade(col, fc[4] * (o.sh || 1)), { fog: o.fog, nofog: o.nofog, a: o.a, stroke: o.stroke, sw: o.sw });
+}
+function drawGlow(ctx, it) {
+  const q = toCam(it.p); if (q[2] < NEAR) return; const s = proj(q);
+  const r = it.r * focal() / q[2]; if (r < .5) return;
+  const col = C(it.col), gr = ctx.createRadialGradient(s[0], s[1], 0, s[0], s[1], r);
+  gr.addColorStop(0, css(col, it.a)); gr.addColorStop(.35, css(col, it.a * .45)); gr.addColorStop(1, css(col, 0));
+  ctx.save(); ctx.globalCompositeOperation = it.o.blend || 'lighter'; ctx.fillStyle = gr;
+  if (it.o.sy) { ctx.translate(s[0], s[1]); ctx.scale(1, it.o.sy); ctx.translate(-s[0], -s[1]); }
+  ctx.fillRect(s[0] - r, s[1] - r, 2 * r, 2 * r); ctx.restore();
+}
+function drawLine3(ctx, it) {
+  let a = toCam(it.p), c = toCam(it.q);
+  if (a[2] < NEAR && c[2] < NEAR) return;
+  if (a[2] < NEAR) { const t = (NEAR - a[2]) / (c[2] - a[2]); a = [a[0] + (c[0] - a[0]) * t, a[1] + (c[1] - a[1]) * t, NEAR]; }
+  if (c[2] < NEAR) { const t = (NEAR - c[2]) / (a[2] - c[2]); c = [c[0] + (a[0] - c[0]) * t, c[1] + (a[1] - c[1]) * t, NEAR]; }
+  const p1 = proj(a), p2 = proj(c), d = Math.hypot((a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2);
+  const f = it.o.fog || FOG;
+  ctx.save(); ctx.strokeStyle = css(mix(C(it.col), f.c, it.o.nofog ? 0 : fogK(f, d)), it.o.a ?? 1);
+  ctx.lineWidth = it.o.wm ? Math.max(.6, it.o.wm * focal() / Math.max(.1, (a[2] + c[2]) / 2)) : it.w; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.stroke(); ctx.restore();
+}
+function drawStickIt(ctx, it) {
+  const q = toCam(it.p); if (q[2] < .15) return; const s = proj(q);
+  const S = it.h * focal() / q[2]; const f = it.o.fog || FOG; const fk = fogK(f, Math.hypot(q[0], q[1], q[2]));
+  ctx.save(); ctx.translate(s[0], s[1]); if (cam.roll) ctx.rotate(cam.roll);
+  drawStick(ctx, 0, 0, S, Object.assign({}, it.o, { fk, fc: f.c })); ctx.restore();
+  it._screen = { x: s[0], y: s[1], S };
+}
+function drawIt(ctx, it) {
+  switch (it.k) {
+    case 'p': return drawPoly(ctx, it.pts, C(it.col), it.o);
+    case 'b': return drawBox(ctx, it);
+    case 's': return drawStickIt(ctx, it);
+    case 'g': return drawGlow(ctx, it);
+    case 'l': return drawLine3(ctx, it);
+    case 'f': return it.fn(ctx, it);
+  }
+}
+function centerOf(it) {
+  if (it.k === 'b') return [(it.a[0] + it.b[0]) / 2, (it.a[1] + it.b[1]) / 2, (it.a[2] + it.b[2]) / 2];
+  if (it.k === 'p') { let x = 0, y = 0, z = 0; for (const p of it.pts) { x += p[0]; y += p[1]; z += p[2]; } const n = it.pts.length; return [x / n, y / n, z / n]; }
+  if (it.k === 'l') return [(it.p[0] + it.q[0]) / 2, (it.p[1] + it.q[1]) / 2, (it.p[2] + it.q[2]) / 2];
+  return it.p;
+}
+function render3D(ctx, base, list) {
+  for (const it of base) drawIt(ctx, it);
+  for (const it of list) { const q = toCam(it.o.dp || centerOf(it)); it._d = Math.hypot(q[0], q[1], q[2]) + (it.o.bias || 0); }
+  list.sort((p, q) => q._d - p._d);
+  for (const it of list) drawIt(ctx, it);
+}
+
+/* =========================================================================
+   PERSONAGEM PALITO
+   ========================================================================= */
+function stickJ(o) {
+  const r = .155, br = (o.breath || 0) * .009;
+  const top = -.70 + br, hip = [0, -.43], neck = [0, top], sh = [0, top + .045];
+  const head = [(o.hx || 0) * r, top - r * .97 + (o.hy || 0) * r];
+  const arm = (side, A) => {
+    const a1 = A[0], a2 = A[1], l1 = A[2] ?? .17, l2 = A[3] ?? .165;
+    const e = [side * Math.sin(a1) * l1, sh[1] + Math.cos(a1) * l1];
+    return [sh, e, [e[0] + side * Math.sin(a2) * l2, e[1] + Math.cos(a2) * l2]];
+  };
+  const w = o.walk || 0;
+  return {
+    r, neck, hip, sh, head,
+    aL: arm(-1, o.armL || [.17, .1]), aR: arm(1, o.armR || [.17, .1]),
+    fL: [-.065 + Math.sin(w) * .06, 0], fR: [.065 - Math.sin(w) * .06, -Math.max(0, Math.cos(w)) * .0]
+  };
+}
+function drawStick(ctx, x, y, S, o) {
+  const J = stickJ(o), fk = o.fk || 0, fc = o.fc || [128, 128, 128];
+  const base = o.col ? C(o.col) : [11, 11, 13];
+  const col = css(mix(base, fc, fk));
+  ctx.save(); ctx.translate(x, y); if (o.sway) ctx.rotate(o.sway); ctx.scale(S, S);
+  const lw = Math.max(1.25 / S, .0235);
+  ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = col; ctx.fillStyle = col;
+  if (o.alpha !== undefined) ctx.globalAlpha = o.alpha;
+  const seg = (a, c) => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.stroke(); };
+  const arm = a => { ctx.beginPath(); ctx.moveTo(a[0][0], a[0][1]); ctx.lineTo(a[1][0], a[1][1]); ctx.lineTo(a[2][0], a[2][1]); ctx.stroke(); };
+  seg(J.hip, J.fL); seg(J.hip, J.fR); seg(J.hip, J.neck);
+  arm(J.aL); arm(J.aR);
+  if (o.bandage) drawBandage(ctx, o.bandage.side < 0 ? J.aL : J.aR, lw, o.bandage);
+  const hd = J.head, r = J.r;
+  ctx.beginPath(); ctx.arc(hd[0], hd[1], r, 0, Math.PI * 2); ctx.fill();
+  if (o.bun) { ctx.beginPath(); ctx.arc(hd[0] - (o.look || 0) * r * .12, hd[1] - r * 1.13, r * .37, 0, Math.PI * 2); ctx.fill(); }
+  if (!o.back) {
+    const lk = o.look || 0, ex = hd[0] + lk * r * .42, ey = hd[1] - r * .06 + (o.lookY || 0) * r * .25, sp = r * .3 * (1 - Math.abs(lk) * .25);
+    if (o.eyes === 'x') {
+      const ec = css(mix([222, 24, 24], fc, fk * .7)), s2 = r * .15;
+      ctx.strokeStyle = ec; ctx.lineWidth = r * .085;
+      if (fk < .6) { ctx.shadowColor = 'rgba(255,30,30,.85)'; ctx.shadowBlur = Math.min(18, S * r * .25); }
+      for (const sx of [-sp, sp]) { seg([ex + sx - s2, ey - s2], [ex + sx + s2, ey + s2]); seg([ex + sx + s2, ey - s2], [ex + sx - s2, ey + s2]); }
+      ctx.shadowBlur = 0;
+    } else if (o.eyes !== 'none') {
+      ctx.fillStyle = css(mix([244, 244, 240], fc, fk * .8)); const er = r * .115 * (o.eyeS || 1);
+      for (const sx of [-sp, sp]) { ctx.beginPath(); ctx.arc(ex + sx, ey, er, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.fillStyle = '#f2f2ee'; ctx.strokeStyle = '#f2f2ee';
+    if (o.mouth === 'smile') { ctx.lineWidth = r * .1; ctx.beginPath(); ctx.arc(hd[0] + lk * r * .4, hd[1] + r * .12, r * .36, .18 * Math.PI, .82 * Math.PI); ctx.stroke(); }
+    else if (o.mouth === 'open') { ctx.beginPath(); ctx.ellipse(hd[0] + lk * r * .4, hd[1] + r * .48, r * .14, r * .19 * (o.mo ?? 1), 0, 0, Math.PI * 2); ctx.fill(); }
+    else if (o.mouth === 'pant') { ctx.beginPath(); ctx.ellipse(hd[0] + lk * r * .4, hd[1] + r * .5, r * .09, r * .07 + r * .06 * (o.mo ?? .5), 0, 0, Math.PI * 2); ctx.fill(); }
+  }
+  ctx.restore();
+}
+function drawBandage(ctx, a, lw, bd) {
+  const e = a[1], h = a[2], ax = h[0] - e[0], ay = h[1] - e[1], len = Math.hypot(ax, ay);
+  ctx.save(); ctx.translate(e[0], e[1]); ctx.rotate(Math.atan2(ay, ax));
+  const x0 = len * .16, x1 = len * .84, th = lw * 3.4;
+  ctx.beginPath(); ctx.moveTo(x0, -th / 2); ctx.lineTo(x1, -th * .45); ctx.quadraticCurveTo(x1 + th * .2, 0, x1, th * .45);
+  ctx.lineTo(x0, th / 2); ctx.quadraticCurveTo(x0 - th * .2, 0, x0, -th / 2); ctx.closePath();
+  ctx.fillStyle = '#e6e1d6'; ctx.fill(); ctx.save(); ctx.clip();
+  const sg = ctx.createLinearGradient(0, -th / 2, 0, th / 2); sg.addColorStop(0, 'rgba(255,255,255,.35)'); sg.addColorStop(.5, 'rgba(255,255,255,0)'); sg.addColorStop(1, 'rgba(60,50,40,.35)');
+  ctx.fillStyle = sg; ctx.fillRect(x0 - th, -th, x1 - x0 + 2 * th, 2 * th);
+  ctx.strokeStyle = 'rgba(140,128,112,.55)'; ctx.lineWidth = lw * .28;
+  for (let x = x0 - th; x < x1 + th; x += th * .5) { ctx.beginPath(); ctx.moveTo(x, -th / 2); ctx.lineTo(x + th * .55, th / 2); ctx.stroke(); }
+  const p = bd.p, cx = lerp(x0, x1, .56), rad = th * .35 + p * (x1 - x0) * .6;
+  const rg = ctx.createRadialGradient(cx, th * .12, 0, cx, th * .12, rad);
+  rg.addColorStop(0, 'rgba(70,0,4,.98)'); rg.addColorStop(.45, 'rgba(120,6,10,.95)'); rg.addColorStop(.78, 'rgba(150,18,18,.65)'); rg.addColorStop(1, 'rgba(150,30,28,0)');
+  ctx.fillStyle = rg; ctx.fillRect(x0 - th, -th, x1 - x0 + 2 * th, 2 * th);
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(0,0,0,.28)'; ctx.lineWidth = lw * .2; ctx.stroke();
+  ctx.restore();
+}
+
+/* =========================================================================
+   TEXTURAS PRÉ-RENDERIZADAS
+   ========================================================================= */
+const TX = {};
+function buildTextures() {
+  // ----- grão de filme
+  TX.noise = [];
+  for (let k = 0; k < 4; k++) {
+    const c = mk(640, 360), x = c.getContext('2d'), id = x.createImageData(640, 360), d = id.data;
+    for (let i = 0; i < d.length; i += 4) { const v = 128 + (Math.random() - .5) * 120; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+    x.putImageData(id, 0, 0); TX.noise.push(c);
+  }
+  // ----- vinheta
+  TX.vig = mk(W, H); { const x = TX.vig.getContext('2d'); const gr = x.createRadialGradient(W / 2, H / 2, H * .32, W / 2, H / 2, W * .72); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(.6, 'rgba(0,0,0,.45)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); x.fillStyle = gr; x.fillRect(0, 0, W, H); }
+  // ----- skyline (episódio 1 → telhado)
+  const R = mulberry(7);
+  TX.far = mk(2000, 420); { const x = TX.far.getContext('2d'); let px = 0;
+    while (px < 2000) { const w = 50 + R() * 120, h = 90 + R() * 230; x.fillStyle = '#2b3349'; x.fillRect(px, 420 - h, w, h);
+      if (R() < .3) { x.fillRect(px + w * .45, 420 - h - 30, 3, 30); }
+      x.fillStyle = 'rgba(160,170,190,.10)'; for (let yy = 420 - h + 10; yy < 410; yy += 14) for (let xx = px + 6; xx < px + w - 6; xx += 11) if (R() < .5) x.fillRect(xx, yy, 5, 7);
+      px += w + R() * 6; } }
+  TX.mid = mk(2000, 520); { const x = TX.mid.getContext('2d'); let px = 0;
+    while (px < 2000) { const w = 90 + R() * 170, h = 150 + R() * 330;
+      x.fillStyle = '#151a26'; x.fillRect(px, 520 - h, w, h);
+      x.fillStyle = 'rgba(255,255,255,.035)'; x.fillRect(px, 520 - h, 5, h);
+      if (R() < .35) { // caixa d'água
+        const cx = px + w * (.25 + R() * .5); x.fillStyle = '#151a26'; x.fillRect(cx - 14, 520 - h - 40, 28, 26); x.beginPath(); x.moveTo(cx - 16, 520 - h - 40); x.lineTo(cx, 520 - h - 54); x.lineTo(cx + 16, 520 - h - 40); x.fill();
+        x.strokeStyle = '#151a26'; x.lineWidth = 2; x.beginPath(); x.moveTo(cx - 12, 520 - h - 14); x.lineTo(cx - 12, 520 - h); x.moveTo(cx + 12, 520 - h - 14); x.lineTo(cx + 12, 520 - h); x.stroke(); }
+      if (R() < .3) { x.fillStyle = '#151a26'; x.fillRect(px + w * .6, 520 - h - 60, 2, 60); }
+      for (let yy = 520 - h + 14; yy < 505; yy += 20) for (let xx = px + 9; xx < px + w - 10; xx += 16) {
+        const r = R(); x.fillStyle = r < .03 ? 'rgba(235,170,90,.75)' : r < .06 ? 'rgba(170,190,220,.25)' : 'rgba(40,48,66,.9)'; x.fillRect(xx, yy, 8, 11); }
+      px += w + R() * 10; } }
+  // ----- concreto
+  TX.conc = mk(512, 256); { const x = TX.conc.getContext('2d'); x.fillStyle = '#56565a'; x.fillRect(0, 0, 512, 256);
+    for (let i = 0; i < 9000; i++) { x.fillStyle = `rgba(${R() < .5 ? '255,255,255' : '0,0,0'},${R() * .08})`; x.fillRect(R() * 512, R() * 256, 1 + R() * 3, 1 + R() * 2); }
+    for (let i = 0; i < 18; i++) { x.fillStyle = `rgba(30,25,20,${.04 + R() * .06})`; x.beginPath(); x.ellipse(R() * 512, R() * 256, 20 + R() * 70, 8 + R() * 25, 0, 0, 7); x.fill(); } }
+  // ----- tijolos
+  TX.brick = mk(256, 128); { const x = TX.brick.getContext('2d'); x.fillStyle = '#4c3029'; x.fillRect(0, 0, 256, 128);
+    for (let row = 0; row < 8; row++) for (let col = -1; col < 5; col++) { const ox = (row % 2) * 32, bx = col * 64 + ox, by = row * 16;
+      const v = .82 + R() * .3; x.fillStyle = css([128 * v, 66 * v, 52 * v]); x.fillRect(bx + 1.5, by + 1.5, 61, 13);
+      x.fillStyle = `rgba(0,0,0,${R() * .12})`; x.fillRect(bx + 1.5, by + 9, 61, 5.5); }
+    for (let i = 0; i < 2500; i++) { x.fillStyle = `rgba(0,0,0,${R() * .12})`; x.fillRect(R() * 256, R() * 128, 1, 1); } }
+  // ----- cerca (madeira, levemente fora de foco)
+  TX.fence = mk(1600, 720); { const x = TX.fence.getContext('2d'); const RR = mulberry(3);
+    for (let i = 0; i < 14; i++) { const px = i * 120, w = 86 + RR() * 2, v = .82 + RR() * .25;
+      const gr = x.createLinearGradient(px, 0, px + w, 0); gr.addColorStop(0, css([70 * v, 46 * v, 30 * v])); gr.addColorStop(.25, css([112 * v, 78 * v, 50 * v])); gr.addColorStop(.8, css([96 * v, 64 * v, 40 * v])); gr.addColorStop(1, css([52 * v, 34 * v, 22 * v]));
+      x.fillStyle = gr; x.beginPath(); x.moveTo(px, 720); x.lineTo(px, 70); x.lineTo(px + w / 2, 34 + RR() * 8); x.lineTo(px + w, 70); x.lineTo(px + w, 720); x.fill();
+      x.strokeStyle = 'rgba(30,18,10,.35)'; x.lineWidth = 1.2; for (let k = 0; k < 9; k++) { const gx = px + 8 + RR() * (w - 16); x.beginPath(); x.moveTo(gx, 80); x.bezierCurveTo(gx + 6, 300, gx - 6, 500, gx + 3, 720); x.stroke(); }
+      x.fillStyle = 'rgba(25,25,25,.8)'; x.beginPath(); x.arc(px + w / 2, 190, 3, 0, 7); x.arc(px + w / 2, 560, 3, 0, 7); x.fill(); }
+    x.fillStyle = 'rgba(60,40,25,.95)'; x.fillRect(0, 165, 1600, 46); x.fillRect(0, 530, 1600, 46);
+    const raw = TX.fence; TX.fence = mk(1600, 720); const fx2 = TX.fence.getContext('2d'); if ('filter' in fx2) fx2.filter = 'blur(1.6px)'; fx2.drawImage(raw, 0, 0);
+  }
+  // ----- cortina
+  TX.curt = mk(128, 256); { const x = TX.curt.getContext('2d'); for (let i = 0; i < 128; i++) { const v = .78 + .22 * Math.sin(i / 128 * Math.PI * 7); x.fillStyle = css([178 * v, 150 * v, 104 * v]); x.fillRect(i, 0, 1, 256); }
+    const gr = x.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(0,0,0,.25)'); gr.addColorStop(.3, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,.18)'); x.fillStyle = gr; x.fillRect(0, 0, 128, 256); }
+  // ----- bilhete na geladeira
+  TX.note = mk(300, 360); { const x = TX.note.getContext('2d');
+    x.fillStyle = '#f2ecdc'; x.fillRect(0, 0, 300, 360);
+    const gr = x.createLinearGradient(0, 0, 300, 360); gr.addColorStop(0, 'rgba(255,255,255,.25)'); gr.addColorStop(1, 'rgba(120,100,60,.18)'); x.fillStyle = gr; x.fillRect(0, 0, 300, 360);
+    x.strokeStyle = 'rgba(90,120,170,.25)'; x.lineWidth = 1; for (let y = 92; y < 350; y += 44) { x.beginPath(); x.moveTo(14, y); x.lineTo(286, y); x.stroke(); }
+    x.fillStyle = '#1d2a5c'; x.font = '34px "Segoe Print","Bradley Hand","Noteworthy","Comic Sans MS","Chalkboard SE",cursive';
+    const L = [['Fui pro hospital', 84, -.03], ['ajudar.', 128, .01], ['Fica em casa.', 186, -.02], ['— Pai', 262, .02]];
+    for (const [s, y, r] of L) { x.save(); x.translate(26 + (s[0] === '—' ? 120 : 0), y); x.rotate(r); x.fillText(s, 0, 0); x.restore(); }
+    x.strokeStyle = '#1d2a5c'; x.lineWidth = 2; x.beginPath(); x.moveTo(150, 274); x.quadraticCurveTo(200, 282, 262, 270); x.stroke();
+    x.fillStyle = 'rgba(0,0,0,.18)'; x.beginPath(); x.ellipse(152, 26, 24, 22, 0, 0, 7); x.fill();
+    const mg = x.createRadialGradient(146, 18, 2, 150, 22, 22); mg.addColorStop(0, '#ff6a5a'); mg.addColorStop(1, '#a3150f'); x.fillStyle = mg; x.beginPath(); x.arc(150, 22, 20, 0, 7); x.fill(); }
+  // ----- foto dos dois amigos
+  TX.photo = mk(400, 300); { const x = TX.photo.getContext('2d');
+    x.fillStyle = '#f4f1ea'; x.fillRect(0, 0, 400, 300);
+    const sk = x.createLinearGradient(0, 14, 0, 200); sk.addColorStop(0, '#8fb6d9'); sk.addColorStop(1, '#dfe8e6'); x.fillStyle = sk; x.fillRect(14, 14, 372, 230);
+    x.fillStyle = 'rgba(70,110,70,.55)'; for (let i = 0; i < 8; i++) { x.beginPath(); x.ellipse(30 + i * 52, 160, 40, 30, 0, 0, 7); x.fill(); }
+    const gr2 = x.createLinearGradient(0, 170, 0, 244); gr2.addColorStop(0, '#7a9c5a'); gr2.addColorStop(1, '#55743d'); x.fillStyle = gr2; x.fillRect(14, 172, 372, 72);
+    // dois palitos sorrindo, abraçados
+    drawStick(x, 158, 236, 175, { armL: [.2, .1], armR: [2.3, 1.75, .17, .13], mouth: 'smile', look: .15 });
+    drawStick(x, 245, 236, 182, { armL: [2.3, 1.75, .17, .13], armR: [.22, .1], mouth: 'smile', look: -.15 });
+    x.fillStyle = 'rgba(255,200,140,.12)'; x.fillRect(14, 14, 372, 230);
+    const gl = x.createLinearGradient(0, 0, 400, 300); gl.addColorStop(0, 'rgba(255,255,255,.28)'); gl.addColorStop(.35, 'rgba(255,255,255,0)'); x.fillStyle = gl; x.fillRect(0, 0, 400, 300); }
+  // ----- quadros da sala
+  TX.pic1 = mk(160, 120); { const x = TX.pic1.getContext('2d'); const gr = x.createLinearGradient(0, 0, 0, 120); gr.addColorStop(0, '#c9a77c'); gr.addColorStop(.6, '#e7d3b0'); gr.addColorStop(.61, '#5d7a52'); gr.addColorStop(1, '#3f5a3a'); x.fillStyle = gr; x.fillRect(0, 0, 160, 120); x.fillStyle = 'rgba(250,240,200,.9)'; x.beginPath(); x.arc(110, 48, 12, 0, 7); x.fill(); }
+  TX.pic2 = mk(120, 150); { const x = TX.pic2.getContext('2d'); x.fillStyle = '#d9d4c6'; x.fillRect(0, 0, 120, 150); x.fillStyle = '#b8c7cf'; x.fillRect(8, 8, 104, 100);
+    drawStick(x, 44, 102, 84, { armR: [.6, .4], mouth: 'smile' }); drawStick(x, 78, 102, 56, { armL: [.6, .4], mouth: 'smile' }); }
+  TX.pic3 = mk(140, 100); { const x = TX.pic3.getContext('2d'); x.fillStyle = '#2c3e50'; x.fillRect(0, 0, 140, 100); x.fillStyle = '#e8c07a'; x.beginPath(); x.moveTo(0, 100); x.lineTo(50, 40); x.lineTo(90, 80); x.lineTo(115, 55); x.lineTo(140, 100); x.fill(); }
+  TX.poster = mk(180, 260); { const x = TX.poster.getContext('2d'); const gr = x.createLinearGradient(0, 0, 0, 260); gr.addColorStop(0, '#1d2633'); gr.addColorStop(1, '#5a2a2a'); x.fillStyle = gr; x.fillRect(0, 0, 180, 260);
+    x.fillStyle = '#e7b34a'; x.beginPath(); x.arc(90, 105, 52, 0, 7); x.fill(); x.fillStyle = '#1d2633'; x.fillRect(0, 150, 180, 4); x.fillStyle = 'rgba(255,255,255,.75)'; x.fillRect(30, 190, 120, 10); x.fillRect(48, 210, 84, 6); }
+  TX.radio = mk(160, 100); { const x = TX.radio.getContext('2d'); x.fillStyle = '#26272a'; x.fillRect(0, 0, 160, 100); x.fillStyle = '#141416';
+    for (let i = 0; i < 7; i++) for (let j = 0; j < 6; j++) { x.beginPath(); x.arc(14 + i * 9, 22 + j * 11, 2.6, 0, 7); x.fill(); }
+    x.fillStyle = '#c9b98a'; x.fillRect(86, 18, 62, 22); x.fillStyle = '#7a1c18'; x.fillRect(110, 18, 2, 22); x.fillStyle = '#3a3b3f'; x.beginPath(); x.arc(116, 70, 13, 0, 7); x.fill(); }
+  // ----- TV (atualizada em tempo real)
+  TX.tvNoise = mk(120, 68); TX.tv = mk(480, 270);
+  // ----- olho mágico
+  FE.src = mk(FE.SN, FE.SN); FE.sx = FE.src.getContext('2d', { willReadFrequently: true });
+  FE.out = mk(FE.ON, FE.ON); FE.ox = FE.out.getContext('2d'); FE.oid = FE.ox.createImageData(FE.ON, FE.ON);
+  FE.lut = new Int32Array(FE.ON * FE.ON); FE.vig = new Float32Array(FE.ON * FE.ON);
+  const half = FE.ON / 2, maxA = FE.FOV / 2, tm = Math.tan(maxA);
+  for (let j = 0; j < FE.ON; j++) for (let i = 0; i < FE.ON; i++) {
+    const dx = (i - half) / half, dy = (j - half) / half, r = Math.hypot(dx, dy), k = j * FE.ON + i;
+    if (r > 1) { FE.lut[k] = -1; continue; }
+    const th = r * maxA, rs = Math.tan(th) / tm, ux = r ? dx / r : 0, uy = r ? dy / r : 0;
+    const sx = Math.round(FE.SN / 2 + ux * rs * (FE.SN / 2 - 1)), sy = Math.round(FE.SN / 2 + uy * rs * (FE.SN / 2 - 1));
+    FE.lut[k] = (sy * FE.SN + sx) * 4; FE.vig[k] = (1 - .62 * Math.pow(r, 3.2)) * (r > .96 ? (1 - (r - .96) / .04) : 1);
+  }
+}
+const FE = { SN: 520, ON: 460, FOV: 118 * Math.PI / 180 };
+function updateTV(t) {
+  const n = TX.tvNoise.getContext('2d'), id = n.createImageData(120, 68), d = id.data;
+  for (let i = 0; i < d.length; i += 4) { const v = Math.random() * 200; d[i] = v * .9; d[i + 1] = v; d[i + 2] = v * 1.08; d[i + 3] = 255; }
+  n.putImageData(id, 0, 0);
+  const x = TX.tv.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(TX.tvNoise, 0, 0, 480, 270); x.imageSmoothingEnabled = true;
+  x.fillStyle = 'rgba(20,24,40,.35)'; x.fillRect(0, 0, 480, 270);
+  const roll = (t * 90) % 270; x.fillStyle = 'rgba(255,255,255,.08)'; x.fillRect(0, roll, 480, 26);
+  const on = Math.sin(t * 9) > -.7;
+  x.fillStyle = on ? 'rgba(186,16,24,.95)' : 'rgba(130,10,16,.9)'; x.fillRect(0, 106, 480, 62);
+  x.fillStyle = 'rgba(255,255,255,.9)'; x.fillRect(0, 106, 480, 3); x.fillRect(0, 165, 480, 3);
+  x.fillStyle = '#fff'; x.font = 'bold 21px Arial,Helvetica,sans-serif'; x.textBaseline = 'middle';
+  const s = 'ALERTA DE EMERGÊNCIA — PERMANEÇA EM CASA', w = x.measureText(s).width, sc = Math.min(1, 452 / w);
+  x.save(); x.translate(240, 137); x.scale(sc, 1); x.textAlign = 'center'; x.fillText(s, 0, 0); x.restore();
+  x.fillStyle = 'rgba(0,0,0,.25)'; for (let y = 0; y < 270; y += 3) x.fillRect(0, y, 480, 1);
+}
+
+/* =========================================================================
+   CENA 1 — amanhecer no telhado + escada de incêndio (0–10s)
+   ========================================================================= */
+const LADDER_STEPS = []; for (let k = 0; k < 7; k++) LADDER_STEPS.push(6.4 + k * .52);
+function S1(t) {
+  const d = ss(0, 10, t);
+  const tilt = sm(4.5, 6.3, t), off = -tilt * 720;
+  b.save();
+  if (tilt < 1) { b.save(); b.translate(0, off); roofView(t, d); b.restore(); }
+  if (tilt > 0) { b.save(); b.translate(0, 720 + off); ladderView(t, d, tilt); b.restore(); }
+  b.restore();
+  POST.vig = .55; POST.shy = Math.sin(t * 1.4) * 2.5; POST.rot = Math.sin(t * .7) * .004;
+  if (t > 6.3) { const ph = stepPhase(t); POST.shy += Math.sin(ph * Math.PI) * 7; POST.rot += Math.sin(t * 2.2) * .008; }
+  POST.black = 1 - ss(0, 1.2, t) + ss(9.65, 10, t);
+}
+function stepPhase(t) { for (const s of LADDER_STEPS) if (t >= s && t < s + .38) return (t - s) / .38; return 0; }
+function ladderScroll(t) { let s = 0; for (const k of LADDER_STEPS) s += sm(k, k + .38, t) * 112; return s; }
+function skyCols(d) {
+  return [mix(C('#0c1326'), C('#56647f'), d), mix(C('#1c2742'), C('#a99091'), d), mix(C('#36405a'), C('#efb184'), d)];
+}
+function roofView(t, d) {
+  const [c0, c1, c2] = skyCols(d);
+  const sk = b.createLinearGradient(0, 0, 0, 520); sk.addColorStop(0, css(c0)); sk.addColorStop(.6, css(c1)); sk.addColorStop(1, css(c2));
+  b.fillStyle = sk; b.fillRect(0, 0, W, 760);
+  // estrelas e lua se apagando
+  const R = mulberry(5); b.fillStyle = `rgba(255,255,255,${clamp(.7 - d * 1.6)})`;
+  for (let i = 0; i < 70; i++) { const x = R() * W, y = R() * 300, s = R() * 1.4 + .4; b.fillRect(x, y, s, s); }
+  b.fillStyle = `rgba(235,235,225,${.85 * (1 - d * .9)})`; b.shadowColor = 'rgba(255,255,240,.5)'; b.shadowBlur = 30 * (1 - d);
+  b.beginPath(); b.arc(220 - t * 2, 120 + t * 3, 30, 0, 7); b.fill(); b.shadowBlur = 0;
+  // sol nascendo atrás dos prédios
+  const sg = b.createRadialGradient(930, 500, 10, 930, 500, 620); sg.addColorStop(0, `rgba(255,190,120,${.55 * d})`); sg.addColorStop(.4, `rgba(255,150,100,${.22 * d})`); sg.addColorStop(1, 'rgba(255,150,100,0)');
+  b.fillStyle = sg; b.fillRect(0, 0, W, 720);
+  // nuvens finas
+  for (let i = 0; i < 6; i++) { const cx = (i * 260 + t * 6) % 1600 - 160, cy = 120 + i * 37 % 160;
+    b.save(); b.translate(cx, cy); b.scale(1, .16); const cg = b.createRadialGradient(0, 0, 0, 0, 0, 260);
+    const cc = mix([60, 66, 90], [230, 170, 150], d); cg.addColorStop(0, css(cc, .35)); cg.addColorStop(1, css(cc, 0)); b.fillStyle = cg; b.fillRect(-260, -260, 520, 520); b.restore(); }
+  const px = -60 - t * 4;
+  b.drawImage(TX.far, px * .4 - 100, 470 - 420 + 30);
+  const hz = mix([40, 50, 75], [205, 170, 155], d);
+  let fg = b.createLinearGradient(0, 260, 0, 500); fg.addColorStop(0, css(hz, 0)); fg.addColorStop(1, css(hz, .78)); b.fillStyle = fg; b.fillRect(0, 260, W, 260);
+  // colunas de fumaça
+  smoke(b, 330 + px * .5, 470, t, 1, d); smoke(b, 1010 + px * .5, 450, t + 3, .8, d);
+  b.drawImage(TX.mid, px - 150, 600 - 520);
+  fg = b.createLinearGradient(0, 380, 0, 610); fg.addColorStop(0, css(hz, 0)); fg.addColorStop(1, css(hz, .55)); b.fillStyle = fg; b.fillRect(0, 380, W, 240);
+  // faixas de névoa entre prédios
+  for (let i = 0; i < 3; i++) { const y = 470 + i * 45, x = ((t * (8 + i * 5) + i * 400) % 1800) - 300;
+    b.save(); b.translate(x, y); b.scale(1, .12); const ng = b.createRadialGradient(0, 0, 0, 0, 0, 700); ng.addColorStop(0, css(mix(hz, [255, 255, 255], .2), .42)); ng.addColorStop(1, css(hz, 0)); b.fillStyle = ng; b.fillRect(-700, -700, 1400, 1400); b.restore(); }
+  // mureta do telhado (parapeito)
+  const pc = mix([28, 29, 34], [96, 88, 84], d);
+  b.save(); b.fillStyle = b.createPattern(TX.conc, 'repeat'); b.fillRect(0, 590, W, 900); b.restore();
+  b.fillStyle = css(pc, .82); b.fillRect(0, 590, W, 900);
+  const lg = b.createLinearGradient(0, 580, 0, 610); lg.addColorStop(0, css(mix(pc, [255, 200, 160], .25 * d + .05))); lg.addColorStop(1, css(shade(pc, .9))); b.fillStyle = lg; b.fillRect(0, 578, W, 24);
+  b.fillStyle = 'rgba(0,0,0,.35)'; b.fillRect(0, 602, W, 10);
+  // ar-condicionado e respiro
+  const ac = mix([40, 42, 48], [110, 108, 108], d);
+  b.fillStyle = css(ac); b.fillRect(1010, 470, 230, 130); b.fillStyle = css(shade(ac, .75)); b.fillRect(1010, 470, 230, 10);
+  b.strokeStyle = css(shade(ac, .6)); b.lineWidth = 2; for (let y = 492; y < 595; y += 9) { b.beginPath(); b.moveTo(1030, y); b.lineTo(1110, y); b.stroke(); }
+  b.fillStyle = css(shade(ac, .5)); b.beginPath(); b.arc(1180, 535, 44, 0, 7); b.fill(); b.strokeStyle = css(shade(ac, .9)); b.beginPath(); b.arc(1180, 535, 44, 0, 7); b.stroke();
+  b.save(); b.translate(1180, 535); b.rotate(t * .4); b.fillStyle = css(shade(ac, .8)); for (let i = 0; i < 3; i++) { b.rotate(2.094); b.beginPath(); b.ellipse(18, 0, 18, 6, 0, 0, 7); b.fill(); } b.restore();
+  b.fillStyle = css(shade(ac, .7)); b.fillRect(90, 520, 22, 80); b.fillRect(80, 512, 42, 12);
+}
+function smoke(ctx, bx, by, t, sc, d) {
+  for (let i = 0; i < 26; i++) {
+    const life = 9, age = ((t * .9 + i * life / 26) % life), k = age / life;
+    const x = bx + Math.sin(i * 2.1 + t * .3) * 12 + k * 160 * sc + Math.sin(k * 5 + i) * 18, y = by - k * 360 * sc, r = (14 + k * 80) * sc;
+    const a = (1 - k) * .32 * (k < .1 ? k * 10 : 1), col = mix([26, 26, 32], [70, 64, 66], d);
+    const gr = ctx.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, css(col, a)); gr.addColorStop(1, css(col, 0));
+    ctx.fillStyle = gr; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
+  const fl = .5 + .3 * Math.sin(t * 7) + .2 * Math.sin(t * 13);
+  const fg = ctx.createRadialGradient(bx, by + 10, 0, bx, by + 10, 60 * sc); fg.addColorStop(0, `rgba(255,140,60,${.35 * fl})`); fg.addColorStop(1, 'rgba(255,120,50,0)');
+  ctx.fillStyle = fg; ctx.fillRect(bx - 70, by - 60, 140, 140);
+}
+function ladderView(t, d, tilt) {
+  const sc = ladderScroll(t);
+  const sway = Math.sin(t * 2.1) * .01;
+  b.save(); b.translate(640, 360); b.rotate(sway); b.translate(-640, -360);
+  // vista à direita: beco, prédio vizinho e rua lá embaixo
+  const [c0, c1, c2] = skyCols(d);
+  const sk = b.createLinearGradient(0, -200, 0, 500); sk.addColorStop(0, css(c1)); sk.addColorStop(1, css(c2)); b.fillStyle = sk; b.fillRect(780, -100, 600, 900);
+  const nb = mix([40, 40, 48], [120, 112, 110], d);
+  b.save(); b.translate(0, -sc * .35);
+  b.fillStyle = css(nb); b.fillRect(930, -200, 400, 1600);
+  for (let y = -180; y < 1400; y += 120) for (let x = 960; x < 1280; x += 90) { b.fillStyle = css(shade(nb, .55)); b.fillRect(x, y, 50, 70); b.fillStyle = css(mix(nb, [255, 210, 170], .15 * d), .35); b.fillRect(x, y, 50, 6); }
+  b.restore();
+  const hz = mix([40, 50, 75], [215, 185, 170], d);
+  const fg = b.createLinearGradient(0, 0, 0, 720); fg.addColorStop(0, css(hz, .1)); fg.addColorStop(1, css(hz, .75)); b.fillStyle = fg; b.fillRect(780, -100, 600, 900);
+  b.save(); b.translate(0, -sc);
+  // telhado visto de cima (borda)
+  b.fillStyle = css(mix([30, 30, 34], [92, 86, 82], d)); b.fillRect(-20, -100, 880, 250);
+  b.fillStyle = 'rgba(0,0,0,.25)'; for (let i = 0; i < 400; i++) { const R = (i * 9301 + 49297) % 233280 / 233280; b.fillRect(R * 860, -90 + (i * 37 % 230), 3, 2); }
+  const cp = mix([40, 40, 46], [140, 130, 122], d); b.fillStyle = css(cp); b.fillRect(-20, 140, 880, 30); b.fillStyle = 'rgba(0,0,0,.4)'; b.fillRect(-20, 170, 880, 14);
+  // parede de tijolos
+  b.fillStyle = b.createPattern(TX.brick, 'repeat'); b.fillRect(-20, 184, 880, 3200);
+  const wl = b.createLinearGradient(0, 0, 860, 0); wl.addColorStop(0, `rgba(0,0,0,${.45 - .2 * d})`); wl.addColorStop(.75, 'rgba(0,0,0,0)'); wl.addColorStop(1, `rgba(255,190,140,${.12 * d})`);
+  b.fillStyle = wl; b.fillRect(-20, 184, 880, 3200);
+  b.fillStyle = 'rgba(0,0,0,.55)'; b.fillRect(840, 184, 20, 3200); // quina
+  // janelas na parede
+  for (const wy of [560, 1230]) { b.fillStyle = '#1c1d22'; b.fillRect(60, wy, 190, 230); b.fillStyle = 'rgba(160,170,190,.12)'; b.fillRect(70, wy + 10, 80, 210); b.fillStyle = '#5b5550'; b.fillRect(50, wy + 228, 210, 14); b.fillStyle = '#2a2a2e'; b.fillRect(150, wy, 8, 230); }
+  // escada: corrimãos e degraus enferrujados
+  const rust = mix([45, 30, 24], [120, 70, 46], d), rl = mix([70, 46, 34], [168, 104, 70], d);
+  const rail = x => { const gr = b.createLinearGradient(x - 8, 0, x + 8, 0); gr.addColorStop(0, css(shade(rust, .7))); gr.addColorStop(.4, css(rl)); gr.addColorStop(1, css(shade(rust, .55))); b.fillStyle = gr; b.fillRect(x - 8, 150, 16, 3300);
+    b.strokeStyle = gr; b.lineWidth = 14; b.beginPath(); b.moveTo(x, 160); b.bezierCurveTo(x, 40, x, 20, x + (x < 460 ? -10 : 10), -40); b.stroke(); };
+  b.fillStyle = 'rgba(0,0,0,.3)'; b.fillRect(330, 160, 14, 3300); b.fillRect(600, 160, 14, 3300);
+  rail(320); rail(590);
+  for (let y = 250; y < 3400; y += 112) {
+    b.fillStyle = 'rgba(0,0,0,.35)'; b.fillRect(320, y + 12, 280, 8);
+    const gr = b.createLinearGradient(0, y - 6, 0, y + 6); gr.addColorStop(0, css(rl)); gr.addColorStop(1, css(shade(rust, .6))); b.fillStyle = gr; b.fillRect(318, y - 6, 276, 12);
+    b.fillStyle = 'rgba(90,40,20,.5)'; b.fillRect(380 + (y * 7 % 120), y - 6, 20, 12);
+    b.fillStyle = `rgba(80,40,25,.18)`; b.fillRect(318 + (y * 13 % 260), y + 6, 4, 40 + (y % 50));
+  }
+  b.restore();
+  b.restore();
+  // mãos (primeira pessoa)
+  const ap = clamp((tilt - .55) / .45);
+  if (ap > 0) {
+    const ph = stepPhase(t), k = LADDER_STEPS.filter(s => t >= s).length;
+    const lUp = (k % 2 ? 1 : 0), dyL = (lUp ? -Math.sin(ph * Math.PI) * 40 : 0) + 30, dyR = (!lUp ? -Math.sin(ph * Math.PI) * 40 : 0);
+    b.save(); b.globalAlpha = ap; b.strokeStyle = '#0d0d0f'; b.fillStyle = '#0d0d0f'; b.lineCap = 'round';
+    b.lineWidth = 17; b.beginPath(); b.moveTo(150, 770); b.lineTo(322, 470 + dyL); b.stroke(); b.beginPath(); b.arc(322, 470 + dyL, 13, 0, 7); b.fill();
+    b.beginPath(); b.moveTo(1120, 770); b.lineTo(592, 420 + dyR); b.stroke(); b.beginPath(); b.arc(592, 420 + dyR, 13, 0, 7); b.fill();
+    b.restore();
+  }
+}
+
+/* =========================================================================
+   CENA 2 — rua residencial (10–22s)
+   ========================================================================= */
+const STREET = { base: [], L: [], fenceL: [] };
+const OUTFOG = { c: [196, 196, 194], d: .03, m: .92 };
+function car(L, x, z, col, rot, door, o = {}) {
+  const c = C(col), cs = Math.cos(rot), sn = Math.sin(rot);
+  const T = (lx, y, lz) => [x + lx * cs + lz * sn, y, z - lx * sn + lz * cs];
+  const boxR = (x0, y0, z0, x1, y1, z1, cl, sh) => { // caixa rotacionada como polígonos
+    const P = [T(x0, 0, z0), T(x1, 0, z0), T(x1, 0, z1), T(x0, 0, z1)];
+    const top = P.map(p => [p[0], y1, p[2]]), bot = P.map(p => [p[0], y0, p[2]]);
+    const faces = [[top[0], top[1], top[2], top[3], 1.05], [bot[0], bot[1], top[1], top[0], .9], [bot[1], bot[2], top[2], top[1], .8], [bot[2], bot[3], top[3], top[2], .85], [bot[3], bot[0], top[0], top[3], .78]];
+    for (const f of faces) L.push(Pp(f.slice(0, 4), shade(cl, f[4] * (sh || 1)), Object.assign({ dp: [(x0 + x1) / 2 + x, (y0 + y1) / 2, (z0 + z1) / 2 + z] }, o)));
+  };
+  // rodas + sombra
+  L.push(Pp([T(-1.05, .01, -2.3), T(1.05, .01, -2.3), T(1.05, .01, 2.3), T(-1.05, .01, 2.3)], [20, 20, 20], Object.assign({ a: .45, blur: 6, bias: 3 }, o)));
+  for (const wx of [-.9, .9]) for (const wz of [-1.4, 1.4]) { const p = T(wx, 0, wz); L.push(Bx(p[0] - .12, 0, p[2] - .3, p[0] + .12, .62, p[2] + .3, '#18181a', o)); }
+  boxR(-.95, .3, -2.15, .95, .95, 2.15, c);
+  boxR(-.85, .95, -1.0, .85, 1.45, .9, mix(c, [40, 48, 60], .6), .9);
+  L.push(Gl(T(-.6, .7, -2.17), .12, '#ffe8b0', .25, o)); L.push(Gl(T(.6, .7, -2.17), .12, '#ffe8b0', .25, o));
+  if (door) { // porta aberta
+    const h0 = T(door * .95, 0, -.75), e1 = T(door * (.95 + Math.sin(1.0) * 1.15), 0, -.75 + Math.cos(1.0) * 1.15);
+    L.push(Pp([[h0[0], .35, h0[2]], [e1[0], .35, e1[2]], [e1[0], 1.4, e1[2]], [h0[0], 1.4, h0[2]]], shade(c, .82), Object.assign({ bias: -.3 }, o)));
+  }
+}
+function buildStreet() {
+  const R = mulberry(11), base = STREET.base, L = STREET.L;
+  segY(base, -.01, -80, 80, -2, 220, '#6f6d64', {}, 18);
+  segY(base, 0, -4, 4, -2, 220, '#4b4c4f', {}, 22);
+  for (let z = 2; z < 200; z += 7) base.push(quadY(.004, -.08, .08, z, z + 3.2, '#c9c2a8'));
+  for (const s of [-1, 1]) {
+    segY(base, .14, s * 4, s * 6.3, -2, 220, '#9c988f', {}, 18); segX(base, s * 4, 0, .14, -2, 220, '#7d7a73', {}, 14);
+    for (let z = 0; z < 90; z += 3.2) base.push(Pp([[s * 4.02, .141, z], [s * 6.3, .141, z], [s * 6.3, .141, z + .03], [s * 4.02, .141, z + .03]], '#86827a'));
+  }
+  // manchas e rachaduras no asfalto
+  for (let i = 0; i < 26; i++) { const x = -3.5 + R() * 7, z = 3 + R() * 90, w = .4 + R() * 1.6; base.push(quadY(.003, x, x + w, z, z + w * .5, R() < .5 ? '#3f4043' : '#55565a')); }
+  const pal = ['#c9bda5', '#a9b3a1', '#c7a58c', '#b6b2ad', '#d2c7b0', '#9fa7ad', '#c4ae8e', '#b9a39a'];
+  for (const s of [-1, 1]) {
+    let z0 = 1;
+    for (let i = 0; i < 9; i++) {
+      const dep = 8 + R() * 2.5, h = R() < .45 ? 5.6 : 3.2, xn = s * 8.2, xf = s * (8.2 + 8 + R() * 3), col = pal[(i * 3 + (s > 0 ? 1 : 0)) % pal.length];
+      L.push(Bx(xn, 0, z0, xf, h, z0 + dep, col));
+      if (R() < .55) { const xm = (xn + xf) / 2, rc = '#7c4636', rh = h + 1.4;
+        L.push(Pp([[xn - s * .3, h, z0 - .3], [xm, rh, z0 - .3], [xm, rh, z0 + dep + .3], [xn - s * .3, h, z0 + dep + .3]], shade(C(rc), 1), { bias: -.2 }));
+        L.push(Pp([[xf, h, z0 - .3], [xm, rh, z0 - .3], [xm, rh, z0 + dep + .3], [xf, h, z0 + dep + .3]], shade(C(rc), .75), { bias: .5 }));
+        L.push(Pp([[xn, h, z0], [xm, rh, z0], [xf, h, z0]], shade(C(col), .9), { bias: -.1 }));
+      } else L.push(Bx(xn - s * .1, h, z0 - .1, xf, h + .3, z0 + dep + .1, shade(C(col), 1.08)));
+      const fx = xn - s * .02;
+      const win = (za, zb, ya, yb) => { L.push(quadX(fx, ya - .08, yb + .08, za - .08, zb + .08, '#ddd6c8', { bias: -.05 })); L.push(quadX(fx - s * .01, ya, yb, za, zb, '#2a3139', { bias: -.1 })); L.push(quadX(fx - s * .015, ya + .02, yb - .02, (za + zb) / 2 - .02, (za + zb) / 2 + .02, '#cfc8ba', { bias: -.15 })); };
+      win(z0 + 1.2, z0 + 2.6, 1.0, 2.1); win(z0 + dep - 2.6, z0 + dep - 1.2, 1.0, 2.1);
+      if (h > 4) { win(z0 + 1.2, z0 + 2.6, 3.4, 4.5); win(z0 + dep - 2.6, z0 + dep - 1.2, 3.4, 4.5); }
+      L.push(quadX(fx, 0, 2.1, z0 + dep / 2 - .5, z0 + dep / 2 + .5, '#4d3a2c', { bias: -.1 }));
+      // muro baixo com portão
+      const wc = shade(C(pal[(i + 4) % pal.length]), .92), gz = z0 + dep * .5;
+      const skip = s < 0 && z0 + dep > 8 && z0 < 22;
+      if (!skip) {
+        L.push(Bx(s * 6.2, 0, z0 - 1, s * 6.45, 1.25, gz - .7, wc)); L.push(Bx(s * 6.2, 0, gz + .7, s * 6.45, 1.25, z0 + dep + 1, wc));
+        L.push(quadX(s * 6.32, .05, 1.2, gz - .7, gz + .7, '#2b2c2e', { a: .75 }));
+      } else {
+        STREET.fenceL.push(Bx(s * 6.2, 0, z0 - 1, s * 6.4, 1.7, z0 + dep + 1, '#6b4b31'));
+      }
+      z0 += dep + .4 + R() * 1.5;
+    }
+    // postes e fios
+    for (let z = 8; z < 140; z += 24) { L.push(Bx(s * 4.5 - .1, 0, z - .1, s * 4.5 + .1, 7.5, z + .1, '#77746e')); L.push(Bx(s * 4.5 - .9, 7.0, z - .05, s * 4.5 + .9, 7.12, z + .05, '#6a6762'));
+      for (const off of [-.7, 0, .7]) { L.push(Ln([s * 4.5 + off, 7.12, z], [s * 4.5 + off, 6.6, z + 12], '#2a2a2a', 1, { bias: 2 })); L.push(Ln([s * 4.5 + off, 6.6, z + 12], [s * 4.5 + off, 7.12, z + 24], '#2a2a2a', 1, { bias: 2 })); } }
+    // árvores
+    for (const z of s < 0 ? [30, 58] : [16, 47, 77]) { L.push(Bx(s * 5.3 - .14, 0, z - .14, s * 5.3 + .14, 2.6, z + .14, '#4a3b2e'));
+      const R2 = mulberry(z * 3 + (s > 0 ? 1 : 0)); const blobs = []; for (let k = 0; k < 7; k++) blobs.push([s * 5.3 + (R2() - .5) * 2.2, 3.2 + R2() * 1.6, z + (R2() - .5) * 2.2, .9 + R2() * .6]);
+      L.push(Fn([s * 5.3, 3.6, z], (ctx) => { for (const bl of blobs) { const q = toCam(bl); if (q[2] < .2) continue; const p = proj(q), r = bl[3] * focal() / q[2]; const fk = fogK(FOG, Math.hypot(...q)); ctx.fillStyle = css(mix([52, 66, 46], FOG.c, fk)); ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill(); } })); }
+  }
+  // carros abandonados
+  car(L, -2.3, 15.5, '#7a2e2a', .12, -1); car(L, 2.6, 33, '#9aa4ad', -.35, 1); car(L, -1.2, 52, '#2f4256', .5, 0); car(L, 2.5, 70, '#c9c3b5', 0, 0);
+  // sacos de lixo / destroços
+  for (let i = 0; i < 9; i++) { const x = (R() < .5 ? -1 : 1) * (3.2 + R() * .8), z = 6 + R() * 60; L.push(Bx(x - .25, 0, z - .25, x + .25, .45, z + .25, '#1e1f22')); }
+  for (let i = 0; i < 14; i++) { const x = -3 + R() * 6, z = 4 + R() * 40; base.push(Pp([[x, .006, z], [x + .3, .006, z + .05], [x + .25, .006, z + .35], [x - .05, .006, z + .28]], '#d8d4c8')); }
+}
+function S2(t) {
+  FOG = OUTFOG; LIGHT = { top: 1.06, bot: .55, l: .8, r: .9, f: .95, bk: .82 };
+  // câmera
+  let x, y, z, yaw, pitch = -.02;
+  const stepT = (t - 10) / .62, bob = Math.abs(Math.sin(stepT * Math.PI)) * .03;
+  if (t < 13.6) { x = -1.2; z = (t - 10) * .9; y = 1.62 - bob; yaw = .04 * Math.sin(t * .8); }
+  else {
+    const p = sm(13.6, 16.3, t);
+    x = lerp(-1.2, -7.55, p); z = lerp(3.24, 12, p) + Math.max(0, t - 16.3) * .55; y = lerp(1.6, 1.02, sm(13.6, 14.8, t)) - Math.abs(Math.sin(t * 5)) * .02 * (1 - ss(16, 17, t));
+    const yawT = Math.atan2(.3 - x, 26 - z); yaw = lerp(0, yawT, sm(14.2, 16.4, t)) + Math.sin(t * .6) * .015;
+    pitch = lerp(-.02, .02, p);
+  }
+  Object.assign(cam, { x, y, z, yaw, pitch, roll: Math.sin(t * 1.3) * .006, fov: 68 * Math.PI / 180 });
+  // céu nublado
+  const F = focal(), hy = VH / 2 + Math.tan(cam.pitch) * F;
+  const sk = b.createLinearGradient(0, hy - 520, 0, hy); sk.addColorStop(0, '#8e98a4'); sk.addColorStop(.7, '#c3c2bf'); sk.addColorStop(1, '#d8d0c4');
+  b.fillStyle = sk; b.fillRect(0, 0, W, H);
+  const sx = W / 2 + Math.tan(.35 - cam.yaw) * F; const sg = b.createRadialGradient(sx, hy - 40, 10, sx, hy - 40, 500); sg.addColorStop(0, 'rgba(255,225,190,.5)'); sg.addColorStop(1, 'rgba(255,225,190,0)'); b.fillStyle = sg; b.fillRect(0, 0, W, H);
+  const list = STREET.L.slice(); if (t < 15.6) list.push(...STREET.fenceL);
+  // zumbi parado de costas
+  const sw = Math.sin(t * 1.25) * .055 + Math.sin(t * 2.9) * .015;
+  list.push(St([.3, 0, 26], 1.75, { back: true, eyes: 'none', sway: sw, armL: [1.25, 1.35, .15, .1], armR: [1.2, 1.3, .15, .1], fog: { c: OUTFOG.c, d: .03, m: .6 } }));
+  // alarme de carro piscando ao longe
+  const bl = Math.floor(t * 2.2) % 2 === 0;
+  if (bl) { list.push(Gl([2.5 - .7, .75, 67.8], .5, '#ffb347', .7)); list.push(Gl([2.5 + .7, .75, 67.8], .5, '#ffb347', .7)); }
+  render3D(b, STREET.base, list);
+  // névoa rasteira
+  const fg = b.createLinearGradient(0, hy - 120, 0, hy + 140); fg.addColorStop(0, 'rgba(210,206,200,0)'); fg.addColorStop(.5, 'rgba(210,206,200,.35)'); fg.addColorStop(1, 'rgba(210,206,200,0)'); b.fillStyle = fg; b.fillRect(0, hy - 120, W, 260);
+  // cerca de madeira em primeiro plano (espiando pelas frestas)
+  const fp = sm(15.2, 16.3, t);
+  if (fp > 0) {
+    const zs = St([.3, 0, 26], 1.75, {}); const q = toCam(zs.p); const zx = proj(q)[0];
+    const target = zx + Math.sin(t * .9) * 14 + Math.sin(t * 2.3) * 4;
+    const r = (((target - 103) % 120) + 120) % 120, slide = (1 - fp) * 1300;
+    const xx = r - 120 + slide; b.drawImage(TX.fence, xx, 0); if (xx > -320) b.drawImage(TX.fence, xx - 1680, 0);
+    const sh = b.createLinearGradient(0, 0, 0, 720); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, `rgba(0,0,0,${.45 * fp})`); b.fillStyle = sh; b.fillRect(0, 0, W, H);
+  }
+  b.fillStyle = 'rgba(120,135,150,.07)'; b.fillRect(0, 0, W, H);
+  POST.vig = .5 + .25 * ss(15, 17, t); POST.black = 1 - ss(10, 10.45, t) + ss(21.7, 22, t);
+}
+
+/* =========================================================================
+   CENA 3 — sala e cozinha (22–35s)
+   ========================================================================= */
+const HOUSE = { base: [], L: [] };
+function planks(base, x0, x1, z0, z1, cols, n, alongZ = true) {
+  for (let i = 0; i < n; i++) { const a = lerp(x0, x1, i / n), c = lerp(x0, x1, (i + 1) / n);
+    base.push(alongZ ? quadY(0, a, c, z0, z1, cols[i % cols.length]) : quadY(0, x0, x1, lerp(z0, z1, i / n), lerp(z0, z1, (i + 1) / n), cols[i % cols.length])); }
+  if (alongZ) for (let i = 1; i < n; i++) { const a = lerp(x0, x1, i / n); base.push(quadY(.001, a - .006, a + .006, z0, z1, '#2e1f15')); }
+}
+function tiltedFrame(L, x, yc, zc, w, h, ang, tex, frameCol) { // quadro em parede x=const (voltado para +x)
+  const c = Math.cos(ang), s = Math.sin(ang);
+  const pt = (u, v) => [x, yc + (u * s + v * c), zc + (u * c - v * s)];
+  const W2 = w / 2 + .04, H2 = h / 2 + .04;
+  L.push(Pp([pt(-W2, H2), pt(W2, H2), pt(W2, -H2), pt(-W2, -H2)], frameCol, { bias: -.02 }));
+  L.push(Pp([pt(-w / 2, h / 2), pt(w / 2, h / 2), pt(w / 2, -h / 2), pt(-w / 2, -h / 2)], '#888', { tex, bias: -.04 }));
+}
+function buildHouse() {
+  const base = HOUSE.base, L = HOUSE.L;
+  // --- SALA: x -4..4, z 0..7, y 0..2.7
+  planks(base, -4, 4, 0, 7, ['#6b4a33', '#70503a', '#664631', '#6e4c34'], 18);
+  base.push(quadY(2.7, -4, 8, -1, 7, '#cdc6b8'));
+  base.push(quadZ(7, -4, 4, 0, 2.7, '#b8ac96'));
+  base.push(quadX(-4, 0, 2.7, 0, 7, '#b2a690'));
+  base.push(quadX(4, 0, 2.7, 0, 1.0, '#b6aa94')); base.push(quadX(4, 0, 2.7, 2.8, 7, '#b6aa94')); base.push(quadX(4, 2.1, 2.7, 1.0, 2.8, '#b6aa94'));
+  base.push(quadZ(0, -4, .1, 0, 2.7, '#b0a48e')); base.push(quadZ(0, 1.0, 4, 0, 2.7, '#b0a48e')); base.push(quadZ(0, .1, 1.0, 2.1, 2.7, '#b0a48e'));
+  base.push(quadZ(-1.5, -2, 3, 0, 2.7, '#3a332c')); // fora da porta (corredor escuro)
+  // rodapés
+  base.push(quadZ(6.99, -4, 4, 0, .1, '#d9d2c4')); base.push(quadX(-3.99, 0, .1, 0, 7, '#d9d2c4'));
+  // janela + cortinas
+  base.push(quadZ(6.985, -3.25, -1.15, .95, 2.25, '#e0d8c8'));
+  base.push(Pp([[-3.2, 2.2, 6.98], [-1.2, 2.2, 6.98], [-1.2, 1.0, 6.98], [-3.2, 1.0, 6.98]], '#fff', { nofog: true, grad: (ctx, sp) => { const gr = ctx.createLinearGradient(sp[0][0], sp[0][1], sp[3][0], sp[3][1]); gr.addColorStop(0, '#f6efe0'); gr.addColorStop(1, '#d8d2c4'); return gr; } }));
+  base.push(quadZ(6.975, -2.22, -2.18, 1.0, 2.2, '#cfc6b4'));
+  base.push(Pp([[-3.4, 2.4, 6.95], [-2.55, 2.4, 6.95], [-2.65, .85, 6.95], [-3.4, .85, 6.95]], '#999', { tex: TX.curt, a: .93 }));
+  base.push(Pp([[-1.85, 2.4, 6.95], [-1.0, 2.4, 6.95], [-1.0, .85, 6.95], [-1.75, .85, 6.95]], '#999', { tex: TX.curt, a: .93 }));
+  base.push(quadZ(6.94, -3.5, -.9, 2.38, 2.44, '#4a3a2a'));
+  // tapete
+  base.push(quadY(.006, -2.3, 1.7, 2.9, 6.1, '#7a3b33')); base.push(quadY(.008, -2.1, 1.5, 3.1, 5.9, '#8e4d42')); base.push(quadY(.009, -1.6, 1.0, 3.6, 5.4, '#7a3b33'));
+  // luz da janela no chão
+  base.push(Pp([[-3.4, .012, 4.4], [-1.05, .012, 4.4], [-.9, .012, 5.9], [-3.3, .012, 5.9]], '#ffe2b0', { blend: 'lighter', a: .13, blur: 10, nofog: true }));
+  // sofá (de costas para nós)
+  const sof = '#56606c';
+  L.push(Pp([[-2.0, .01, 3.45], [1.4, .01, 3.45], [1.4, .01, 4.75], [-2.0, .01, 4.75]], '#000', { a: .3, blur: 12, bias: 3 }));
+  L.push(Bx(-1.8, 0, 3.6, 1.2, .45, 4.55, sof)); L.push(Bx(-1.8, .45, 3.55, 1.2, .98, 3.85, shade(C(sof), .95)));
+  L.push(Bx(-2.0, 0, 3.55, -1.8, .7, 4.55, shade(C(sof), .9))); L.push(Bx(1.2, 0, 3.55, 1.4, .7, 4.55, shade(C(sof), .9)));
+  L.push(Bx(-1.2, .45, 3.9, -.3, .62, 4.4, '#6a7480')); L.push(Bx(.0, .45, 3.9, .9, .62, 4.4, '#6a7480'));
+  // mesa de centro + caneca
+  L.push(Bx(-.8, .32, 5.0, .6, .42, 5.7, '#4b3726')); for (const [lx, lz] of [[-.75, 5.05], [.55, 5.05], [-.75, 5.65], [.55, 5.65]]) L.push(Bx(lx - .03, 0, lz - .03, lx + .03, .32, lz + .03, '#3a2a1d'));
+  L.push(Bx(-.2, .42, 5.25, -.1, .52, 5.35, '#d8d2c8'));
+  // rack + TV
+  L.push(Pp([[.6, .01, 6.2], [3.0, .01, 6.2], [3.0, .01, 7], [.6, .01, 7]], '#000', { a: .35, blur: 10, bias: 3 }));
+  L.push(Bx(.8, 0, 6.45, 2.8, .5, 6.95, '#3b2c22')); L.push(quadZ(6.44, .85, 1.75, .06, .44, '#30241b', { bias: -.05 })); L.push(quadZ(6.44, 1.85, 2.75, .06, .44, '#30241b', { bias: -.05 }));
+  L.push(Bx(1.0, .55, 6.84, 2.6, 1.45, 6.94, '#0f0f10')); L.push(Bx(1.7, .5, 6.86, 1.9, .55, 6.92, '#111'));
+  // estante + livros (alguns caídos)
+  L.push(Bx(-4, 0, 1.0, -3.65, 1.9, 2.4, '#5a4231'));
+  const R = mulberry(31); for (let sh = 0; sh < 3; sh++) { L.push(Bx(-3.66, .45 + sh * .5, 1.02, -3.63, .47 + sh * .5, 2.38, '#3f2e22'));
+    let zz = 1.05; while (zz < 2.3) { const w = .04 + R() * .05, hh = .25 + R() * .15; if (R() > .25) L.push(Bx(-3.95, .47 + sh * .5, zz, -3.7, .47 + sh * .5 + hh, zz + w, ['#7b2d26', '#2d4a6b', '#c9b48a', '#3d5c3a', '#888'][Math.floor(R() * 5)])); zz += w + .005; } }
+  for (let i = 0; i < 5; i++) { const x = -3.4 + R() * .9, z = 1.3 + R() * 1.5; L.push(Bx(x, 0, z, x + .22, .04, z + .16, ['#7b2d26', '#2d4a6b', '#c9b48a'][i % 3])); }
+  // quadros tortos na parede esquerda
+  tiltedFrame(L, -3.98, 1.65, 3.2, .55, .42, .09, TX.pic1, '#2a2018'); tiltedFrame(L, -3.98, 1.6, 4.3, .4, .5, -.14, TX.pic2, '#d8d0c0'); tiltedFrame(L, -3.98, 1.75, 5.4, .5, .36, .05, TX.pic3, '#1d1712');
+  // quadro caído no chão
+  L.push(Pp([[-3.7, .01, 5.8], [-3.3, .01, 5.95], [-3.4, .01, 6.3], [-3.8, .01, 6.15]], '#1d1712')); L.push(Pp([[-3.65, .015, 5.88], [-3.38, .015, 5.98], [-3.45, .015, 6.22], [-3.72, .015, 6.12]], '#9aa3a8'));
+  // abajur caído + almofada + planta
+  L.push(Pp([[2.4, .02, 3.2], [3.6, .02, 4.2], [3.58, .06, 4.24], [2.38, .06, 3.24]], '#2a2a2a')); L.push(Bx(2.1, 0, 2.9, 2.55, .32, 3.35, '#d9cfb8'));
+  L.push(Bx(-2.6, 0, 2.6, -2.1, .14, 3.05, '#6a7480'));
+  L.push(Bx(3.4, 0, 6.3, 3.75, .4, 6.65, '#8a5a3c'));
+  L.push(Fn([3.57, .9, 6.47], (ctx) => { const q = toCam([3.57, .75, 6.47]); if (q[2] < .2) return; const p = proj(q), r = .32 * focal() / q[2]; ctx.fillStyle = '#2f4a2c'; for (let k = 0; k < 6; k++) { ctx.beginPath(); ctx.ellipse(p[0] + Math.cos(k * 1.1) * r * .5, p[1] - Math.abs(Math.sin(k * 1.7)) * r * .8, r * .5, r * .22, k * .9, 0, 7); ctx.fill(); } }));
+  // porta de entrada aberta
+  L.push(Pp([[.1, 0, 0], [.1, 2.1, 0], [.1 + .9 * Math.cos(1.25), 2.1, .9 * Math.sin(1.25)], [.1 + .9 * Math.cos(1.25), 0, .9 * Math.sin(1.25)]], '#5c4030'));
+  // --- COZINHA: x 4..8, z -0.5..4
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 9; j++) base.push(quadY(.001, 4 + i * .5, 4.5 + i * .5, -.5 + j * .5, j * .5, (i + j) % 2 ? '#c9c5bb' : '#aeaa9f'));
+  base.push(quadX(8, 0, 2.7, -.5, 4, '#d3cfc3')); base.push(quadZ(4, 4, 8, 0, 2.7, '#cfcbbf')); base.push(quadZ(-.5, 4, 8, 0, 2.7, '#cfcbbf'));
+  base.push(quadX(7.99, 1.1, 2.05, 2.5, 3.6, '#e9e6dc', { nofog: true })); base.push(quadX(7.985, 1.1, 2.05, 3.03, 3.07, '#bcb6a8'));
+  // azulejos atrás da pia
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 4; j++) base.push(quadZ(3.99, 4.4 + i * .4, 4.78 + i * .4, .95 + j * .15, 1.08 + j * .15, '#dfe5e6'));
+  L.push(Bx(4.3, 0, 3.35, 6.9, .9, 4, '#e2ddd2')); L.push(Bx(4.25, .9, 3.3, 6.95, .95, 4, '#3d3a36')); L.push(Bx(5.2, .85, 3.5, 5.9, .951, 3.85, '#8d9297'));
+  L.push(Bx(4.3, 1.6, 3.65, 6.9, 2.3, 4, '#d8d2c6'));
+  // geladeira
+  L.push(Pp([[7.1, .01, 1.0], [8, .01, 1.0], [8, .01, 2.05], [7.1, .01, 2.05]], '#000', { a: .35, blur: 8, bias: 2 }));
+  L.push(Bx(7.25, 0, 1.1, 8.0, 1.86, 1.95, '#dcdcd4')); L.push(quadX(7.245, 1.18, 1.2, 1.1, 1.95, '#a9a9a2', { bias: -.05 }));
+  L.push(Bx(7.2, 1.25, 1.18, 7.245, 1.7, 1.22, '#b8b8b0', { bias: -.1 })); L.push(Bx(7.2, .4, 1.18, 7.245, 1.0, 1.22, '#b8b8b0', { bias: -.1 }));
+  // bilhete (levemente torto) + ímãs
+  const nc = [7.243, 1.47, 1.6], na = .05, nw = .25, nh = .3;
+  const np = (u, v) => [nc[0], nc[1] + u * Math.sin(na) + v * Math.cos(na), nc[2] - (u * Math.cos(na) - v * Math.sin(na))];
+  L.push(Pp([np(-nw / 2 + .006, nh / 2 - .006), np(nw / 2 + .006, nh / 2 - .006), np(nw / 2 + .006, -nh / 2 - .006), np(-nw / 2 + .006, -nh / 2 - .006)], '#000', { a: .22, bias: -.11 }));
+  L.push(Pp([np(-nw / 2, nh / 2), np(nw / 2, nh / 2), np(nw / 2, -nh / 2), np(-nw / 2, -nh / 2)], '#888', { tex: TX.note, bias: -.12 }));
+  L.push(Gl([7.24, 1.62, 1.82], .03, '#e0b030', .0));
+  for (const [y, z, c] of [[1.75, 1.35, '#2d6bb0'], [1.3, 1.83, '#3a9a4a'], [1.62, 1.84, '#e0b030']]) L.push(Bx(7.22, y - .02, z - .02, 7.245, y + .02, z + .02, c, { bias: -.13 }));
+  // cadeira caída + cacos
+  L.push(Bx(5.4, 0, .4, 6.2, .06, .8, '#5b4130')); L.push(Bx(5.4, 0, .4, 5.46, .5, .8, '#5b4130'));
+  for (let i = 0; i < 6; i++) base.push(Pp([[5 + i * .17, .004, 2.1 + (i % 3) * .1], [5.08 + i * .17, .004, 2.12 + (i % 3) * .1], [5.04 + i * .17, .004, 2.2 + (i % 3) * .1]], '#eeeae2'));
+}
+function S3(t) {
+  FOG = { c: [60, 54, 48], d: .045, m: .55 }; LIGHT = { top: 1.0, bot: .5, l: .8, r: .9, f: .92, bk: .78 };
+  updateTV(t);
+  let x, z, yaw, pitch = -.07, fov = 64;
+  const p1 = sm(22, 24, t), p2 = sm(24, 27.2, t), p3 = sm(27.2, 29.6, t), p4 = sm(29.6, 31.6, t), p5 = sm(31.4, 35, t);
+  x = lerp(.55, .8, p1); z = lerp(-.6, .7, p1); yaw = .06;
+  x = lerp(x, 1.1, p2); z = lerp(z, 2.0, p2); fov = lerp(64, 56, p2);
+  x = lerp(x, 3.3, p3); z = lerp(z, 1.9, p3); yaw = lerp(yaw, Math.PI / 2, p3);
+  x = lerp(x, 6.15, p4); z = lerp(z, 1.62, p4);
+  const nt = Math.atan2(1.47 - 1.6, 7.24 - 6.15);
+  pitch = lerp(lerp(-.07, nt, p4), nt, p5); fov = lerp(fov, lerp(56, 28, p5), Math.max(p4, p5) > 0 ? 1 : 0);
+  if (t < 29.6) fov = lerp(lerp(64, 56, p2), 58, p3);
+  const walking = (t < 24) || (t > 27.2 && t < 31.6);
+  const bob = walking ? Math.abs(Math.sin(t * Math.PI / .6)) * .03 : 0;
+  Object.assign(cam, { x: x + nz(t, 1) * .01, y: 1.6 - bob, z: z + nz(t, 2) * .01, yaw: yaw + nz(t, 3) * .006, pitch: pitch + nz(t, 4) * .004, roll: nz(t, 5) * .006, fov: fov * Math.PI / 180 });
+  b.fillStyle = '#1e1b18'; b.fillRect(0, 0, W, H);
+  const list = HOUSE.L.slice();
+  const fl = .55 + .45 * Math.random();
+  list.push(Pp([[1.06, 1.4, 6.835], [2.54, 1.4, 6.835], [2.54, .6, 6.835], [1.06, .6, 6.835]], '#888', { tex: TX.tv, bias: -.2 }));
+  list.push(Gl([1.8, 1.0, 6.6], 2.6, '#9fb4ff', .10 * fl, { bias: -1 }));
+  list.push(Gl([1.8, 1.0, 6.7], .9, '#ff3040', .06 * fl, { bias: -1 }));
+  // partículas de poeira na luz
+  const R = mulberry(9); for (let i = 0; i < 30; i++) { const px = -3.2 + R() * 2.4, py = .3 + ((R() * 2 + t * .05 * (R() + .3)) % 2), pz = 4.5 + R() * 2.2; list.push(Gl([px + Math.sin(t * .3 + i) * .05, py, pz], .012, '#fff2d8', .5)); }
+  render3D(b, HOUSE.base, list);
+  // luz da janela (feixe)
+  const w0 = P3([-3.2, 2.2, 6.98]), w1 = P3([-1.2, 2.2, 6.98]), f0 = P3([-3.3, 0, 5.9]), f1 = P3([-.9, 0, 4.4]);
+  shaft(b, [w0, w1, f1, f0], '#ffe6c0', .08, 26);
+  // tremulação da TV na sala
+  b.fillStyle = `rgba(150,170,255,${(.05 * fl) * (1 - p3)})`; b.globalCompositeOperation = 'soft-light'; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
+  b.fillStyle = 'rgba(40,50,70,.12)'; b.fillRect(0, 0, W, H);
+  POST.vig = .62; POST.black = 1 - ss(22, 22.45, t) + ss(34.6, 35, t);
+}
+
+/* =========================================================================
+   CENA 4 — quarto (35–53s, inclui as primeiras batidas)
+   ========================================================================= */
+const ROOM = { base: [], L: [] };
+function buildRoom() {
+  const base = ROOM.base, L = ROOM.L;
+  planks(base, -3, 3, 0, 6, ['#74533a', '#6c4c34', '#7a583e'], 14);
+  base.push(quadY(2.6, -3, 3, 0, 6, '#d2cfc6'));
+  base.push(quadZ(6, -3, 3, 0, 2.6, '#9fa8ad'));
+  base.push(quadX(-3, 0, 2.6, 0, 6, '#98a1a7')); base.push(quadX(3, 0, 2.6, 0, 6, '#a3acb1'));
+  base.push(quadZ(0, -3, -.45, 0, 2.6, '#9aa3a8')); base.push(quadZ(0, .45, 3, 0, 2.6, '#9aa3a8')); base.push(quadZ(0, -.45, .45, 2.1, 2.6, '#9aa3a8'));
+  base.push(quadZ(-1.2, -1.5, 1.5, 0, 2.6, '#1a1918'));
+  base.push(quadZ(5.99, -3, 3, 0, .1, '#e2ddd2')); base.push(quadX(2.99, 0, .1, 0, 6, '#e2ddd2')); base.push(quadX(-2.99, 0, .1, 0, 6, '#e2ddd2'));
+  // janela com luz da manhã
+  base.push(quadZ(5.985, .05, 2.15, .85, 2.25, '#e8e2d4'));
+  base.push(Pp([[.2, 2.15, 5.98], [2.0, 2.15, 5.98], [2.0, .95, 5.98], [.2, .95, 5.98]], '#fff', { nofog: true, grad: (ctx, sp) => { const gr = ctx.createLinearGradient(sp[0][0], sp[0][1], sp[2][0], sp[2][1]); gr.addColorStop(0, '#fff6e2'); gr.addColorStop(1, '#f2d9b0'); return gr; } }));
+  base.push(quadZ(5.975, 1.08, 1.12, .95, 2.15, '#d9d2c4')); base.push(quadZ(5.975, .2, 2.0, 1.53, 1.57, '#d9d2c4'));
+  base.push(Pp([[1.55, 2.35, 5.95], [2.3, 2.35, 5.95], [2.3, .8, 5.95], [1.65, .8, 5.95]], '#999', { tex: TX.curt, a: .9 }));
+  base.push(Pp([[.4, .012, 3.2], [2.5, .012, 3.2], [2.3, .012, 5.0], [.2, .012, 5.0]], '#ffd9a0', { blend: 'lighter', a: .16, blur: 12, nofog: true }));
+  // pôster
+  base.push(Pp([[-2.2, 2.2, 5.985], [-1.35, 2.2, 5.985], [-1.35, 1.0, 5.985], [-2.2, 1.0, 5.985]], '#888', { tex: TX.poster }));
+  // cama desarrumada
+  L.push(Pp([[-3, .01, 2.4], [-1.25, .01, 2.4], [-1.25, .01, 6], [-3, .01, 6]], '#000', { a: .35, blur: 12, bias: 3 }));
+  L.push(Bx(-3, 0, 2.5, -1.35, .35, 5.95, '#6d5138')); L.push(Bx(-2.97, .35, 2.55, -1.4, .55, 5.9, '#ddd8cf')); L.push(Bx(-3, 0, 5.82, -1.35, 1.0, 5.95, '#5f4530'));
+  L.push(Pp([[-2.75, .62, 5.3], [-1.75, .64, 5.25], [-1.7, .66, 5.75], [-2.8, .64, 5.78]], '#f0ece4', { bias: -.3 }));
+  L.push(Pp([[-2.97, .58, 2.6], [-1.5, .7, 3.0], [-1.4, .66, 4.6], [-2.95, .6, 4.9]], '#3e5a7a', { bias: -.2 }));
+  L.push(Pp([[-1.5, .7, 3.0], [-1.25, .2, 3.1], [-1.25, .15, 4.4], [-1.4, .66, 4.6]], '#36506e', { bias: -.25 }));
+  L.push(Pp([[-2.4, .66, 3.5], [-1.9, .78, 3.7], [-1.8, .74, 4.2], [-2.3, .64, 4.1]], '#4a6a8c', { bias: -.3 }));
+  // mochila + roupas no chão
+  L.push(Bx(-1.1, 0, 1.95, -.55, .5, 2.3, '#2f3a2c')); L.push(Bx(-1.0, .08, 1.9, -.65, .3, 1.95, '#28321f')); L.push(Ln([-1.0, .5, 2.12], [-.65, .5, 2.12], '#1e251a', 3));
+  L.push(Pp([[.2, .005, 1.6], [.8, .005, 1.5], [.9, .005, 1.9], [.3, .005, 2.1]], '#7d2f2a')); L.push(Pp([[-.5, .006, 3.2], [-.1, .006, 3.0], [.1, .006, 3.4], [-.3, .006, 3.5]], '#2c3140'));
+  // escrivaninha na parede direita
+  L.push(Bx(2.2, .72, 1.0, 2.98, .77, 3.25, '#7a5b40'));
+  for (const [lx, lz] of [[2.24, 1.04], [2.94, 1.04], [2.24, 3.21], [2.94, 3.21]]) L.push(Bx(lx - .025, 0, lz - .025, lx + .025, .72, lz + .025, '#5c4430'));
+  L.push(Bx(1.6, 0, 1.8, 2.0, .45, 2.3, '#3a3a3e')); L.push(Bx(1.6, .45, 1.8, 1.65, .95, 2.3, '#3a3a3e'));
+  L.push(Bx(2.6, .77, 2.95, 2.9, .83, 3.2, '#c9b48a')); L.push(Bx(2.62, .83, 2.97, 2.88, .87, 3.18, '#7b2d26'));
+  // porta do quarto aberta
+  L.push(Pp([[-.45, 0, 0], [-.45, 2.1, 0], [-.45 + .9 * Math.cos(1.3), 2.1, .9 * Math.sin(1.3)], [-.45 + .9 * Math.cos(1.3), 0, .9 * Math.sin(1.3)]], '#c9c2b4'));
+  // moldura da foto (parede direita)
+  L.push(Bx(2.955, 1.36, 1.7, 2.995, 2.06, 2.6, '#3b2a1c'));
+}
+function S4(t) {
+  FOG = { c: [70, 62, 54], d: .05, m: .5 }; LIGHT = { top: 1.0, bot: .5, l: .78, r: .9, f: .93, bk: .8 };
+  const P = (a, c) => sm(a, c, t);
+  let x = .1, z = -.2, yaw = 0, pitch = -.06, fov = 66;
+  const e1 = P(35, 37.6); x = lerp(x, .25, e1); z = lerp(z, 1.0, e1); yaw = lerp(0, -.42, sm(35.6, 37.4, t));
+  const e2 = P(37.6, 39.8); x = lerp(x, .7, e2); z = lerp(z, 2.0, e2); yaw = lerp(yaw, 1.3, e2);
+  const e3 = P(39.8, 44.5); x = lerp(x, 1.72, e3); z = lerp(z, 2.15, e3); yaw = lerp(yaw, Math.PI / 2, e3);
+  const pt = Math.atan2(1.71 - 1.6, 2.95 - 1.72); pitch = lerp(pitch, pt, e3); fov = lerp(fov, 33, e3);
+  const e4 = P(45.6, 47.2); pitch = lerp(pitch, -.5, e4); fov = lerp(fov, 66, e4); x = lerp(x, 1.35, e4);
+  const e5 = P(48.6, 50); pitch = lerp(pitch, -.2, e5);
+  // batidas na porta (50s+) e virada brusca
+  const turn = sm(51.25, 51.75, t); yaw = lerp(yaw, Math.PI + .02, turn); pitch = lerp(pitch, -.03, turn); fov = lerp(fov, 66, turn);
+  const e6 = P(51.8, 52.95); x = lerp(x, .05, e6); z = lerp(z, .35, e6);
+  const walking = (t < 37.6) || (t > 37.6 && t < 39.8) || (t > 51.8);
+  const bob = walking ? Math.abs(Math.sin(t * Math.PI / (t > 51.8 ? .45 : .7))) * .03 : 0;
+  Object.assign(cam, { x: x + nz(t, 1) * .008, y: 1.6 - bob, z: z + nz(t, 2) * .008, yaw: yaw + nz(t, 3) * .005, pitch: pitch + nz(t, 4) * .004, roll: nz(t, 6) * .006, fov: fov * Math.PI / 180 });
+  b.fillStyle = '#1b1a18'; b.fillRect(0, 0, W, H);
+  const list = ROOM.L.slice();
+  // foto (textura)
+  list.push(Pp([[2.945, 2.0, 2.55], [2.945, 2.0, 1.75], [2.945, 1.42, 1.75], [2.945, 1.42, 2.55]], '#888', { tex: TX.photo, bias: -.2 }));
+  // lanterna e rádio na mesa (até serem pegos)
+  const gotF = t > 47.5, gotR = t > 48.25;
+  if (!gotF) { list.push(Bx(2.35, .77, 1.45, 2.62, .83, 1.52, '#2b2b2e')); list.push(Bx(2.33, .765, 1.43, 2.37, .835, 1.54, '#4a4a4f')); }
+  if (!gotR) { list.push(Bx(2.42, .77, 2.3, 2.72, .97, 2.7, '#26272a')); list.push(Pp([[2.415, .95, 2.68], [2.415, .95, 2.32], [2.415, .79, 2.32], [2.415, .79, 2.68]], '#888', { tex: TX.radio, bias: -.1 })); }
+  const R = mulberry(4); for (let i = 0; i < 28; i++) { const px = .3 + R() * 2, py = .4 + ((R() * 1.8 + t * .04 * (R() + .3)) % 1.8), pz = 3.6 + R() * 2.2; list.push(Gl([px + Math.sin(t * .3 + i) * .05, py, pz], .011, '#fff0d0', .55)); }
+  render3D(b, ROOM.base, list);
+  // feixe de luz da janela
+  const w0 = P3([.2, 2.15, 5.98]), w1 = P3([2.0, 2.15, 5.98]), f0 = P3([.2, 0, 5.0]), f1 = P3([2.3, 0, 5.0]);
+  shaft(b, [w0, w1, f1, f0], '#ffdcae', .09, 30);
+  // foco suave na foto (bordas desfocadas)
+  const foc = ss(40, 42.5, t) * (1 - ss(45.4, 46.4, t));
+  if (foc > 0) softFocus(foc);
+  // luz mais quente e melancólica
+  const warm = ss(39, 46, t) * (1 - ss(50, 51.4, t) * .6);
+  b.globalCompositeOperation = 'soft-light'; b.fillStyle = `rgba(255,150,70,${.32 * warm})`; b.fillRect(0, 0, W, H);
+  b.globalCompositeOperation = 'source-over'; b.fillStyle = `rgba(80,50,20,${.08 * warm})`; b.fillRect(0, 0, W, H);
+  // mãos pegando lanterna e rádio
+  hands(t);
+  POST.vig = .58 + .12 * foc + .2 * ss(50, 52, t);
+  POST.black = 1 - ss(35, 35.45, t) + ss(52.6, 53, t);
+  // impacto das batidas
+  for (const k of KNOCKS) if (t >= k[0] && t < k[0] + .35) { const a = (1 - (t - k[0]) / .35) * k[1]; POST.shx += (Math.random() - .5) * 18 * a; POST.shy += (Math.random() - .5) * 14 * a; }
+  if (turn > 0 && turn < 1) POST.mblur = .55;
+}
+function softFocus(k) {
+  ta.setTransform(1, 0, 0, 1, 0, 0); ta.globalCompositeOperation = 'source-over'; ta.clearRect(0, 0, W, H);
+  const sc = Math.max(.08, .5 - .4 * k), sw = Math.round(W * sc), sh = Math.round(H * sc);
+  SMALL.width = sw; SMALL.height = sh; const sx = SMALL.getContext('2d'); sx.imageSmoothingQuality = 'high'; sx.drawImage(buf, 0, 0, sw, sh);
+  ta.imageSmoothingEnabled = true; ta.imageSmoothingQuality = 'high'; ta.drawImage(SMALL, 0, 0, W, H);
+  ta.globalCompositeOperation = 'destination-out';
+  const gr = ta.createRadialGradient(W / 2, H / 2, 120, W / 2, H / 2, 520); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  ta.fillStyle = gr; ta.fillRect(0, 0, W, H); ta.globalCompositeOperation = 'source-over';
+  b.drawImage(tmpA, 0, 0);
+}
+function hands(t) {
+  if (t < 46.6) return;
+  const fT = P3([2.48, .8, 1.49]), rT = P3([2.42, .87, 2.5]);
+  const rest = { r: [880, 610], l: [400, 640] };
+  const reachR = sm(46.6, 47.4, t) * (1 - sm(47.5, 48.1, t)), reachL = sm(47.5, 48.2, t) * (1 - sm(48.3, 49, t));
+  const show = ss(46.6, 46.9, t);
+  const hr = fT ? [lerp(rest.r[0], fT[0], reachR), lerp(rest.r[1] + 140 * (1 - ss(46.6, 47.4, t)), fT[1], reachR)] : rest.r;
+  const hl = rT ? [lerp(rest.l[0], rT[0], reachL), lerp(rest.l[1] + 140 * (1 - ss(47.3, 48, t)), rT[1], reachL)] : rest.l;
+  b.save(); b.globalAlpha = show; b.lineCap = 'round'; b.strokeStyle = '#0d0d0f'; b.fillStyle = '#0d0d0f'; b.lineWidth = 17;
+  const shake = POST.shx * .3;
+  // lanterna na mão direita
+  if (t > 47.5) { const [x, y] = hr; b.save(); b.translate(x + shake, y); b.rotate(-.5); const gr = b.createLinearGradient(0, -14, 0, 14); gr.addColorStop(0, '#5a5a60'); gr.addColorStop(.5, '#2a2a2e'); gr.addColorStop(1, '#141416'); b.fillStyle = gr; b.fillRect(-30, -13, 150, 26); b.fillStyle = '#3c3c42'; b.fillRect(110, -18, 34, 36); b.fillStyle = '#d8d6c8'; b.fillRect(142, -15, 4, 30); b.restore(); b.fillStyle = '#0d0d0f'; }
+  if (t > 48.25) { const [x, y] = hl; b.save(); b.translate(x + shake, y); b.rotate(.12); b.fillStyle = '#26272a'; b.fillRect(-90, -70, 160, 100); b.drawImage(TX.radio, -88, -68, 156, 96); b.strokeStyle = '#777'; b.lineWidth = 3; b.beginPath(); b.moveTo(55, -70); b.lineTo(80, -170); b.stroke();
+    const led = (Math.sin(t * 17) > 0) ? '#ff4030' : '#5a1510'; b.fillStyle = led; b.beginPath(); b.arc(50, -50, 4, 0, 7); b.fill(); b.restore(); }
+  b.strokeStyle = '#0d0d0f'; b.lineWidth = 17;
+  b.beginPath(); b.moveTo(1080 + shake, 800); b.lineTo(hr[0] + shake, hr[1]); b.stroke(); b.beginPath(); b.arc(hr[0] + shake, hr[1], 13, 0, 7); b.fill();
+  b.beginPath(); b.moveTo(200 + shake, 800); b.lineTo(hl[0] + shake, hl[1]); b.stroke(); b.beginPath(); b.arc(hl[0] + shake, hl[1], 13, 0, 7); b.fill();
+  b.restore();
+}
+
+/* =========================================================================
+   CORREDOR + PORTA DA FRENTE + ÁREA EXTERNA (cenas 5, 6, 7)
+   ========================================================================= */
+const HALL = { base: [], L: [], out: [], outBase: [] };
+const KNOCKS = [[50.2, 1], [50.6, 1], [51.0, 1.1], [53.5, .9], [53.85, .9], [54.2, 1], [54.55, 1], [56.5, 1.1], [56.8, 1.1], [57.1, 1.2], [58.6, 1.2], [58.9, 1.2], [59.2, 1.3], [59.5, 1.3], [61.5, .9], [61.8, .9], [63.2, .7]];
+function buildHall() {
+  const base = HALL.base, L = HALL.L;
+  for (const [a, c] of [[-1, 3], [3, 6], [6, 9], [9, 12]]) planks(base, -.9, .9, a, c, ['#4e3a2a', '#563f2d', '#4a3627'], 5);
+  segY(base, 2.5, -.9, .9, -1, 12, '#3e3b37', {}, 6);
+  // paredes com vãos de portas
+  segX(base, -.9, 0, 2.5, -1, 5.5, '#7f7a70', {}, 4); segX(base, -.9, 0, 2.5, 6.4, 12, '#7f7a70', {}, 4); base.push(quadX(-.9, 2.1, 2.5, 5.5, 6.4, '#7f7a70'));
+  base.push(quadX(-.9, 0, 2.1, 5.5, 6.4, '#121212'));
+  segX(base, .9, 0, 2.5, -1, 3.0, '#857f75', {}, 3); segX(base, .9, 0, 2.5, 4.0, 12, '#857f75', {}, 5); base.push(quadX(.9, 2.1, 2.5, 3.0, 4.0, '#857f75'));
+  base.push(quadX(.9, 0, 2.1, 3.0, 4.0, '#141414'));
+  base.push(quadX(-.89, 0, .09, -1, 12, '#a49e92')); base.push(quadX(.89, 0, .09, -1, 12, '#a49e92'));
+  // parede da porta (z=12)
+  base.push(quadZ(12, -.9, -.47, 0, 2.5, '#7a756c')); base.push(quadZ(12, .47, .9, 0, 2.5, '#7a756c')); base.push(quadZ(12, -.47, .47, 2.12, 2.5, '#7a756c'));
+  base.push(quadZ(11.99, -.35, .35, 2.17, 2.4, '#d6d6d0', { nofog: true }));
+  base.push(quadZ(11.985, -.52, -.45, 0, 2.17, '#5e4a38')); base.push(quadZ(11.985, .45, .52, 0, 2.17, '#5e4a38')); base.push(quadZ(11.985, -.52, .52, 2.1, 2.17, '#5e4a38'));
+  // mesinha, tigela de chaves, quadros, cabideiro
+  L.push(Bx(-.9, .74, 8.0, -.58, .79, 8.9, '#3e2d20')); L.push(Bx(-.88, 0, 8.02, -.84, .74, 8.06, '#3e2d20')); L.push(Bx(-.62, 0, 8.02, -.58, .74, 8.06, '#3e2d20')); L.push(Bx(-.88, 0, 8.84, -.84, .74, 8.88, '#3e2d20')); L.push(Bx(-.62, 0, 8.84, -.58, .74, 8.88, '#3e2d20'));
+  L.push(Bx(-.82, .79, 8.3, -.66, .84, 8.5, '#8a8a84'));
+  tiltedFrame(L, -.895, 1.6, 3.2, .5, .38, .02, TX.pic1, '#1f1813'); tiltedFrame(L, -.895, 1.55, 9.6, .36, .46, -.06, TX.pic3, '#1f1813');
+  L.push(Pp([[.895, 1.95, 7.0], [.895, 1.95, 6.4], [.895, 1.25, 6.4], [.895, 1.25, 7.0]], '#888', { tex: TX.pic2, bias: -.05 }));
+  L.push(Bx(.7, 0, 10.95, .76, 1.8, 11.01, '#2a2420'));
+  L.push(Bx(.62, 1.7, 10.9, .8, 1.74, 11.06, '#2a2420'));
+  L.push(Bx(-.15, 2.46, 5.85, .15, 2.5, 6.15, '#cfcac0'));
+  // --- área externa (vista pelo olho mágico / porta aberta)
+  const ob = HALL.outBase, o = HALL.out, OF = { fog: OUTFOG };
+  segY(ob, -.02, -40, 40, 12, 120, '#5c6750', OF, 10);
+  ob.push(quadY(-.01, -1.7, 1.7, 12, 14.3, '#8f8c86', OF)); ob.push(quadY(-.008, -.55, .55, 14.3, 22, '#9a968e', OF));
+  ob.push(quadY(-.005, -40, 40, 22.6, 30, '#4d4e51', OF)); ob.push(quadY(.0, -40, 40, 22.3, 22.6, '#9c988f', OF)); ob.push(quadY(.0, -40, 40, 30, 31, '#9c988f', OF));
+  for (let xx = -30; xx < 30; xx += 7) ob.push(quadY(.002, xx, xx + 3.2, 26.2, 26.36, '#c9c2a8', OF));
+  o.push(Bx(-1.7, 2.55, 12, 1.7, 2.65, 14.3, '#d9d4c8', OF)); o.push(Bx(-1.6, 0, 14.1, -1.45, 2.55, 14.25, '#d9d4c8', OF)); o.push(Bx(1.45, 0, 14.1, 1.6, 2.55, 14.25, '#d9d4c8', OF));
+  o.push(Bx(-30, 0, 22, -.8, 1.3, 22.25, '#c8c0ae', OF)); o.push(Bx(.8, 0, 22, 30, 1.3, 22.25, '#c8c0ae', OF));
+  o.push(Pp([[.8, 1.2, 22.1], [.8, .05, 22.1], [.1, .05, 21.5], [.1, 1.2, 21.5]], '#2c2d2f', Object.assign({ a: .85 }, OF)));
+  const pal = ['#b9b2a3', '#a5ad9c', '#c3a48a', '#9fa6ab', '#cfc3aa'];
+  for (let i = 0; i < 8; i++) { const x0 = -26 + i * 7, h = i % 2 ? 3.4 : 5.6; o.push(Bx(x0, 0, 33, x0 + 6.2, h, 40, pal[i % 5], OF));
+    o.push(Pp([[x0 + 1, 2.0, 32.99], [x0 + 2.4, 2.0, 32.99], [x0 + 2.4, 1.0, 32.99], [x0 + 1, 1.0, 32.99]], '#2a3139', Object.assign({ bias: -.2 }, OF))); o.push(Pp([[x0 + 3.8, 2.0, 32.99], [x0 + 5.2, 2.0, 32.99], [x0 + 5.2, 1.0, 32.99], [x0 + 3.8, 1.0, 32.99]], '#2a3139', Object.assign({ bias: -.2 }, OF)));
+    o.push(Bx(x0, 0, 31.6, x0 + 6.2, 1.2, 31.8, '#bdb5a5', OF)); }
+  car(o, 4.2, 26.6, '#6d7b86', Math.PI / 2 + .05, 0, OF);
+  for (const x of [-7, 6]) { o.push(Bx(x - .1, 0, 31.2, x + .1, 7.5, 31.4, '#77746e', OF)); }
+  o.push(Ln([-7, 7.3, 31.3], [6, 6.8, 31.3], '#2a2a2a', 1, OF));
+}
+function doorItems(L, ang, shakeA) {
+  const hx = .45, len = .9, c = Math.cos(ang), s = Math.sin(ang), j = shakeA || 0;
+  const pt = (u, y) => [hx - u * c + j * .01, y, 12 - .005 - u * s + j * .008];
+  L.push(Pp([pt(0, 0), pt(0, 2.1), pt(len, 2.1), pt(len, 0)], '#5a3d29', { bias: -.05 }));
+  for (const [u0, u1, y0, y1] of [[.12, .42, 1.2, 1.95], [.48, .78, 1.2, 1.95], [.12, .42, .15, 1.05], [.48, .78, .15, 1.05]])
+    L.push(Pp([pt(u0, y1), pt(u1, y1), pt(u1, y0), pt(u0, y0)], '#4c3322', { bias: -.08, stroke: 'rgba(0,0,0,.25)', sw: 1 }));
+  L.push(Gl(pt(.8, 1.0), .03, '#e8c070', .6, { bias: -.1 }));
+  L.push(Fn(pt(.45, 1.58), (ctx, it) => { const q = toCam(it.p); if (q[2] < .02) return; const p = proj(q), r = .013 * focal() / q[2];
+    ctx.fillStyle = '#b8954e'; ctx.beginPath(); ctx.arc(p[0], p[1], r * 1.55, 0, 7); ctx.fill();
+    const gr = ctx.createRadialGradient(p[0] - r * .3, p[1] - r * .3, 0, p[0], p[1], r); gr.addColorStop(0, '#c8cfd4'); gr.addColorStop(.5, '#59636b'); gr.addColorStop(1, '#16191c'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill(); }, { bias: -.12 }));
+}
+function hallScene(t, opts) {
+  FOG = { c: [16, 15, 14], d: .07, m: .55 }; LIGHT = { top: .95, bot: .5, l: .8, r: .9, f: .9, bk: .78 };
+  b.fillStyle = '#0d0c0b'; b.fillRect(0, 0, W, H);
+  const list = HALL.L.slice(), base = HALL.base.slice();
+  const open = opts.door > .02;
+  if (open) { b.fillStyle = '#c8c8c4'; b.fillRect(0, 0, W, H); list.push(...HALL.out); base.unshift(...HALL.outBase); }
+  doorItems(list, opts.door, opts.doorShake);
+  // luz por baixo da porta, com sombras de pés se mexendo
+  if (!open) {
+    const fx = Math.sin(t * 3.1) * .12, fx2 = Math.sin(t * 2.3 + 1) * .1;
+    const segs = [[-.42, -.2 + fx], [-.08 + fx, .02 + fx2], [.14 + fx2, .42]];
+    for (const [a, c] of segs) if (c > a) list.push(Pp([[a, .028, 11.985], [c, .028, 11.985], [c, 0, 11.985], [a, 0, 11.985]], '#fff3d8', { nofog: true, bias: -.2 }));
+    list.push(Gl([0, .01, 11.75], .7, '#e8dcc4', .22, { sy: .25 }));
+  }
+  if (opts.extra) list.push(...opts.extra);
+  render3D(b, base, list);
+  if (open) { // luz invadindo o corredor
+    const k = clamp(opts.door / 1.2);
+    const p0 = P3([-.45, 0, 12]), p1 = P3([.45, 0, 12]), p2 = P3([.8, 0, 9.5]), p3 = P3([-.8, 0, 9.5]);
+    shaft(b, [p0, p1, p2, p3], '#e8e4da', .2 * k, 30);
+    b.globalCompositeOperation = 'soft-light'; b.fillStyle = `rgba(255,255,255,${.25 * k})`; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
+  }
+}
+/* ---- CENA 5 — corredor até a porta (53–65s) ---- */
+function S5(t) {
+  const walkP = sm(53.1, 61.2, t);
+  let z = lerp(.4, 10.55, walkP), y = 1.62, fov = 66, x = 0;
+  const steps = (t - 53.1) / 1.05, bob = t < 61.2 ? Math.abs(Math.sin(steps * Math.PI)) * .035 : 0;
+  const ap = sm(61.4, 64.4, t); z = lerp(z, 11.77, ap); y = lerp(y, 1.58, ap); fov = lerp(fov, 34, ap);
+  const zm = sm(64.2, 65, t); fov = lerp(fov, 4, zm); z = lerp(z, 11.84, zm);
+  const breath = Math.sin(t * 2.2) * .01;
+  Object.assign(cam, { x: x + nz(t, 7) * .015, y: y - bob + breath, z, yaw: nz(t, 8) * .02 * (1 - zm), pitch: nz(t, 9) * .012 * (1 - zm) - .01, roll: Math.sin(steps * Math.PI) * .012 + nz(t, 10) * .006, fov: fov * Math.PI / 180 });
+  let ds = 0; for (const k of KNOCKS) if (t >= k[0] && t < k[0] + .3) ds = (1 - (t - k[0]) / .3) * k[1] * (Math.random() - .5) * 2;
+  hallScene(t, { door: 0, doorShake: ds });
+  // poeira caindo do batente nas batidas
+  for (const k of KNOCKS) if (t >= k[0] && t < k[0] + 1.2) { const a = 1 - (t - k[0]) / 1.2; const R = mulberry(Math.floor(k[0] * 10)); for (let i = 0; i < 12; i++) { const p = P3([-.45 + R() * .9, 2.12 - (t - k[0]) * (.6 + R() * .8), 11.95]); if (p) { b.fillStyle = `rgba(210,200,180,${.5 * a})`; b.fillRect(p[0], p[1], 2, 2); } } }
+  for (const k of KNOCKS) if (t >= k[0] && t < k[0] + .3) { const a = (1 - (t - k[0]) / .3) * k[1]; POST.shx += (Math.random() - .5) * 16 * a; POST.shy += (Math.random() - .5) * 12 * a; }
+  POST.vig = lerp(.6, 1, ss(53, 62, t)); POST.vig2 = ss(55, 64, t) * .75;
+  POST.black = 1 - ss(53, 53.35, t) + ss(64.75, 65, t) * .9;
+}
+/* ---- CENA 6 — olho mágico (65–74s) ---- */
+function helenaOutside(t) {
+  const back = t < 69.6, pant = Math.sin(t * 8.5);
+  const turn = ss(69.3, 69.9, t);
+  const shout = t > 70 && t < 72.8;
+  const pound = t > 72.6 && t < 74 ? Math.max(0, Math.sin((t - 72.6) * 14)) : 0;
+  const o = { bun: true, breath: pant, look: lerp(-1, 0, turn), hx: lerp(-.18, 0, turn), eyeS: lerp(1, 1.25, turn), lookY: back ? -.2 : 0,
+    mouth: shout ? 'open' : 'pant', mo: shout ? .8 + .3 * Math.sin(t * 20) : .5 + .5 * pant,
+    armR: [-.25, -.15, .14, .06], armL: pound ? [2.3 - pound * .5, 2.6 - pound * .4, .17, .15] : [lerp(.25, 2.0, ss(70.6, 71.2, t)), lerp(.15, 2.5, ss(70.6, 71.2, t)), .17, .15],
+    sway: back ? Math.sin(t * 1.5) * .03 - .03 : Math.sin(t * 2) * .015, fog: OUTFOG };
+  return St([.12 + Math.sin(t * .9) * .03, 0, 12.78 - turn * .08], 1.66, o);
+}
+function S6(t) {
+  // render da área externa em canvas quadrado, depois distorção olho-de-peixe
+  const saveVW = VW, saveVH = VH; VW = FE.SN; VH = FE.SN;
+  FOG = OUTFOG; LIGHT = { top: 1.05, bot: .55, l: .8, r: .9, f: .95, bk: .82 };
+  Object.assign(cam, { x: nz(t, 1) * .01, y: 1.58 + nz(t, 2) * .006, z: 11.99, yaw: nz(t, 3) * .01, pitch: .02, roll: 0, fov: FE.FOV });
+  const s = FE.sx; s.setTransform(1, 0, 0, 1, 0, 0);
+  const F = focal(), hy = VH / 2 + Math.tan(cam.pitch) * F;
+  const sk = s.createLinearGradient(0, 0, 0, hy); sk.addColorStop(0, '#a6aeb6'); sk.addColorStop(1, '#d6d0c6'); s.fillStyle = sk; s.fillRect(0, 0, VW, VH);
+  const list = HALL.out.slice(); list.push(helenaOutside(t));
+  // zumbi se aproximando ao longe
+  if (t > 66) { const zx = lerp(-7, -2.2, ss(66, 74, t)); list.push(St([zx, 0, 26.5], 1.75, { eyes: 'x', armL: [1.4, 1.45, .17, .15], armR: [1.35, 1.4, .17, .15], sway: Math.sin(t * 2.4) * .06, walk: t * 3.2, fog: OUTFOG })); }
+  render3D(s, HALL.outBase, list);
+  // sombra e frio
+  s.fillStyle = 'rgba(40,55,75,.12)'; s.fillRect(0, 0, VW, VH);
+  VW = saveVW; VH = saveVH;
+  const src = s.getImageData(0, 0, FE.SN, FE.SN).data, od = FE.oid.data, lut = FE.lut, vg = FE.vig;
+  for (let i = 0, n = lut.length; i < n; i++) { const si = lut[i], o4 = i * 4; if (si < 0) { od[o4] = od[o4 + 1] = od[o4 + 2] = 0; od[o4 + 3] = 255; continue; } const v = vg[i]; od[o4] = src[si] * v; od[o4 + 1] = src[si + 1] * v; od[o4 + 2] = src[si + 2] * v * 1.02; od[o4 + 3] = 255; }
+  FE.ox.putImageData(FE.oid, 0, 0);
+  b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
+  const D = 700, cx = W / 2 + nz(t, 4) * 6, cy = H / 2 - 10 + nz(t, 5) * 5;
+  b.save(); b.beginPath(); b.arc(cx, cy, D / 2, 0, 7); b.clip(); b.drawImage(FE.out, cx - D / 2, cy - D / 2, D, D);
+  const gl = b.createRadialGradient(cx - 120, cy - 140, 10, cx - 120, cy - 140, 300); gl.addColorStop(0, 'rgba(255,255,255,.10)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); b.fillStyle = gl; b.fillRect(0, 0, W, H);
+  b.restore();
+  const ring = b.createRadialGradient(cx, cy, D / 2 - 30, cx, cy, D / 2 + 10); ring.addColorStop(0, 'rgba(0,0,0,0)'); ring.addColorStop(.8, 'rgba(0,0,0,.85)'); ring.addColorStop(1, 'rgba(0,0,0,1)'); b.fillStyle = ring; b.fillRect(0, 0, W, H);
+  POST.vig = .8; POST.black = 1 - ss(65, 65.4, t);
+}
+/* ---- CENA 7 — a porta abre, Helena entra, o curativo (74–88s) ---- */
+function S7(t) {
+  const rec = sm(74, 74.9, t);
+  let x = lerp(0, .5, rec), z = lerp(11.77, 9.05, rec), y = lerp(1.58, 1.62, rec), yaw = 0, pitch = 0, fov = lerp(40, 70, rec);
+  // porta abre e bate
+  let door = 0;
+  if (t < 75.55) door = sm(74.35, 74.95, t) * 1.45; else door = 1.45 * (1 - ss(75.55, 75.72, t));
+  // Helena
+  const hp = sm(74.75, 75.55, t);
+  const hx = lerp(.1, -.6, hp), hz = lerp(12.9, 10.95, hp);
+  const hide = 1 - ss(80.6, 82.4, t);
+  const pant = Math.sin(t * lerp(8, 4.5, ss(76, 84, t)));
+  const look = t < 79 ? lerp(-.2, .35, ss(76, 77.5, t)) : t < 80.6 ? lerp(.35, -.55, ss(79, 79.6, t)) : lerp(-.55, -.2, ss(81, 83, t));
+  const ho = { bun: true, breath: pant * 1.4, look, lookY: t > 79 ? .5 : .1, mouth: 'pant', mo: .5 + .5 * pant,
+    sway: hp < 1 ? Math.sin(t * 9) * .04 : lerp(0, -.075, ss(75.6, 76.6, t)) + pant * .008,
+    armL: [.15 + pant * .02, .08], armR: [lerp(.42, -.28, 1 - hide), lerp(.18, -.2, 1 - hide), lerp(.17, .13, 1 - hide), lerp(.165, .05, 1 - hide)],
+    walk: hp < 1 ? t * 14 : 0 };
+  ho.armR = hide < .5 ? [-.28, -.2, .13, .05] : [lerp(-.28, .36, (hide - .5) * 2), lerp(-.2, .14, (hide - .5) * 2), lerp(.13, .17, (hide - .5) * 2), lerp(.05, .165, (hide - .5) * 2)];
+  const reveal = 1 - hide;
+  ho.armR = reveal < .5 ? [-.28, -.2, .13, .05] : [lerp(-.28, .38, (reveal - .5) * 2), lerp(-.2, .12, (reveal - .5) * 2), lerp(.13, .17, (reveal - .5) * 2), lerp(.05, .165, (reveal - .5) * 2)];
+  const stain = lerp(.15, 1, ss(81.5, 88, t));
+  if (reveal > .5) ho.bandage = { side: 1, p: stain };
+  const helena = St([hx, 0, hz], 1.66, ho);
+  // câmera vira para Helena
+  const tgtYaw = Math.atan2(hx - x, hz - z);
+  const tv = sm(75.8, 77.2, t); yaw = lerp(0, tgtYaw + .05, tv);
+  const tilt = sm(80.4, 83.2, t); pitch = lerp(-.04, -.3, tilt);
+  fov = lerp(fov, 64, tv);
+  Object.assign(cam, { x: x + nz(t, 1) * .01, y: y + Math.sin(t * 2.4) * .006, z, yaw: yaw + nz(t, 2) * .008 * (1 - ss(83, 86, t) * .6), pitch: pitch + nz(t, 3) * .006, roll: nz(t, 4) * .008, fov: fov * Math.PI / 180 });
+  // zoom 2D no curativo (vetorial, nítido)
+  const zk = sm(82.6, 88, t), Z = lerp(1, 6.8, zk * zk * .4 + zk * .6);
+  let focus = [W / 2, H / 2];
+  {
+    const q = toCam(helena.p); if (q[2] > .15) { const s = proj(q), S = 1.66 * focal() / q[2], J = stickJ(ho), a = J.aR, mx = lerp(a[1][0], a[2][0], .5), my = lerp(a[1][1], a[2][1], .5);
+      const cr = Math.cos(ho.sway + cam.roll), sr = Math.sin(ho.sway + cam.roll); focus = [s[0] + (mx * cr - my * sr) * S, s[1] + (mx * sr + my * cr) * S]; }
+  }
+  const fz = [lerp(W / 2, focus[0], zk > 0 ? Math.min(1, zk * 3) : 0), lerp(H / 2, focus[1], zk > 0 ? Math.min(1, zk * 3) : 0)];
+  b.save(); b.setTransform(Z, 0, 0, Z, W / 2 - Z * fz[0], H / 2 - Z * fz[1]);
+  hallScene(t, { door, extra: [helena] });
+  b.restore();
+  // dessaturação e escurecimento no final
+  const ds = ss(81.5, 86, t);
+  if (ds > 0) { b.globalCompositeOperation = 'saturation'; b.fillStyle = `rgba(128,128,128,${.45 * ds})`; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; b.fillStyle = `rgba(0,0,0,${.18 * ds})`; b.fillRect(0, 0, W, H); }
+  if (door > .02) { const k = clamp(door / 1.45); b.globalCompositeOperation = 'screen'; b.fillStyle = `rgba(220,220,215,${.12 * k})`; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; }
+  // sacudida da porta batendo
+  if (t > 75.66 && t < 76.3) { const a = 1 - (t - 75.66) / .64; POST.shx += (Math.random() - .5) * 30 * a; POST.shy += (Math.random() - .5) * 22 * a; }
+  if (t < 74.9) POST.mblur = .4;
+  POST.vig = lerp(.75, 1, ss(80, 86, t)); POST.vig2 = .4 + .45 * ss(82, 87, t);
+  POST.black = 1 - ss(74, 74.25, t) * 1;
+  POST.black = Math.max(0, POST.black);
+}
+function S8(t) { b.fillStyle = '#000'; b.fillRect(0, 0, W, H); POST.grain = .18; POST.vig = 0; }
+
+/* =========================================================================
+   COMPOSIÇÃO FINAL
+   ========================================================================= */
+let POST = {}, frameN = 0;
+function renderAt(t) {
+  POST = { shx: 0, shy: 0, rot: 0, vig: .5, vig2: 0, grain: .2, black: 0, mblur: 0 };
+  b.setTransform(1, 0, 0, 1, 0, 0); b.globalAlpha = 1; b.globalCompositeOperation = 'source-over'; if ('filter' in b) b.filter = 'none';
+  VW = W; VH = H;
+  if (t < 10) S1(t); else if (t < 22) S2(t); else if (t < 35) S3(t); else if (t < 53) S4(t); else if (t < 65) S5(t); else if (t < 74) S6(t); else if (t < 88) S7(t); else S8(t);
+  frameN++;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over';
+  if (POST.mblur > 0) g.globalAlpha = 1 - POST.mblur; else { g.globalAlpha = 1; g.fillStyle = '#000'; g.fillRect(0, 0, W, H); }
+  const z = 1.045; g.translate(W / 2 + POST.shx, H / 2 + POST.shy); g.rotate(POST.rot); g.scale(z, z); g.drawImage(buf, -W / 2, -H / 2); g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = POST.grain; g.globalCompositeOperation = 'overlay';
+  g.drawImage(TX.noise[frameN % 4], -Math.random() * 16, -Math.random() * 16, W + 16, H + 16);
+  g.globalCompositeOperation = 'source-over';
+  if (POST.vig > 0) { g.globalAlpha = Math.min(1, POST.vig); g.drawImage(TX.vig, 0, 0); }
+  if (POST.vig2 > 0) { g.globalAlpha = POST.vig2; g.drawImage(TX.vig, -W * .15, -H * .15, W * 1.3, H * 1.3); g.drawImage(TX.vig, 0, 0); }
+  g.globalAlpha = .025 + Math.random() * .03; g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  if (POST.black > 0) { g.globalAlpha = Math.min(1, POST.black); g.fillRect(0, 0, W, H); }
+  g.globalAlpha = 1;
+  overlays(t);
+}
+
+/* =========================================================================
+   LEGENDAS, NARRAÇÃO, MENSAGEM DISCRETA E TÍTULO
+   ========================================================================= */
+const CUES = [
+  [0.5, 5, 'Passei a noite naquele telhado.'],
+  [5, 10, 'Não consegui parar de pensar nos olhos dele.'],
+  [10, 16, 'Quando amanheceu, desci. Eu precisava ir pra casa.'],
+  [16, 22, 'A rua estava vazia. Quase vazia.'],
+  [22, 28, 'Entrei em casa. A TV ainda estava ligada.'],
+  [28, 35, 'Na geladeira, um bilhete do meu pai. Ele tinha ido pro hospital.'],
+  [35, 42, 'Fui pro meu quarto. Tinha uma foto nossa na parede.'],
+  [42, 50, 'Eu e ele. Ontem de manhã a gente ainda ria de tudo.'],
+  [50, 55, 'Aí alguém começou a bater na porta.'],
+  [55, 62, 'Forte. Desesperado.'],
+  [62, 65, 'Olhei pelo olho mágico...'],
+  [65, 70, 'Era a professora Helena.'],
+  [70, 74, 'Abre! Rápido!', 'helena'],
+  [74, 78, 'Eu abri. Ela entrou sem dizer mais nada.'],
+  [78, 84, 'Ela tentava esconder o braço.'],
+  [84, 90, 'Mas eu vi. O curativo estava encharcado de sangue.'],
+  [88, 92, 'CONTINUA...', 'title']
+];
+const subEl = $('sub').firstElementChild, ctaEl = $('cta'), ctaLn = ctaEl.querySelector('.ln'), titleEl = $('title');
+let curSub = '';
+function overlays(t) {
+  let txt = '';
+  for (const c of CUES) if (!c[3] || c[3] === 'helena') if (t >= c[0] && t < c[1]) txt = c[2];
+  if (txt !== curSub) { curSub = txt; if (txt) { subEl.textContent = txt; subEl.classList.add('on'); } else subEl.classList.remove('on'); }
+  // mensagem discreta (não narrada) 18–26s
+  const a = ss(18, 18.8, t) * (1 - ss(25.2, 26, t));
+  ctaEl.style.opacity = a.toFixed(3);
+  ctaEl.style.transform = `translateY(${((1 - eio(clamp((t - 18) / .8))) * 10).toFixed(2)}px)`;
+  ctaLn.style.transform = `scaleX(${eio(clamp((t - 18.35) / 1.2)).toFixed(3)})`;
+  // título final
+  titleEl.style.opacity = (ss(88.35, 89.4, t) * (1 - ss(91.4, 92, t))).toFixed(3);
+}
+let VOICE = null;
+function pickVoices() {
+  const vs = speechSynthesis.getVoices(), sel = $('voice');
+  const pt = vs.filter(v => /^pt[-_]BR/i.test(v.lang)), any = pt.length ? pt : vs.filter(v => /^pt/i.test(v.lang));
+  const pref = ['Felipe', 'Daniel', 'Antonio', 'Reed', 'Eddy', 'Rocko', 'Google português do Brasil', 'Luciana', 'Francisca'];
+  any.sort((p, q) => { const ip = pref.findIndex(n => p.name.includes(n)), iq = pref.findIndex(n => q.name.includes(n)); return (ip < 0 ? 99 : ip) - (iq < 0 ? 99 : iq); });
+  sel.innerHTML = '';
+  for (const v of any) { const o = document.createElement('option'); o.value = v.name; o.textContent = `${v.name} (${v.lang})`; sel.appendChild(o); }
+  if (!any.length) { const o = document.createElement('option'); o.textContent = 'Voz padrão do sistema (pt-BR)'; o.value = ''; sel.appendChild(o); }
+  VOICE = any[0] || null;
+}
+if ('speechSynthesis' in window) { pickVoices(); speechSynthesis.onvoiceschanged = pickVoices; }
+$('voice').onchange = e => { VOICE = speechSynthesis.getVoices().find(v => v.name === e.target.value) || VOICE; };
+function say(text, kind) {
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'pt-BR'; if (VOICE) u.voice = VOICE;
+  u.rate = .92; u.pitch = .85; u.volume = 1;
+  if (kind === 'helena') { u.rate = 1.08; u.pitch = 1.12; }
+  if (kind === 'title') { u.rate = .8; u.pitch = .75; }
+  speechSynthesis.speak(u);
+}
+
+/* =========================================================================
+   ÁUDIO — tudo sintetizado com Web Audio
+   ========================================================================= */
+let A = null, T0 = 0, master, sfx, mus, hb, rev, NW, NB;
+function noiseBuf(kind, sec) {
+  const n = A.sampleRate * sec, bf = A.createBuffer(1, n, A.sampleRate), d = bf.getChannelData(0); let last = 0;
+  for (let i = 0; i < n; i++) { const w = Math.random() * 2 - 1; if (kind === 'brown') { last = (last + .02 * w) / 1.02; d[i] = last * 3.5; } else d[i] = w; }
+  return bf;
+}
+function impulse(sec) { const n = A.sampleRate * sec, bf = A.createBuffer(2, n, A.sampleRate); for (let c = 0; c < 2; c++) { const d = bf.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.6); } return bf; }
+const T = s => T0 + s;
+function nsrc(bf, t0, t1) { const s = A.createBufferSource(); s.buffer = bf; s.loop = true; s.start(T(t0), Math.random() * (bf.duration - .1)); s.stop(T(t1)); return s; }
+function filt(type, f, q) { const n = A.createBiquadFilter(); n.type = type; n.frequency.value = f; if (q !== undefined) n.Q.value = q; return n; }
+function gn(v) { const n = A.createGain(); n.gain.value = v; return n; }
+function chain(...ns) { for (let i = 0; i < ns.length - 1; i++) ns[i].connect(ns[i + 1]); return ns[ns.length - 1]; }
+function env(gp, t0, a, peak, d, sus = 0) { gp.setValueAtTime(0, T(t0)); gp.linearRampToValueAtTime(peak, T(t0 + a)); gp.exponentialRampToValueAtTime(Math.max(1e-4, sus || 1e-4), T(t0 + a + d)); }
+function send(node, amt) { const s = gn(amt); node.connect(s); s.connect(rev); }
+
+function initAudio() {
+  A = new (window.AudioContext || window.webkitAudioContext)();
+  const comp = A.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3.5; comp.attack.value = .005; comp.release.value = .25;
+  master = gn(.85); master.connect(comp); comp.connect(A.destination);
+  sfx = gn(1); mus = gn(1); hb = gn(1); sfx.connect(master); mus.connect(master); hb.connect(master);
+  rev = A.createConvolver(); rev.buffer = impulse(2.8); const rg = gn(.55); rev.connect(rg); rg.connect(sfx);
+  NW = noiseBuf('white', 4); NB = noiseBuf('brown', 4);
+}
+function schedule() {
+  // ---- drone grave (todo o episódio, sobe a partir de 50s)
+  const dg = gn(0); const lp = filt('lowpass', 170, 1.2); chain(lp, dg, mus);
+  for (const [f, type, v] of [[55, 'sine', .9], [55.35, 'sawtooth', .22], [82.6, 'sine', .35], [27.5, 'sine', .7]]) { const o = A.createOscillator(); o.type = type; o.frequency.value = f; const og = gn(v); chain(o, og, lp); o.start(T(0)); o.stop(T(88.02)); }
+  const lfo = A.createOscillator(); lfo.frequency.value = .07; const lg = gn(50); chain(lfo, lg, lp.frequency); lfo.start(T(0)); lfo.stop(T(88));
+  const G = dg.gain; G.setValueAtTime(0, T(0)); G.linearRampToValueAtTime(.09, T(3)); G.setValueAtTime(.09, T(50)); G.linearRampToValueAtTime(.2, T(64)); G.linearRampToValueAtTime(.26, T(80)); G.linearRampToValueAtTime(.05, T(83.5)); G.setValueAtTime(.05, T(88)); G.setValueAtTime(0, T(88.02));
+  lp.frequency.setValueAtTime(160, T(0)); lp.frequency.setValueAtTime(160, T(50)); lp.frequency.linearRampToValueAtTime(420, T(70)); lp.frequency.linearRampToValueAtTime(520, T(82));
+  // tensão dissonante (50s+)
+  { const pg = gn(0), pl = filt('lowpass', 700, .7); chain(pl, pg, mus); for (const f of [110, 116.5, 164.8]) { const o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; const v = A.createOscillator(); v.frequency.value = 4.5 + Math.random(); const vg = gn(1.2); chain(v, vg, o.frequency); v.start(T(48)); v.stop(T(88)); o.connect(pl); o.start(T(48)); o.stop(T(88.02)); }
+    pg.gain.setValueAtTime(0, T(48)); pg.gain.linearRampToValueAtTime(.025, T(58)); pg.gain.linearRampToValueAtTime(.05, T(78)); pg.gain.linearRampToValueAtTime(.008, T(83.5)); pg.gain.setValueAtTime(0, T(88.02)); }
+  // ---- vento no telhado e na rua
+  { const s = nsrc(NB, 0, 23), f = filt('bandpass', 480, .7), w = gn(0); chain(s, f, w, sfx);
+    const l = A.createOscillator(); l.frequency.value = .18; const lgn = gn(260); chain(l, lgn, f.frequency); l.start(T(0)); l.stop(T(23));
+    w.gain.setValueAtTime(0, T(0)); w.gain.linearRampToValueAtTime(.5, T(1.5)); w.gain.setValueAtTime(.5, T(9.4)); w.gain.linearRampToValueAtTime(.16, T(10.6)); w.gain.linearRampToValueAtTime(.12, T(21.5)); w.gain.linearRampToValueAtTime(0, T(22.4));
+    const s2 = nsrc(NW, 0, 10.5), f2 = filt('bandpass', 1400, 3), w2 = gn(0); chain(s2, f2, w2, sfx); const l2 = A.createOscillator(); l2.frequency.value = .31; const l2g = gn(500); chain(l2, l2g, f2.frequency); l2.start(T(0)); l2.stop(T(10.5));
+    w2.gain.setValueAtTime(0, T(0)); w2.gain.linearRampToValueAtTime(.05, T(2)); w2.gain.linearRampToValueAtTime(0, T(10.4)); }
+  // ---- metal rangendo na escada
+  const creak = (t0, k = 1) => { const o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(190 + Math.random() * 40, T(t0)); o.frequency.linearRampToValueAtTime(120 + Math.random() * 30, T(t0 + .45));
+    const v = A.createOscillator(); v.frequency.value = 28 + Math.random() * 14; const vg = gn(25); chain(v, vg, o.frequency); const f = filt('bandpass', 1100, 7), e = gn(0); chain(o, f, e, sfx); send(e, .25); env(e.gain, t0, .05, .32 * k, .45); o.start(T(t0)); o.stop(T(t0 + .6)); v.start(T(t0)); v.stop(T(t0 + .6));
+    for (const [fr, a] of [[420, .05], [1130, .035], [2390, .02]]) { const s = A.createOscillator(); s.frequency.value = fr * (1 + Math.random() * .02); const sg = gn(0); chain(s, sg, sfx); send(sg, .3); env(sg.gain, t0 + .02, .003, a * k, .7); s.start(T(t0)); s.stop(T(t0 + .9)); } };
+  creak(5.5, .7); for (const s of LADDER_STEPS) creak(s, 1);
+  // ---- passos cuidadosos
+  const step = (t0, k = 1, wood) => { const s = nsrc(NW, t0, t0 + .2), f = filt('lowpass', wood ? 380 : 650, .8), e = gn(0); chain(s, f, e, sfx); env(e.gain, t0, .008, .32 * k, .14);
+    if (!wood) { const s2 = nsrc(NW, t0, t0 + .12), f2 = filt('highpass', 2500), e2 = gn(0); chain(s2, f2, e2, sfx); env(e2.gain, t0, .004, .05 * k, .07); }
+    const o = A.createOscillator(); o.frequency.setValueAtTime(90, T(t0)); o.frequency.exponentialRampToValueAtTime(45, T(t0 + .1)); const og = gn(0); chain(o, og, sfx); env(og.gain, t0, .005, .22 * k, .12); o.start(T(t0)); o.stop(T(t0 + .2)); };
+  for (let t = 10.4; t < 13.6; t += .62) step(t, .8); for (let t = 13.8; t < 16.2; t += .45) step(t, .55); for (let t = 16.8; t < 21.6; t += 1.25) step(t, .3);
+  for (let t = 22.1; t < 24; t += .6) step(t, .7, 1); for (let t = 27.3; t < 31.5; t += .6) step(t, .6, 1); for (let t = 35.1; t < 39.8; t += .7) step(t, .6, 1);
+  for (let t = 51.9; t < 52.9; t += .45) step(t, .8, 1); for (let t = 53.2; t < 61.2; t += 1.05) step(t, .45, 1); step(74.05, .9, 1); step(74.4, .9, 1);
+  step(75.0, .6); step(75.3, .6);
+  // ---- alarme de carro distante
+  { const o = A.createOscillator(); o.type = 'square'; const f = filt('lowpass', 1900, .8), e = gn(0); chain(o, f, e, sfx); send(e, 1.2);
+    let t = 10.2, mode = 0; while (t < 22.4) { if (mode === 0) { for (let i = 0; i < 6 && t < 22.4; i++, t += .5) { o.frequency.setValueAtTime(650, T(t)); o.frequency.linearRampToValueAtTime(1500, T(t + .45)); } } else { for (let i = 0; i < 14 && t < 22.4; i++, t += .21) o.frequency.setValueAtTime(i % 2 ? 950 : 1350, T(t)); } mode = 1 - mode; }
+    e.gain.setValueAtTime(0, T(10)); e.gain.linearRampToValueAtTime(.022, T(11)); e.gain.setValueAtTime(.022, T(21.4)); e.gain.linearRampToValueAtTime(.0, T(22.6)); o.start(T(10)); o.stop(T(22.7)); }
+  // ---- grunhido baixo do zumbi
+  const growl = (t0, dur, k = 1) => { const e = gn(0), f = filt('bandpass', 320, 1.8); chain(f, e, sfx); send(e, .5);
+    for (const fr of [62, 66.5, 93]) { const o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(fr, T(t0)); o.frequency.linearRampToValueAtTime(fr * .82, T(t0 + dur)); o.connect(f); o.start(T(t0)); o.stop(T(t0 + dur + .1)); }
+    const am = A.createOscillator(); am.type = 'square'; am.frequency.value = 11; const amg = gn(.5); chain(am, amg, e.gain); am.start(T(t0)); am.stop(T(t0 + dur + .1));
+    const s = nsrc(NW, t0, t0 + dur), nf = filt('bandpass', 700, 2), ng = gn(.15); chain(s, nf, ng, e);
+    e.gain.setValueAtTime(0, T(t0)); e.gain.linearRampToValueAtTime(.42 * k, T(t0 + .25)); e.gain.linearRampToValueAtTime(.3 * k, T(t0 + dur * .7)); e.gain.linearRampToValueAtTime(0, T(t0 + dur)); };
+  growl(12.6, 1.7); growl(18.4, 1.9, 1.1); growl(20.9, 1.0, .8); growl(67.5, 1.4, .25); growl(71.8, 1.2, .3);
+  // ---- estática da TV + tom de alerta
+  { const s = nsrc(NW, 22, 35.6), f = filt('highpass', 1300), f2 = filt('lowpass', 7000), e = gn(0); chain(s, f, f2, e, sfx);
+    e.gain.setValueAtTime(0, T(22)); e.gain.linearRampToValueAtTime(.075, T(22.4)); e.gain.setValueAtTime(.075, T(27.2)); e.gain.linearRampToValueAtTime(.03, T(29.6)); e.gain.linearRampToValueAtTime(.018, T(34.6)); e.gain.linearRampToValueAtTime(0, T(35.3));
+    for (const [a, c] of [[22.6, 23.9], [25.4, 26.5]]) for (const fr of [853, 960]) { const o = A.createOscillator(); o.frequency.value = fr; const og = gn(0), bp = filt('bandpass', 1000, .8); chain(o, bp, og, sfx); og.gain.setValueAtTime(0, T(a)); og.gain.linearRampToValueAtTime(.018, T(a + .03)); og.gain.setValueAtTime(.018, T(c)); og.gain.linearRampToValueAtTime(0, T(c + .05)); o.start(T(a)); o.stop(T(c + .1)); } }
+  // ---- zumbido da geladeira
+  { const e = gn(0), f = filt('lowpass', 260, 1); chain(f, e, sfx); for (const [fr, ty, v] of [[60, 'sawtooth', .5], [120, 'sine', .6], [180, 'triangle', .2]]) { const o = A.createOscillator(); o.type = ty; o.frequency.value = fr; const og = gn(v); chain(o, og, f); o.start(T(27)); o.stop(T(35.5)); }
+    e.gain.setValueAtTime(0, T(27)); e.gain.linearRampToValueAtTime(.05, T(29.5)); e.gain.linearRampToValueAtTime(.11, T(31.6)); e.gain.setValueAtTime(.11, T(34.5)); e.gain.linearRampToValueAtTime(0, T(35.3)); }
+  // ---- rádio chiando com vozes cortadas
+  { const s = nsrc(NW, 47.6, 52), f = filt('bandpass', 2200, .9), e = gn(0); chain(s, f, e, sfx);
+    const v = A.createOscillator(); v.type = 'sawtooth'; v.frequency.value = 130; const f1 = filt('bandpass', 720, 4), f2 = filt('bandpass', 1350, 5), ve = gn(0), mix2 = gn(1); v.connect(f1); v.connect(f2); f1.connect(mix2); f2.connect(mix2); chain(mix2, ve, sfx);
+    let t = 47.7; while (t < 51.3) { const d = .07 + Math.random() * .2; const on = Math.random() < .55; ve.gain.setValueAtTime(on ? .09 : 0, T(t)); v.frequency.setValueAtTime(100 + Math.random() * 70, T(t)); e.gain.setValueAtTime(.05 + Math.random() * .08, T(t)); t += d; }
+    ve.gain.setValueAtTime(0, T(51.3)); e.gain.linearRampToValueAtTime(.0, T(51.9)); v.start(T(47.6)); v.stop(T(52)); }
+  // ---- batidas na porta
+  const knock = (t0, k) => { const o = A.createOscillator(); o.frequency.setValueAtTime(115, T(t0)); o.frequency.exponentialRampToValueAtTime(48, T(t0 + .16)); const og = gn(0); chain(o, og, sfx); send(og, .6); env(og.gain, t0, .003, .85 * k, .3); o.start(T(t0)); o.stop(T(t0 + .4));
+    const s = nsrc(NW, t0, t0 + .25), f = filt('lowpass', 1100, 1), e = gn(0); chain(s, f, e, sfx); send(e, .5); env(e.gain, t0, .002, .55 * k, .16);
+    const s2 = nsrc(NW, t0, t0 + .1), f2 = filt('bandpass', 3200, 3), e2 = gn(0); chain(s2, f2, e2, sfx); env(e2.gain, t0, .001, .05 * k, .05); };
+  for (const [t0, k] of KNOCKS) knock(t0, k * (t0 > 53 ? 1 : .85));
+  // ---- batimento cardíaco
+  const beat = (t0, k) => { for (const [dt, v] of [[0, 1], [.27, .65]]) { const o = A.createOscillator(); o.frequency.setValueAtTime(62, T(t0 + dt)); o.frequency.exponentialRampToValueAtTime(38, T(t0 + dt + .14)); const lpf = filt('lowpass', 140), og = gn(0); chain(o, lpf, og, hb); env(og.gain, t0 + dt, .012, .95 * v * k, .2); o.start(T(t0 + dt)); o.stop(T(t0 + dt + .35)); } };
+  { let t = 51.3; while (t < 65.6) { const p = (t - 51.3) / 14.3; beat(t, .55 + .4 * p); t += 60 / lerp(76, 128, p); } }
+  { let t = 78.6; while (t < 87.9) { const p = (t - 78.6) / 9.3; beat(t, .5 + .5 * p); t += 60 / lerp(86, 116, p); } }
+  // ---- porta abrindo e batendo
+  { const t0 = 74.35, o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(260, T(t0)); o.frequency.linearRampToValueAtTime(170, T(t0 + .55)); const v = A.createOscillator(); v.frequency.value = 22; const vg = gn(30); chain(v, vg, o.frequency);
+    const f = filt('bandpass', 850, 6), e = gn(0); chain(o, f, e, sfx); send(e, .4); e.gain.setValueAtTime(0, T(t0)); e.gain.linearRampToValueAtTime(.22, T(t0 + .08)); e.gain.linearRampToValueAtTime(0, T(t0 + .6)); o.start(T(t0)); o.stop(T(t0 + .7)); v.start(T(t0)); v.stop(T(t0 + .7));
+    const s = nsrc(NW, t0 - .05, t0), hf = filt('highpass', 3000), he = gn(0); chain(s, hf, he, sfx); env(he.gain, t0 - .05, .001, .15, .04);
+    const sl = 75.62; const o2 = A.createOscillator(); o2.frequency.setValueAtTime(90, T(sl)); o2.frequency.exponentialRampToValueAtTime(35, T(sl + .3)); const og2 = gn(0); chain(o2, og2, sfx); send(og2, 1); env(og2.gain, sl, .003, 1.0, .5); o2.start(T(sl)); o2.stop(T(sl + .7));
+    const s2 = nsrc(NW, sl, sl + .5), lf = filt('lowpass', 1600), le = gn(0); chain(s2, lf, le, sfx); send(le, 1); env(le.gain, sl, .002, .8, .35);
+    for (let i = 0; i < 5; i++) { const tt = sl + .08 + i * .045, s3 = nsrc(NW, tt, tt + .05), bf = filt('bandpass', 2500 + i * 300, 6), be = gn(0); chain(s3, bf, be, sfx); env(be.gain, tt, .001, .12, .04); } }
+  // ---- respiração ofegante da Helena
+  const breath = (t0, inh, k, muff) => { const s = nsrc(NW, t0, t0 + .6), f = filt('bandpass', inh ? 1500 : 1000, 1.2), f2 = filt('lowpass', muff ? 800 : 5000), e = gn(0); chain(s, f, f2, e, sfx);
+    const d = inh ? .32 : .4; e.gain.setValueAtTime(0, T(t0)); e.gain.linearRampToValueAtTime(.2 * k, T(t0 + d * .35)); e.gain.linearRampToValueAtTime(0, T(t0 + d)); };
+  { let t = 65.2; while (t < 73.8) { breath(t, 1, .55, 1); breath(t + .36, 0, .6, 1); t += .78; } }
+  { let t = 75.9, per = .8; while (t < 84) { const k = t < 82 ? .9 : .9 * (1 - (t - 82) / 2); breath(t, 1, k, 0); breath(t + per * .45, 0, k * 1.05, 0); t += per; per = Math.min(1.35, per + .04); } }
+  // ---- o som some: sobra o zumbido agudo e o coração
+  sfx.gain.setValueAtTime(1, T(81.8)); sfx.gain.linearRampToValueAtTime(.06, T(83.6)); sfx.gain.setValueAtTime(.06, T(88)); sfx.gain.setValueAtTime(0, T(88.02));
+  hb.gain.setValueAtTime(1, T(80)); hb.gain.linearRampToValueAtTime(1.25, T(86)); hb.gain.setValueAtTime(1.25, T(88)); hb.gain.setValueAtTime(0, T(88.02));
+  { const e = gn(0); chain(e, master); for (const fr of [6150, 6158]) { const o = A.createOscillator(); o.frequency.value = fr; o.connect(e); o.start(T(81.5)); o.stop(T(88.03)); }
+    e.gain.setValueAtTime(0, T(81.5)); e.gain.linearRampToValueAtTime(.022, T(84.5)); e.gain.linearRampToValueAtTime(.03, T(88)); e.gain.setValueAtTime(0, T(88.02)); }
+  // ---- impacto grave no título
+  { const t0 = 88.3, o = A.createOscillator(); o.frequency.setValueAtTime(58, T(t0)); o.frequency.exponentialRampToValueAtTime(30, T(t0 + 2.5)); const e = gn(0); chain(o, e, master); env(e.gain, t0, .01, .55, 3); o.start(T(t0)); o.stop(T(t0 + 3.2));
+    const s = nsrc(NB, t0, t0 + 2.5), f = filt('lowpass', 220), e2 = gn(0); chain(s, f, e2, master); env(e2.gain, t0, .01, .5, 2.2); }
+}
+
+/* =========================================================================
+   CONTROLE DE REPRODUÇÃO
+   ========================================================================= */
+let playing = false, spoken = new Set();
+function fit() { const s = Math.min(innerWidth / W, innerHeight / H); $('stage').style.transform = `scale(${s})`; }
+addEventListener('resize', fit); fit();
+buildTextures(); buildStreet(); buildHouse(); buildRoom(); buildHall();
+
+function loop() {
+  if (!playing) return;
+  const t = A.currentTime - T0;
+  for (let i = 0; i < CUES.length; i++) if (t >= CUES[i][0] && !spoken.has(i)) { spoken.add(i); say(CUES[i][2], CUES[i][3]); }
+  renderAt(Math.min(t, DUR));
+  if (t >= DUR) { playing = false; $('play').textContent = 'Assistir de novo'; $('start').classList.remove('hide'); return; }
+  requestAnimationFrame(loop);
+}
+$('play').onclick = () => {
+  if ('speechSynthesis' in window) { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'pt-BR'; speechSynthesis.speak(u); }
+  if (A) { try { A.close(); } catch (e) { } }
+  initAudio(); A.resume();
+  T0 = A.currentTime + .15; schedule();
+  spoken = new Set(); curSub = '';
+  $('start').classList.add('hide'); playing = true; requestAnimationFrame(loop);
+};
+// pré-visualização estática: ?t=SEGUNDOS
+const qs = new URLSearchParams(location.search);
+if (qs.has('t')) { $('start').classList.add('hide'); renderAt(parseFloat(qs.get('t')) || 0); }
+else renderAt(0.0001);
+window.__renderAt = renderAt;
+</script>
+</body>
+</html>
