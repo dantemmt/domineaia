@@ -1,0 +1,116 @@
+1
+00:00:00,400 --> 00:00:05,210
+Você já entrou em um estádio lotado e sentiu o grito de milhares de torcedores tomando conta de tudo?
+
+2
+00:00:05,290 --> 00:00:07,930
+Em alguns estádios, o barulho parece ainda mais intenso.
+
+3
+00:00:08,010 --> 00:00:10,300
+Mas isso não depende só da quantidade de pessoas.
+
+4
+00:00:10,380 --> 00:00:12,920
+Existe engenharia acústica por trás dessa experiência.
+
+5
+00:00:13,300 --> 00:00:18,960
+Quando a torcida grita, as vozes produzem ondas sonoras que se espalham pelo ambiente.
+
+6
+00:00:19,040 --> 00:00:22,710
+Parte desse som chega diretamente aos outros torcedores.
+
+7
+00:00:22,790 --> 00:00:26,450
+Outra parte encontra arquibancadas, paredes e cobertura,
+
+8
+00:00:26,530 --> 00:00:29,920
+sendo refletida de volta para o interior do estádio.
+
+9
+00:00:30,300 --> 00:00:32,900
+A forma do estádio faz diferença.
+
+10
+00:00:32,980 --> 00:00:41,770
+A inclinação e a disposição das arquibancadas influenciam como o som se espalha e como o barulho é percebido.
+
+11
+00:00:41,850 --> 00:00:48,920
+A cobertura também pode refletir parte da energia sonora de volta para as arquibancadas.
+
+12
+00:00:49,300 --> 00:00:50,710
+Mas existe um desafio:
+
+13
+00:00:50,790 --> 00:00:55,590
+reflexão demais pode criar ecos e dificultar a compreensão de mensagens.
+
+14
+00:00:55,670 --> 00:00:56,200
+Por isso,
+
+15
+00:00:56,280 --> 00:01:02,840
+o projeto equilibra superfícies que refletem o som com materiais que absorvem parte dessa energia.
+
+16
+00:01:02,920 --> 00:01:07,920
+O objetivo é preservar a atmosfera da torcida sem prejudicar a comunicação.
+
+17
+00:01:08,300 --> 00:01:09,980
+E não é só a arquitetura.
+
+18
+00:01:10,060 --> 00:01:13,910
+O sistema de alto-falantes também precisa ser planejado.
+
+19
+00:01:13,990 --> 00:01:17,430
+Distribuir o som de maneira uniforme é um desafio.
+
+20
+00:01:17,510 --> 00:01:25,650
+Os equipamentos precisam ser posicionados e sincronizados para que os avisos sejam compreendidos em todos os setores,
+
+21
+00:01:25,730 --> 00:01:26,920
+sem ecos confusos.
+
+22
+00:01:27,300 --> 00:01:27,800
+Por isso,
+
+23
+00:01:27,880 --> 00:01:33,870
+projetar um estádio não é apenas garantir boa visão do campo e espaço para milhares de pessoas.
+
+24
+00:01:33,950 --> 00:01:37,970
+Arquitetos e engenheiros também estudam reflexões, reverberação,
+
+25
+00:01:38,050 --> 00:01:40,020
+cobertura e distribuição sonora.
+
+26
+00:01:40,100 --> 00:01:43,920
+Tudo isso influencia a atmosfera que faz parte do espetáculo.
+
+27
+00:01:44,300 --> 00:01:46,550
+Da próxima vez que ouvir um estádio inteiro cantando, lembre-se:
+
+28
+00:01:46,630 --> 00:01:48,700
+até o som da torcida pode ser influenciado pela engenharia.
+
+29
+00:01:48,780 --> 00:01:50,920
+Qual estádio você acha que tem a torcida mais impressionante?
+
