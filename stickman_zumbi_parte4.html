@@ -1435,7 +1435,7 @@ function decodeNarr() {
 }
 function scheduleNarr() {
   if (!NARR) return;
-  const vg = gn(1.15); vg.connect(master);
+  const vg = gn(1.6); vg.connect(master);
   CUES.forEach((c, i) => { const sg = NSEG[i]; if (!sg) return; const s = A.createBufferSource(); s.buffer = NARR; s.connect(vg); s.start(T(c[0] + .05), sg[0], sg[1] - sg[0]); });
 }
 let VOICE = null;
@@ -1482,7 +1482,7 @@ function initAudio() {
   A = new (window.AudioContext || window.webkitAudioContext)();
   const comp = A.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3.5; comp.attack.value = .005; comp.release.value = .25;
   master = gn(.85); master.connect(comp); comp.connect(A.destination);
-  sfx = gn(1); mus = gn(1); hb = gn(1); sfx.connect(master); mus.connect(master); hb.connect(master);
+  sfx = gn(1); mus = gn(1); hb = gn(1); const bed = gn(.45); bed.connect(master); sfx.connect(bed); mus.connect(bed); hb.connect(bed); // efeitos mais baixos, voz em destaque
   rev = A.createConvolver(); rev.buffer = impulse(2.8); const rg = gn(.55); rev.connect(rg); rg.connect(sfx);
   NW = noiseBuf('white', 4); NB = noiseBuf('brown', 4);
 }
