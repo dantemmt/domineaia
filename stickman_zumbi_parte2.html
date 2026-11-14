@@ -1165,7 +1165,7 @@ let VOICE = null;
 function pickVoices() {
   const vs = speechSynthesis.getVoices(), sel = $('voice');
   const pt = vs.filter(v => /^pt[-_]BR/i.test(v.lang)), any = pt.length ? pt : vs.filter(v => /^pt/i.test(v.lang));
-  const pref = ['Felipe', 'Daniel', 'Antonio', 'Reed', 'Eddy', 'Rocko', 'Google português do Brasil', 'Luciana', 'Francisca'];
+  const pref = ['Daniel', 'Antonio', 'Reed', 'Eddy', 'Rocko', 'Felipe', 'Google português do Brasil', 'Luciana', 'Francisca'];
   any.sort((p, q) => { const ip = pref.findIndex(n => p.name.includes(n)), iq = pref.findIndex(n => q.name.includes(n)); return (ip < 0 ? 99 : ip) - (iq < 0 ? 99 : iq); });
   sel.innerHTML = '';
   for (const v of any) { const o = document.createElement('option'); o.value = v.name; o.textContent = `${v.name} (${v.lang})`; sel.appendChild(o); }
