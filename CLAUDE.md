@@ -17,3 +17,8 @@
 ## Mixagem de áudio (regra fixa)
 - Voz SEMPRE bem mais alta que tudo (é o som principal, o ouvinte precisa entender cada palavra).
 - Efeitos e trilha audíveis, mas baixos: no HTML, `bed = gn(.45)` para sfx/mus/hb e narração `gn(1.6)`.
+
+## Retenção (regra fixa para todo vídeo)
+- Gancho nos primeiros 3s, curiosidade e perguntas diretas ao espectador ao longo do vídeo.
+- Uma promessa no começo/meio ("fica até o final...") que só é entregue no final. Não entregar tudo no início.
+- Terminar com pergunta para comentários. Texto grande na tela nos pontos-chave.
