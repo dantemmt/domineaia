@@ -13,3 +13,7 @@
 - Voz da narração: ElevenLabs "Eric - Professional Brazilian Narrator" (voice_id `JcJSwKJ3l1HpINgnIA4X`, modelo `eleven_multilingual_v2`). Usar sempre essa voz.
 - Novo episódio: copiar o HTML do episódio anterior, trocar só cenas (funções de cena), CUES, schedule de áudio e narração embutida (NSEG + NARR_MP3).
 - O usuário quer sempre o MP4 final para baixar e salvar nas Fotos (renderizar quadros com Playwright + áudio via OfflineAudioContext + ffmpeg). Não commitar MP4 no repositório.
+
+## Mixagem de áudio (regra fixa)
+- Voz SEMPRE bem mais alta que tudo (é o som principal, o ouvinte precisa entender cada palavra).
+- Efeitos e trilha audíveis, mas baixos: no HTML, `bed = gn(.45)` para sfx/mus/hb e narração `gn(1.6)`.
