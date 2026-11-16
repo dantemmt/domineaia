@@ -25,4 +25,4 @@
 
 ## Estilo de personagens (a partir do vídeo do Pelé)
 - Padrão: personagens estilo "Fama em Miniatura" (chibi: cabeça grande, olhos grandes com brilho, bochechas rosadas, contorno escuro) — `drawChibi`, `STYLE = 'chibi'` em `stickman_pele.html`. Cenários continuam os mesmos.
-- Vídeos sempre em duas versões: em pé 9:16 (TikTok/Reels, com frase-gancho no topo) e normal 16:9.
+- Vídeos sempre em duas versões: em pé 9:16 (TikTok/Reels, SEM título escrito por cima — o usuário escreve no app) e normal 16:9.
