@@ -2,34 +2,477 @@
   "fps": 30,
   "durationInFrames": 1890,
   "scenes": {
-    "s1": [0, 90], "s2": [90, 165], "s3": [165, 360], "s4": [360, 540],
-    "s5": [540, 810], "s6": [810, 930], "s7": [930, 1110], "s8": [1110, 1380],
-    "s9": [1380, 1560], "s10": [1560, 1740], "s11": [1740, 1890]
+    "s1": [
+      0,
+      90
+    ],
+    "s2": [
+      90,
+      165
+    ],
+    "s3": [
+      165,
+      360
+    ],
+    "s4": [
+      360,
+      540
+    ],
+    "s5": [
+      540,
+      810
+    ],
+    "s6": [
+      810,
+      930
+    ],
+    "s7": [
+      930,
+      1110
+    ],
+    "s8": [
+      1110,
+      1380
+    ],
+    "s9": [
+      1380,
+      1560
+    ],
+    "s10": [
+      1560,
+      1740
+    ],
+    "s11": [
+      1740,
+      1890
+    ]
   },
-  "s1": { "lampOn": [[4, 8], [14, 18], [26, 9999]], "hookText": 36 },
-  "s2": { "text": 96, "glitches": [104, 128] },
-  "s3": { "text": 171, "phone": 185, "notif": 200, "counterStart": 215, "counterEnd": 290, "shimmer": 292 },
-  "s4": { "text": 366, "brain": 380, "text2": 450, "whoosh": 438, "heartStart": 372, "heartEnd": 532 },
+  "s1": {
+    "lampOn": [
+      [
+        4,
+        8
+      ],
+      [
+        14,
+        18
+      ],
+      [
+        26,
+        9999
+      ]
+    ],
+    "hookText": 36
+  },
+  "s2": {
+    "text": 96,
+    "glitches": [
+      104,
+      128
+    ]
+  },
+  "s3": {
+    "text": 171,
+    "phone": 185,
+    "notif": 200,
+    "counterStart": 215,
+    "counterEnd": 290,
+    "shimmer": 292
+  },
+  "s4": {
+    "text": 366,
+    "brain": 380,
+    "text2": 450,
+    "whoosh": 438,
+    "heartStart": 372,
+    "heartEnd": 532
+  },
   "s5": {
     "text": 546,
     "spends": [
-      { "f": 575, "icon": "cheers", "value": 180, "label": "-R$ 180", "note": "(COMEMORAÇÃO)" },
-      { "f": 625, "icon": "shoes", "value": 65, "label": "-R$ 65", "note": "(1ª PARCELA DE 10)" },
-      { "f": 668, "icon": "moto", "value": 42, "label": "-R$ 42", "note": "" },
-      { "f": 681, "icon": "moto", "value": 42, "label": "-R$ 42", "note": "" },
-      { "f": 694, "icon": "moto", "value": 42, "label": "-R$ 42", "note": "" },
-      { "f": 707, "icon": "moto", "value": 42, "label": "-R$ 42", "note": "" },
-      { "f": 738, "icon": "cart", "value": 850, "label": "-R$ 850", "note": "" },
-      { "f": 766, "icon": "house", "value": 1200, "label": "-R$ 1.200", "note": "" }
+      {
+        "f": 575,
+        "icon": "cheers",
+        "value": 180,
+        "label": "-R$ 180",
+        "note": "(COMEMORAÇÃO)"
+      },
+      {
+        "f": 625,
+        "icon": "shoes",
+        "value": 65,
+        "label": "-R$ 65",
+        "note": "(1ª PARCELA DE 10)"
+      },
+      {
+        "f": 668,
+        "icon": "moto",
+        "value": 42,
+        "label": "-R$ 42",
+        "note": ""
+      },
+      {
+        "f": 681,
+        "icon": "moto",
+        "value": 42,
+        "label": "-R$ 42",
+        "note": ""
+      },
+      {
+        "f": 694,
+        "icon": "moto",
+        "value": 42,
+        "label": "-R$ 42",
+        "note": ""
+      },
+      {
+        "f": 707,
+        "icon": "moto",
+        "value": 42,
+        "label": "-R$ 42",
+        "note": ""
+      },
+      {
+        "f": 738,
+        "icon": "cart",
+        "value": 850,
+        "label": "-R$ 850",
+        "note": ""
+      },
+      {
+        "f": 766,
+        "icon": "house",
+        "value": 1200,
+        "label": "-R$ 1.200",
+        "note": ""
+      }
     ],
-    "drainStart": 784, "drainEnd": 800
+    "drainStart": 784,
+    "drainEnd": 800
   },
-  "s6": { "text": 816, "flipStart": 818, "flipEnd": 856, "lampFlicker": [864, 868, 872, 876], "lampOff": 880 },
-  "s7": { "text": 936, "boxStart": 955, "boxEnd": 995, "reveal": 998, "sub": 1030 },
-  "s8": { "text": 1116, "other": 1130, "vault": 1142, "notif": 1185, "coinsStart": 1205, "coinsEnd": 1238, "vaultClose": 1250, "bold": 1272 },
-  "s9": { "split": 1386, "left": 1398, "right": 1422, "growStart": 1430, "growEnd": 1520, "final": 1476 },
-  "s10": { "text": 1566, "noteFall": 1574, "noteLand": 1594, "typeStart": 1606, "framesPerChar": 1.6,
-           "typeText": "O DINHEIRO QUE VOCÊ VÊ,\nVOCÊ GASTA.\nO QUE VOCÊ AUTOMATIZA,\nVOCÊ ACUMULA." },
-  "s11": { "text": 1746, "pill1": 1768, "ou": 1778, "pill2": 1788, "impact": 1800, "fadeStart": 1875 },
-  "coursePill": [[120, 270], [1380, 1530], [1800, 99999]]
+  "s6": {
+    "text": 816,
+    "flipStart": 818,
+    "flipEnd": 856,
+    "lampFlicker": [
+      864,
+      868,
+      872,
+      876
+    ],
+    "lampOff": 880
+  },
+  "s7": {
+    "text": 936,
+    "boxStart": 955,
+    "boxEnd": 995,
+    "reveal": 998,
+    "sub": 1030
+  },
+  "s8": {
+    "text": 1116,
+    "other": 1130,
+    "vault": 1142,
+    "notif": 1185,
+    "coinsStart": 1205,
+    "coinsEnd": 1238,
+    "vaultClose": 1250,
+    "bold": 1272
+  },
+  "s9": {
+    "split": 1386,
+    "left": 1398,
+    "right": 1422,
+    "growStart": 1430,
+    "growEnd": 1520,
+    "final": 1476
+  },
+  "s10": {
+    "text": 1566,
+    "noteFall": 1574,
+    "noteLand": 1594,
+    "typeStart": 1606,
+    "framesPerChar": 1.6,
+    "typeText": "O DINHEIRO QUE VOCÊ VÊ,\nVOCÊ GASTA.\nO QUE VOCÊ AUTOMATIZA,\nVOCÊ ACUMULA."
+  },
+  "s11": {
+    "text": 1746,
+    "pill1": 1768,
+    "ou": 1778,
+    "pill2": 1788,
+    "impact": 1800,
+    "fadeStart": 1875
+  },
+  "coursePill": [
+    [
+      120,
+      270
+    ],
+    [
+      1380,
+      1530
+    ],
+    [
+      1800,
+      99999
+    ]
+  ],
+  "captions": [
+    [
+      0,
+      "PARA TUDO."
+    ],
+    [
+      22,
+      "PRESTA ATENÇÃO."
+    ],
+    [
+      48,
+      "É SÉRIO."
+    ],
+    [
+      70,
+      "ME ESCUTA."
+    ],
+    [
+      96,
+      "VOCÊ TÁ PENSANDO:"
+    ],
+    [
+      120,
+      "“QUE BOBAGEM.”"
+    ],
+    [
+      142,
+      "MAS FICA ATÉ O FIM."
+    ],
+    [
+      171,
+      "TODO MÊS É IGUAL."
+    ],
+    [
+      200,
+      "O PIX CHEGA."
+    ],
+    [
+      222,
+      "O NÚMERO SOBE."
+    ],
+    [
+      250,
+      "VOCÊ SE SENTE RICO."
+    ],
+    [
+      285,
+      "POR UM MOMENTO…"
+    ],
+    [
+      315,
+      "VOCÊ RESPIRA ALIVIADO."
+    ],
+    [
+      340,
+      "SÓ QUE…"
+    ],
+    [
+      366,
+      "ISSO NÃO É À TOA."
+    ],
+    [
+      395,
+      "É QUÍMICA."
+    ],
+    [
+      418,
+      "A MESMA DO VÍCIO."
+    ],
+    [
+      456,
+      "O CÉREBRO AFROUXA."
+    ],
+    [
+      485,
+      "O CUIDADO SOME."
+    ],
+    [
+      512,
+      "E O DEDO COÇA."
+    ],
+    [
+      546,
+      "PRIMEIRO, UM BRINDE."
+    ],
+    [
+      600,
+      "AFINAL, VOCÊ MERECE."
+    ],
+    [
+      625,
+      "DEPOIS, O TÊNIS."
+    ],
+    [
+      648,
+      "“É SÓ UMA PARCELA.”"
+    ],
+    [
+      668,
+      "DELIVERY."
+    ],
+    [
+      681,
+      "DE NOVO."
+    ],
+    [
+      694,
+      "E DE NOVO."
+    ],
+    [
+      707,
+      "E DE NOVO."
+    ],
+    [
+      725,
+      "AÍ VEM O MERCADO."
+    ],
+    [
+      752,
+      "O ALUGUEL."
+    ],
+    [
+      784,
+      "E O RESTO… SOME."
+    ],
+    [
+      816,
+      "PULA PRO DIA 20."
+    ],
+    [
+      850,
+      "OLHA A CONTA."
+    ],
+    [
+      880,
+      "“PRA ONDE FOI?”"
+    ],
+    [
+      905,
+      "VOCÊ NÃO SABE."
+    ],
+    [
+      936,
+      "NÃO É FALTA DE SALÁRIO."
+    ],
+    [
+      968,
+      "É UM PADRÃO."
+    ],
+    [
+      1000,
+      "QUASE TODO MUNDO CAI."
+    ],
+    [
+      1040,
+      "LÊ DE NOVO:"
+    ],
+    [
+      1072,
+      "E SE REPETE TODO MÊS."
+    ],
+    [
+      1116,
+      "AGORA OLHA ELE."
+    ],
+    [
+      1150,
+      "MESMO SALÁRIO QUE VOCÊ."
+    ],
+    [
+      1185,
+      "O PIX CAI…"
+    ],
+    [
+      1205,
+      "E ANTES DE TUDO…"
+    ],
+    [
+      1238,
+      "GUARDA."
+    ],
+    [
+      1260,
+      "TRANCA."
+    ],
+    [
+      1282,
+      "SEM PENSAR."
+    ],
+    [
+      1310,
+      "SEM NEGOCIAR."
+    ],
+    [
+      1340,
+      "TODO. SANTO. MÊS."
+    ],
+    [
+      1386,
+      "COMPARA."
+    ],
+    [
+      1410,
+      "VOCÊ: NÃO SOBRA NADA."
+    ],
+    [
+      1440,
+      "ELE: SOBRA SEMPRE."
+    ],
+    [
+      1478,
+      "A DIFERENÇA?"
+    ],
+    [
+      1502,
+      "A ORDEM."
+    ],
+    [
+      1528,
+      "SÓ A ORDEM."
+    ],
+    [
+      1566,
+      "ANOTA AÍ."
+    ],
+    [
+      1600,
+      "PRINTA SE PRECISAR."
+    ],
+    [
+      1640,
+      "LÊ COMIGO."
+    ],
+    [
+      1690,
+      "AUTOMATIZA."
+    ],
+    [
+      1715,
+      "E ESQUECE."
+    ],
+    [
+      1746,
+      "SEM MENTIR."
+    ],
+    [
+      1768,
+      "QUAL DOS DOIS?"
+    ],
+    [
+      1800,
+      "COMENTA AQUI EMBAIXO."
+    ],
+    [
+      1840,
+      "E SALVA ESSE VÍDEO."
+    ]
+  ]
 }

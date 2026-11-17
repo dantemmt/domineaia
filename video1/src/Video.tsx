@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, Audio, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import T from './timeline.json';
 import { FONT, W, H, clamp } from './ui';
+import { Captions } from './captions';
 import { Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11 } from './scenes';
 
 const SCENES: [keyof typeof T.scenes, React.FC][] = [
@@ -79,6 +80,7 @@ export const Video: React.FC = () => {
         return frame >= a && frame < b ? <C key={k} /> : null;
       })}
       <Vignette />
+      <Captions />
       <CoursePill />
       <div style={{ position: 'absolute', right: 60, top: 70, fontFamily: FONT, fontWeight: 500, fontSize: 24, letterSpacing: 2, color: 'rgba(255,255,255,0.5)' }}>
         @codigovoyrex
