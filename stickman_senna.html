@@ -2548,12 +2548,11 @@ function captions(t) {
   const words = LINES[i].split(' '), tot = LINES[i].length, p = clamp((t - CS[i]) / CD[i]);
   let acc = 0, cur = 0; for (let k = 0; k < words.length; k++) { acc += words[k].length + 1; if (p * tot < acc) { cur = k; break; } cur = k; }
   const g0 = Math.floor(cur / 3) * 3, grp = words.slice(g0, g0 + 3);
-  b.save(); b.font = '900 46px "DejaVu Sans", Arial, sans-serif'; b.textBaseline = 'middle'; b.lineJoin = 'round';
-  const widths = grp.map(w => b.measureText(w.toUpperCase()).width + 22), totalW = widths.reduce((a, c) => a + c, 0); let x = 640 - totalW / 2; const y = 650;
-  grp.forEach((w, k) => { const on = g0 + k === cur, hl = HL.includes(w.toUpperCase()); const sc = on ? 1 + .14 * (1 - ss(0, .12, (p * tot - (acc - w.length)) / 30)) : 1;
-    b.save(); b.translate(x + widths[k] / 2, y); b.scale(sc, sc); b.textAlign = 'center';
-    b.lineWidth = 10; b.strokeStyle = 'rgba(0,0,0,.92)'; b.strokeText(w.toUpperCase(), 0, 0);
-    b.fillStyle = on ? '#ffd400' : hl ? '#7CFF8A' : '#ffffff'; if (g0 + k > cur) b.globalAlpha = .55; b.fillText(w.toUpperCase(), 0, 0); b.restore(); x += widths[k]; });
+  b.save(); b.font = '600 34px "DejaVu Sans", Arial, sans-serif'; b.textBaseline = 'middle'; b.lineJoin = 'round';
+  const widths = grp.map(w => b.measureText(w).width + 14), totalW = widths.reduce((a, c) => a + c, 0); let x = 640 - totalW / 2; const y = 650;
+  grp.forEach((w, k) => { const on = g0 + k === cur; b.save(); b.translate(x + widths[k] / 2, y); b.textAlign = 'center';
+    b.shadowColor = 'rgba(0,0,0,.85)'; b.shadowBlur = 6; b.shadowOffsetY = 2; b.lineWidth = 3; b.strokeStyle = 'rgba(0,0,0,.6)'; b.strokeText(w, 0, 0);
+    b.fillStyle = on ? '#ffe680' : '#ffffff'; if (g0 + k > cur) b.globalAlpha = .7; b.fillText(w, 0, 0); b.restore(); x += widths[k]; });
   b.restore();
 }
 /* ---- cards / títulos ---- */
@@ -2890,21 +2889,15 @@ function V3(t) { // perdia no molhado: os outros passam
 }
 function V4(t) { // treinava na chuva, sozinho, à noite: rodada e volta
   const k = t - ls(3), kx = k * 8, camX = kx - 1, sp = sm(ls(3) + 1.0, ls(3) + 2.4, t); NOWT = t; sideBG(t, camX, 'kartrain');
-  carOnTrack(t, camX, kx, 'near', { k: 1, rain: 1, dist: kx, rot: sp < 1 ? sp * Math.PI * 2 : 0 });
+  carOnTrack(t, camX, kx, 'near', { k: 1, rain: 1, dist: kx, rot: Math.sin(sp * Math.PI) * .12 });
   b.fillStyle = 'rgba(10,15,35,.12)'; b.fillRect(0, 0, W, H); rainOver(t, 1); bolt(t, ls(3) + 3.2);
   headline('TREINAVA NA CHUVA', ls(3) + .2, le(3), t, 150, 60, '#ffd400'); POST.vig = .75;
 }
-function V6(t) { // Mônaco 1984: um por um... bandeira vermelha... triste
-  const T0 = ls(5), k = t - T0; NOWT = t;
-  if (k < 6.4) { const sx = 10 + k * 40, camX = sx - 1; sideBG(t, camX, 'monaco');
-    for (const r0 of [22, 50, 78, 108]) carOnTrack(t, camX, r0 + k * 26, 'far', { liv: [LIV.wil, LIV.fer, LIV.ben, LIV.wil][r0 % 4], rain: 1, dist: r0 + k * 26, speed: 26 });
-    carOnTrack(t, camX, sx, 'near', { liv: LIV.tol, rain: 1, dist: sx, speed: 40, rainLight: 1 });
-    rainOver(t, 1); motionStreaks(t, .4); tag('MÔNACO • 1984', T0 + .1, T0 + 6.4, t);
-    if (k < 5.6) headline('UM POR UM...', T0 + 3.2, T0 + 5.6, t, 160, 56, '#ffd400'); else { b.fillStyle = `rgba(200,20,20,${.22 + .12 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', T0 + 5.6, T0 + 6.4, t, 170, 60, '#fff'); } }
-  else { const camX = 0; sideBG(t, camX, 'monaco'); carOnTrack(t, camX, 1.5, 'near', { liv: LIV.tol, rain: 1, dist: 0, noDriver: 1 });
-    drawChibi(b, 360, 640, 290, { suit: { c: '#f4f4f0', s: '#1f56b0' }, lookY: 1, hy: .15, armL: [.25, .1], armR: [.3, .15], hairC: '#3a2a1c', skin: '#e2b48a', sway: Math.sin(t * .8) * .02 });
-    b.globalCompositeOperation = 'saturation'; b.fillStyle = 'rgba(128,128,128,.5)'; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; rainOver(t, 1);
-    tag('CORRIDA INTERROMPIDA', T0 + 6.5, le(5), t, 92, '#d02828'); headline('ELE ESTAVA CHEGANDO NO LÍDER', T0 + 7, le(5), t, 190, 42, '#fff'); }
+function V6(t) { // Mônaco 1984: ultrapassa um por um na chuva
+  const T0 = ls(5), k = t - T0, sx = 10 + k * 40, camX = sx - 1; NOWT = t; sideBG(t, camX, 'monaco');
+  for (const r0 of [22, 50, 78, 108, 140, 172]) carOnTrack(t, camX, r0 + k * 26, 'far', { liv: [LIV.fer, LIV.ben][r0 % 2], rain: 1, dist: r0 + k * 26, speed: 26 });
+  carOnTrack(t, camX, sx, 'near', { liv: LIV.tol, rain: 1, dist: sx, speed: 40, rainLight: 1 });
+  rainOver(t, 1); motionStreaks(t, .4); tag('MÔNACO • 1984', T0 + .1, le(5), t); headline('UM POR UM...', T0 + 3.2, le(5), t, 160, 56, '#ffd400');
   POST.vig = .7;
 }
 function V7(t) { // a vitória: de pé no carro, bandeira do Brasil (sem fala, com fanfarra)
