@@ -10,7 +10,7 @@
   #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
   #stage{position:relative;width:1280px;height:720px;flex:none;transform-origin:center center;overflow:hidden;background:#000}
   #c{display:block;width:1280px;height:720px}
-  #sub{display:none}
+  #sub{position:absolute;left:0;right:0;bottom:66px;text-align:center;pointer-events:none}
   #sub span{display:inline-block;max-width:1040px;background:rgba(12,12,14,.66);color:#fff;font-size:27px;font-weight:500;
     line-height:1.36;padding:5px 15px 6px;border-radius:5px;letter-spacing:.005em;opacity:0;transition:opacity .18s linear}
   #sub span.on{opacity:1}
@@ -2537,9 +2537,9 @@ function scheduleS() {
    SENNA v2 — visual profissional: carros reais, kart, cards, legendas palavra a palavra
    ========================================================================= */
 const LINES = ['Ele tinha medo de chuva. E virou o rei da chuva.', 'Aos quatro anos, ganhou o primeiro kart do pai.', 'Perdia no molhado.', 'Então treinava quando chovia.', '', 'Mônaco, 84: carro fraco, chuva forte, passou um por um.', '', 'Três títulos mundiais. Quarenta e uma vitórias.', 'Interlagos, 91:', 'câmbio travado na sexta marcha.', 'Mesmo assim, venceu em casa', 'e ergueu o troféu.', '', 'Qual corrida dele você nunca esquece?'];
-const LDUR = [5.0, 5.0, 3.2, 4.6, 0, 9.5, 5.5, 5.5, 4.0, 4.2, 3.6, 3.8, 0, 2.6];
-const LST = [0.0, 5.0, 10.0, 13.2, 17.8, 17.8, 27.3, 32.8, 38.3, 42.3, 46.5, 50.1, 53.9, 53.9];
-const CS = [0.5, 5.5, 10.5, 13.7, 0, 18.3, 0, 33.3, 38.8, 42.8, 47.0, 50.6, 0, 54.4], CD = [2.93, 2.77, 0.95, 1.53, 0, 5.39, 0, 2.96, 1.69, 1.59, 2.0, 1.06, 0, 1.63]; // início e duração de cada fala
+const LDUR = [4.9, 4.7, 2.9, 3.5, 0, 7.5, 12.0, 4.9, 3.7, 3.5, 3.9, 3.7, 0, 4.8];
+const LST = [0.0, 4.9, 9.6, 12.5, 16.0, 16.0, 23.5, 35.5, 40.4, 44.1, 47.6, 51.5, 55.2, 55.2];
+const CS = [0.4, 5.3, 10.0, 12.9, 0, 16.4, 0, 35.9, 40.8, 44.5, 48.0, 51.9, 0, 55.6], CD = [2.93, 2.77, 0.95, 1.53, 0, 5.39, 0, 2.96, 1.69, 1.59, 2.0, 1.06, 0, 1.63]; // início e duração de cada fala
 const VEND = 60; // vídeo de exatamente 60s
 const HL = ['1983,', 'CAMPEÃO', 'CHANCE', 'CHUVA', 'MEDO', 'KART', 'PERDIA', 'TREINAR.', 'NINGUÉM', 'FINAL,', 'TERMINOU.', 'MÔNACO,', 'INTERROMPIDA.', 'TÍTULOS:', 'VITÓRIAS.', 'BANDEIRA', 'BRASIL', 'INTERLAGOS,', 'CÂMBIO', 'SEXTA', 'BANDEIRADA.', 'GRITANDO.', 'TROFÉU', 'BEM', 'FEITO...', 'NÃO', 'FAZ.', 'ESQUECE?', 'COMENTA'];
 /* ---- legenda palavra a palavra (estilo TikTok) ---- */
@@ -2900,13 +2900,21 @@ function V6(t) { // Mônaco 1984: ultrapassa um por um na chuva
   rainOver(t, 1); motionStreaks(t, .4); tag('MÔNACO • 1984', T0 + .1, le(5), t); headline('UM POR UM...', T0 + 3.2, le(5), t, 160, 56, '#ffd400');
   POST.vig = .7;
 }
-function V7(t) { // a vitória: de pé no carro, bandeira do Brasil (sem fala, com fanfarra)
-  const T0 = ls(6), k = t - T0, v = Math.max(0, 14 - k * 5), sx = 30 + (k < 2.8 ? 14 * k - 2.5 * k * k : 14 * 2.8 - 2.5 * 7.84), camX = sx - 1; NOWT = t; CROWDJ = 1; sideBG(t, camX, 'day');
-  const up = sm(T0 + 2.4, T0 + 3.4, t), s = LANE.near.s * 1.45, X = 640 + (sx - camX) * 30, Y = LANE.near.y + 40;
-  drawF1Side(b, X, Y, s, { liv: LIV.mcl, dist: sx, speed: v, noDriver: up > .05 });
-  if (up > .05) { drawChibi(b, X + .05 * s, Y - .55 * s - up * .25 * s, .95 * s * (1 + up * .1), { suit: SUIT, helmet: true, armR: [lerp(.3, 2.8, up), lerp(.2, 3.0, up), .17, .16], armL: [lerp(.3, 2.2, up), lerp(.2, 2.6, up), .17, .16] });
-    flag2d(b, X + .3 * s, Y - 2.4 * s - Math.sin(t * 3) * 6, 1.4 * s, .95 * s, t); }
-  confetti(t, ss(T0 + 2.6, T0 + 3.2, t)); tag('A VOLTA DA VITÓRIA', T0 + .2, le(6), t, 92, '#1f9a45'); POST.vig = .55;
+function V7(t) { // a vitória (sem fala, com fanfarra): cruza a linha de chegada e depois fica de pé com a bandeira
+  const T0 = ls(6), k = t - T0; NOWT = t; CROWDJ = 1;
+  if (k < 4.2) { const sx = -14 + k * 9, camX = 6; sideBG(t, camX, 'day');
+    const fx = 640 + (6 - camX) * 30 + 0; for (let i2 = 0; i2 < 8; i2++) for (let j = 0; j < 2; j++) { b.fillStyle = (i2 + j) % 2 ? '#111' : '#f4f4f4'; b.fillRect(fx - 20 + j * 20, 484 + i2 * 20, 20, 20); }
+    drawChibi(b, fx + 120, 470, 150, { cloth: '#f0f0f0', pants: '#f0f0f0', skin: '#e2b48a', hairC: '#3a2a1c', armR: [2.9, 3.0, .17, .16], armL: [.3, .2], mouth: 'open', mo: .6 });
+    for (let a = 0; a < 4; a++) for (let j = 0; j < 3; j++) { b.fillStyle = (a + j) % 2 ? '#111' : '#fff'; b.fillRect(fx + 128 + a * 18 + Math.sin(t * 12 + a) * 3, 300 + j * 18, 18, 18); }
+    carOnTrack(t, camX, sx, 'near', { liv: LIV.mcl, dist: sx * 3, speed: 30 }); motionStreaks(t, .4);
+    confetti(t, ss(T0 + 2.4, T0 + 3, t)); tag('BANDEIRADA', T0 + .2, T0 + 4.2, t, 92, '#ffd400'); }
+  else { const kk = k - 4.2, sx = 30 + Math.min(kk, 2.6) * 10 - Math.min(kk, 2.6) ** 2 * 1.6 + Math.max(0, kk - 2.6) * 2.2, camX = sx - 1; sideBG(t, camX, 'day');
+    const up = sm(T0 + 6.4, T0 + 7.4, t), s2 = LANE.near.s * 1.45, X = 640 + (sx - camX) * 30, Y = LANE.near.y + 40;
+    drawF1Side(b, X, Y, s2, { liv: LIV.mcl, dist: sx, speed: 5, noDriver: up > .05 });
+    if (up > .05) { drawChibi(b, X + .05 * s2, Y - .55 * s2 - up * .25 * s2, .95 * s2 * (1 + up * .1), { suit: SUIT, helmet: true, armR: [lerp(.3, 2.8, up), lerp(.2, 3.0, up), .17, .16], armL: [lerp(.3, 2.2, up), lerp(.2, 2.6, up), .17, .16] });
+      flag2d(b, X + .3 * s2, Y - 2.4 * s2 - Math.sin(t * 3) * 6, 1.4 * s2, .95 * s2, t); }
+    confetti(t, 1); tag('A VOLTA DA VITÓRIA', T0 + 4.4, le(6), t, 92, '#1f9a45'); }
+  POST.vig = .55;
 }
 function V9(t) { // Interlagos 1991: em casa
   const T0 = ls(8), k = t - T0, sx = 10 + k * 55, camX = sx - 2; NOWT = t; CROWDJ = 1; sideBG(t, camX, 'day');
@@ -2930,9 +2938,10 @@ function V11(t) { // bandeirada: venceu em casa
   confetti(t, ss(T0 + 1.2, T0 + 1.7, t)); headline('VENCEU EM CASA!', T0 + 1.3, le(10), t, 150, 76, '#ffd400'); POST.vig = .55;
 }
 
-function VS2(t) { const f = [V1, V2, V3, V4, M5, V6, V7, M7, V9, V10, V11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); const st = i ? LST[i] : 0, en = st + LDUR[i]; if (i) POST.black = Math.max(POST.black || 0, 1 - ss(st, st + .35, t)); if (i < 13) POST.black = Math.max(POST.black || 0, ss(en - .3, en, t) * .9); captions(t); }
+function VS2(t) { const f = [V1, V2, V3, V4, M5, V6, V7, M7, V9, V10, V11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); const st = i ? LST[i] : 0, en = st + LDUR[i]; if (i) POST.black = Math.max(POST.black || 0, 1 - ss(st, st + .35, t)); if (i < 13) POST.black = Math.max(POST.black || 0, ss(en - .3, en, t) * .9); }
 function scheduleS2() {
   const R = Math.random;
+  sfx.gain.setValueAtTime(.5, T(0)); // efeitos mais baixos que a voz
   const pad = (a, c, fr, v) => { const pg = gn(0), pl = filt('lowpass', 1400); chain(pl, pg, mus); for (const f of fr) { const o = A.createOscillator(); o.type = 'triangle'; o.frequency.value = f; o.connect(pl); o.start(T(a)); o.stop(T(c + .1)); } pg.gain.setValueAtTime(0, T(a)); pg.gain.linearRampToValueAtTime(v, T(a + 1)); pg.gain.setValueAtTime(v, T(c - .8)); pg.gain.linearRampToValueAtTime(0, T(c)); };
   pad(0, ls(5), [110, 130.8, 164.8], .04); pad(ls(5), VEND, [146.8, 185, 220, 293.7], .045);
   // batida (kick + baixo) a partir de Mônaco — energia
@@ -2953,11 +2962,11 @@ function scheduleS2() {
   const roar = (a, c, k) => { const s = nsrc(NB, a, c), f1 = filt('bandpass', 600, .8), e = gn(0); chain(s, f1, e, sfx); send(e, .5); e.gain.setValueAtTime(0, T(a)); e.gain.linearRampToValueAtTime(k, T(a + .3)); e.gain.setValueAtTime(k, T(c - .6)); e.gain.linearRampToValueAtTime(0, T(c)); };
   roar(ls(6), le(7), .6); roar(ls(8), le(9), .5); roar(ls(10) + 1.1, le(11), 1.1); roar(ls(13), VEND, .3);
   // fanfarra original da vitória (metais sintetizados) — momento em que ele fica de pé com a bandeira
-  { const t0 = ls(6) + 2.4, notes = [[392, .22], [392, .22], [523.3, .45], [659.3, .3], [587.3, .3], [523.3, .45], [784, 1.6]]; let tt = t0;
+  for (const t0 of [ls(6) + .6, ls(6) + 6.4]) { const notes = [[392, .22], [392, .22], [523.3, .45], [659.3, .3], [587.3, .3], [523.3, .45], [784, 1.6]]; let tt = t0;
     for (const [f, d] of notes) { for (const det of [-4, 0, 4]) { const o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = det; const lp = filt('lowpass', 2400, 1), e = gn(0); chain(o, lp, e, master); e.gain.setValueAtTime(0, T(tt)); e.gain.linearRampToValueAtTime(.045, T(tt + .03)); e.gain.setValueAtTime(.04, T(tt + d * .8)); e.gain.linearRampToValueAtTime(0, T(tt + d)); o.start(T(tt)); o.stop(T(tt + d + .05)); }
       const o2 = A.createOscillator(); o2.type = 'triangle'; o2.frequency.value = f / 2; const e2 = gn(0); chain(o2, e2, master); e2.gain.setValueAtTime(0, T(tt)); e2.gain.linearRampToValueAtTime(.05, T(tt + .03)); e2.gain.linearRampToValueAtTime(0, T(tt + d)); o2.start(T(tt)); o2.stop(T(tt + d + .05)); tt += d; }
     for (let k = 0; k < 4; k++) { const o = A.createOscillator(); o.frequency.setValueAtTime(110, T(t0 + k * .5)); o.frequency.exponentialRampToValueAtTime(45, T(t0 + k * .5 + .2)); const e = gn(0); chain(o, e, master); env(e.gain, t0 + k * .5, .003, .25, .25); o.start(T(t0 + k * .5)); o.stop(T(t0 + k * .5 + .3)); } }
-  sfx.gain.setValueAtTime(1, T(VEND)); sfx.gain.setValueAtTime(0, T(VEND + .02)); mus.gain.setValueAtTime(1, T(VEND)); mus.gain.setValueAtTime(0, T(VEND + .02));
+  sfx.gain.setValueAtTime(.5, T(VEND)); sfx.gain.setValueAtTime(0, T(VEND + .02)); mus.gain.setValueAtTime(1, T(VEND)); mus.gain.setValueAtTime(0, T(VEND + .02));
 }
 
 /* =========================================================================
@@ -2987,7 +2996,7 @@ function renderAt(t) {
 /* =========================================================================
    LEGENDAS, NARRAÇÃO, MENSAGEM DISCRETA E TÍTULO
    ========================================================================= */
-const CUES = LST.map((t, i) => [CS[i] - .05, CS[i] + CD[i], LINES[i]]);
+const CUES = LST.map((t, i) => [CS[i] - .05, CS[i] + CD[i] + .4, LINES[i]]).filter(c => c[2]);
 const subEl = $('sub').firstElementChild, ctaEl = $('cta'), ctaLn = ctaEl.querySelector('.ln'), titleEl = $('title');
 let curSub = '';
 function overlays(t) {
