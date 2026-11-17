@@ -2541,7 +2541,7 @@ const LINES = [
   'São Paulo, 1960. Aos quatro anos, o pai monta um kart pra ele.',
   'Mas tinha um problema: quando a pista molhava, ele perdia.',
   'Então ele fez o que ninguém fazia. Esperava a chuva... e ia treinar.',
-  'Fica até o final, porque a corrida mais emocionante da vida dele quase não terminou.',
+  'Em 1983, foi campeão da Fórmula 3 inglesa. E ganhou a chance na Fórmula 1.',
   'Mônaco, 1984. Carro fraco, chuva forte. Ele vinha passando um por um... até a corrida ser interrompida.',
   'Depois vieram os títulos: 1988, 1990, 1991. Quarenta e uma vitórias.',
   'E sempre a mesma imagem: a bandeira do Brasil na volta da vitória.',
@@ -2554,7 +2554,7 @@ const LINES = [
 const LDUR = [6.8, 5.6, 4.4, 5.4, 6.2, 7.8, 7.2, 5.0, 5.2, 6.6, 4.0, 4.2, 4.8, 3.8];
 const LST = []; { let t = .3; for (const d of LDUR) { LST.push(t); t += d; } }
 const VEND = LST[13] + LDUR[13] + 3.5; // + cartão final
-const HL = ['CHUVA', 'MEDO', 'KART', 'PERDIA', 'TREINAR.', 'NINGUÉM', 'FINAL,', 'TERMINOU.', 'MÔNACO,', 'INTERROMPIDA.', 'TÍTULOS:', 'VITÓRIAS.', 'BANDEIRA', 'BRASIL', 'INTERLAGOS,', 'CÂMBIO', 'SEXTA', 'BANDEIRADA.', 'GRITANDO.', 'TROFÉU', 'BEM', 'FEITO...', 'NÃO', 'FAZ.', 'ESQUECE?', 'COMENTA'];
+const HL = ['1983,', 'CAMPEÃO', 'CHANCE', 'CHUVA', 'MEDO', 'KART', 'PERDIA', 'TREINAR.', 'NINGUÉM', 'FINAL,', 'TERMINOU.', 'MÔNACO,', 'INTERROMPIDA.', 'TÍTULOS:', 'VITÓRIAS.', 'BANDEIRA', 'BRASIL', 'INTERLAGOS,', 'CÂMBIO', 'SEXTA', 'BANDEIRADA.', 'GRITANDO.', 'TROFÉU', 'BEM', 'FEITO...', 'NÃO', 'FAZ.', 'ESQUECE?', 'COMENTA'];
 /* ---- legenda palavra a palavra (estilo TikTok) ---- */
 function captions(t) {
   let i = -1; for (let k = 0; k < 14; k++) if (t >= LST[k] && t < LST[k] + LDUR[k] - .15) i = k; if (i < 0) return;
@@ -2585,7 +2585,7 @@ function speedLines(t, k) { if (k <= 0) return; const R = mulberry(Math.floor(t 
 function loftPts(T, a, c) { // a, c = [z, halfW, y0, y1]
   const A = [T(-a[1], a[2], a[0]), T(a[1], a[2], a[0]), T(a[1], a[3], a[0]), T(-a[1], a[3], a[0])], B = [T(-c[1], c[2], c[0]), T(c[1], c[2], c[0]), T(c[1], c[3], c[0]), T(-c[1], c[3], c[0])];
   return [[A[3], A[2], B[2], B[3], 1.06], [A[0], A[3], B[3], B[0], .8], [A[1], A[2], B[2], B[1], .9], [A[0], A[1], A[2], A[3], .95], [B[0], B[1], B[2], B[3], .85]]; }
-function wheel(P, T, cx, cy, cz, r, w, dp) { const n = 10, L = [], Rr = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, y = cy + Math.sin(a) * r, z = cz + Math.cos(a) * r; L.push(T(cx - w, y, z)); Rr.push(T(cx + w, y, z)); }
+function wheel(P, T, cx, cy, cz, r, w, dp) { const n = 16, L = [], Rr = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, y = cy + Math.sin(a) * r, z = cz + Math.cos(a) * r; L.push(T(cx - w, y, z)); Rr.push(T(cx + w, y, z)); }
   for (let i = 0; i < n; i++) { const j = (i + 1) % n; P.push(Pp([L[i], L[j], Rr[j], Rr[i]], i % 2 ? '#1a1a1c' : '#222226', { dp })); }
   const out = cx > 0 ? Rr : L; P.push(Pp(out, '#151517', { dp, bias: -.05 })); const rim = out.map((p, i) => [lerp(p[0], T(cx > 0 ? cx + w : cx - w, cy, cz)[0], .45), lerp(p[1], cy, .45), lerp(p[2], T(cx > 0 ? cx + w : cx - w, cy, cz)[2], .45)]); P.push(Pp(rim, '#8a8f96', { dp, bias: -.08 })); }
 function f1b(x, z, yaw, o = {}) {
@@ -2599,8 +2599,12 @@ function f1b(x, z, yaw, o = {}) {
   lf([-1.45, .6, .78, .86], [-1.75, .6, .78, .86], c2); lf([-1.45, .6, .9, .98], [-1.7, .6, .9, .98], c2);
   for (const s of [-1, 1]) P.push(Pp([Tp(s * .62, .45, -1.3), Tp(s * .62, 1.0, -1.3), Tp(s * .62, 1.0, -1.8), Tp(s * .62, .45, -1.8)], '#202024', { dp }));
   P.push(Pp([Tp(-.16, .6, .62), Tp(.16, .6, .62), Tp(.2, .6, .05), Tp(-.2, .6, .05)], '#111', { dp, bias: -.1 }));
-  wheel(P, Tp, -.85, .33, -1.2, .33, .2, dp); wheel(P, Tp, .85, .33, -1.2, .33, .2, dp); wheel(P, Tp, -.8, .29, 1.95, .29, .15, dp); wheel(P, Tp, .8, .29, 1.95, .29, .15, dp);
-  const hp = Tp(0, .78, .3); P.push(Fn(hp, (ctx) => { const q = toCam(hp); if (q[2] < .3) return; const s = proj(q), r = .16 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); ctx.lineWidth = Math.max(1, r * .1); ctx.strokeStyle = OUT; ctx.fillStyle = '#f2d22a'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.stroke(); ctx.clip(); ctx.fillStyle = '#1f8a3a'; ctx.fillRect(-r, -r * .1, 2 * r, r * .22); ctx.fillStyle = '#2456a8'; ctx.fillRect(-r, r * .12, 2 * r, r * .1); ctx.restore(); }, { bias: -.6 }));
+  wheel(P, Tp, -.86, .37, -1.15, .37, .23, dp); wheel(P, Tp, .86, .37, -1.15, .37, .23, dp); wheel(P, Tp, -.84, .3, 2.0, .3, .15, dp); wheel(P, Tp, .84, .3, 2.0, .3, .15, dp);
+  for (const s of [-1, 1]) { P.push(Ln(Tp(s * .3, .32, 1.8), Tp(s * .7, .3, 2.0), '#222', 2, { dp })); P.push(Ln(Tp(s * .3, .2, 2.1), Tp(s * .7, .28, 2.0), '#222', 2, { dp })); P.push(Ln(Tp(s * .6, .35, -1.0), Tp(s * .7, .37, -1.15), '#222', 2, { dp }));
+    P.push(Bx(...Tp(s * .42 - .06, .62, .55), ...Tp(s * .42 + .06, .7, .62), '#222', { dp })); }
+  P.push(Pp([Tp(-.18, .6, .66), Tp(.18, .6, .66), Tp(.14, .72, .5), Tp(-.14, .72, .5)], '#2a3446', { dp, bias: -.2 }));
+  P.push(Pp([Tp(-.06, .2, -1.52), Tp(.06, .2, -1.52), Tp(.06, .28, -1.52), Tp(-.06, .28, -1.52)], '#ff2a2a', { dp, bias: -.1, nofog: true }));
+  const hp = Tp(0, .72, .3); P.push(Fn(hp, (ctx) => { const q = toCam(hp); if (q[2] < .3) return; const s = proj(q), r = .16 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); ctx.lineWidth = Math.max(1, r * .1); ctx.strokeStyle = OUT; ctx.fillStyle = '#f2d22a'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.stroke(); ctx.clip(); ctx.fillStyle = '#1f8a3a'; ctx.fillRect(-r, -r * .1, 2 * r, r * .22); ctx.fillStyle = '#2456a8'; ctx.fillRect(-r, r * .12, 2 * r, r * .1); ctx.restore(); }, { bias: -.6 }));
   if (o.flag) P.push(Fn(Tp(0, 1.6, .2), (ctx, it) => flag3(ctx, it.p, NOWT), { bias: -1 }));
   return P; }
 function kart2(x, z, yaw, o = {}) {
@@ -2613,7 +2617,7 @@ function kart2(x, z, yaw, o = {}) {
   lf([-.7, .55, .1, .2], [-.8, .55, .1, .2], '#2a2a2e');
   P.push(Pp([Tp(-.14, .3, .25), Tp(.14, .3, .25), Tp(.14, .2, .25), Tp(-.14, .2, .25)], '#f4f4f0', { dp, bias: -.1 }));
   wheel(P, Tp, -.55, .13, .55, .13, .07, dp); wheel(P, Tp, .55, .13, .55, .13, .07, dp); wheel(P, Tp, -.58, .15, -.55, .15, .1, dp); wheel(P, Tp, .58, .15, -.55, .15, .1, dp);
-  P.push(St(Tp(0, .12, -.28), .9, Object.assign({ seated: true, helmet: o.helmet !== false, suit: SUITK, armL: [1.25, 1.35, .17, .17], armR: [1.25, 1.35, .17, .17], bias: -.4 }, o.kid || {})));
+  P.push(St(Tp(0, .2, -.3), .62, Object.assign({ seated: true, helmet: o.helmet !== false, suit: SUITK, armL: [1.25, 1.35, .17, .17], armR: [1.25, 1.35, .17, .17], bias: -.4 }, o.kid || {})));
   P.push(Fn(Tp(0, .42, .08), (ctx, it) => { const q = toCam(it.p); if (q[2] < .2) return; const s = proj(q), r = .1 * focal() / q[2]; ctx.strokeStyle = '#111'; ctx.lineWidth = Math.max(1.5, r * .2); ctx.beginPath(); ctx.ellipse(s[0], s[1], r, r * .45, 0, 0, 7); ctx.stroke(); }, { bias: -.7 }));
   return P; }
 
@@ -2624,22 +2628,22 @@ function M1(t) { // gancho: carro saindo da névoa de chuva + raio
   const ltn = (t > 1.1 && t < 1.25) || (t > 1.4 && t < 1.5);
   aimCam(-.9 + Math.sin(t * 2) * .1, .55, z + 9 - Math.min(k, 3) * 1.2, [0, .5, z], 62, t, 2);
   cam.yaw = Math.atan2(0 - cam.x, z - cam.z); 
-  track(t, [...f1b(0, z, Math.PI, {}), ...f1b(2.4, z - 12, Math.PI, { c1: '#2456a8', c2: '#f4f4f0' })], 'rain'); spray(t, [0, .5, z + 2.4], 1.2);
+  track(t, [...f1b(0, z, Math.PI, {}), ...f1b(2.9, z - 12, Math.PI, { c1: '#2456a8', c2: '#f4f4f0' })], 'rain'); spray(t, [0, .5, z + 2.4], 1.2);
   if (ltn) { b.fillStyle = 'rgba(230,235,255,.7)'; b.fillRect(0, 0, W, H); }
   if (t > 4.6) { const a = ss(4.6, 4.9, t); b.fillStyle = `rgba(0,0,0,${.55 * a})`; b.fillRect(0, 0, W, H); headline('AYRTON SENNA', 4.7, le(0), t, 300, 92, '#ffd400'); tag('O REI DA CHUVA', 5.2, le(0), t, 370, '#1f9a45'); }
   POST.vig = .7; POST.black = 1 - ss(0, .2, t); POST.shx += Math.sin(t * 40) * 2; flash(t, 4.7, .9);
 }
 function M2(t) { // São Paulo 1960: o pai e o kart
   const z = 22;
-  aimCam(lerp(2.6, 1.6, sm(ls(1), le(1), t)), 1.1, z - 2.4, [-.4, .45, z], 46, t);
+  aimCam(lerp(2.8, 2.2, sm(ls(1), le(1), t)), 1.0, z - 3.4, [-.9, .7, z + .3], 50, t, .5);
   CROWDJ = 0; track(t, [...kart2(-.4, z, .25, { helmet: false, kid: { skin: '#e2b48a', hairC: '#3a2a1c', mouth: 'open', mo: .6 } }), St([-1.7, 0, z + .6], 1.78, { look: .7, armL: [.3, .2], armR: [1.8, 2.2], cloth: '#5a6e8a', pants: '#3a3a40', skin: '#e2b48a', hairC: '#3a2a1c', mouth: 'smile' })], 'day');
-  sepia(.4); tag('SÃO PAULO • 1960', ls(1) + .1, le(1), t); headline('4 ANOS', ls(1) + 1.8, le(1), t, 200, 64, '#ffd400');
+  sepia(.4); tag('SÃO PAULO • 1960', ls(1) + .1, ls(1) + 2.6, t); tag('4 ANOS • O PRIMEIRO KART', ls(1) + 2.6, le(1), t);
   POST.vig = .6; flash(t, ls(1), .5);
 }
 function M3(t) { // perdia na chuva: os outros passam
   const k = t - ls(2), z = 30 + k * 4;
   aimCam(2.6, .9, z - 3, [0, .4, z + 1], 52, t, 1.2);
-  track(t, [...kart2(0, z, Math.sin(k * 4) * .08), ...kart2(-1.2, z - 2 + k * 4.5, 0, { col: '#2456a8', kid: { suit: { c: '#2456a8', s: '#fff' } } }), ...kart2(1.3, z - 4 + k * 5.5, 0, { col: '#1f8a3a', kid: { suit: { c: '#1f8a3a', s: '#fff' } } })], 'rain'); spray(t, [-1.2, .3, z - 2.6 + k * 4.5], .7);
+  track(t, [...kart2(0, z, Math.sin(k * 4) * .03), ...kart2(-1.8, z - 2 + k * 4.5, 0, { col: '#2456a8', kid: { suit: { c: '#2456a8', s: '#fff' } } }), ...kart2(1.9, z - 4 + k * 5.5, 0, { col: '#1f8a3a', kid: { suit: { c: '#1f8a3a', s: '#fff' } } })], 'rain'); spray(t, [-1.8, .3, z - 2.6 + k * 4.5], .7);
   headline('PERDIA NA CHUVA', ls(2) + .2, le(2), t, 120, 58, '#fff'); POST.vig = .65; flash(t, ls(2), .5);
 }
 function M4(t) { // treinava na chuva, sozinho, à noite
@@ -2650,19 +2654,18 @@ function M4(t) { // treinava na chuva, sozinho, à noite
   tag('ESPERAVA A CHUVA...', ls(3) + 1.6, le(3), t, 92, '#ffd400'); headline('E IA TREINAR', ls(3) + 3.4, le(3), t, 200, 64, '#ffd400');
   POST.vig = .75; flash(t, ls(3), .5);
 }
-function M5(t) { // promessa: a corrida que quase não terminou
-  const k = t - ls(4), z = 60.6;
-  aimCam(5 + k * .3, 1.0, z - 4, [0, .6, z + 2], 46, t, .4); CROWDJ = .2;
-  track(t, f1b(0, z + 1.5, 0), 'day');
-  b.globalCompositeOperation = 'saturation'; b.fillStyle = '#808080'; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over'; b.fillStyle = 'rgba(0,0,0,.55)'; b.fillRect(0, 0, W, H);
-  headline('FICA ATÉ O FINAL', ls(4) + .2, le(4), t, 220, 60, '#fff'); headline('ELA QUASE NÃO TERMINOU', ls(4) + 2.4, le(4), t, 310, 50, '#ffd400');
-  POST.vig = .9; POST.vig2 = .4;
+function M5(t) { // 1983: campeão da F3 inglesa
+  const k = t - ls(4), z = 30 + k * 16, rz = 38 + k * 12;
+  aimCam(-4.8, 1.2, z - 5.5, [-.8, .6, z + 3], 56, t, 1.2); CROWDJ = .5;
+  track(t, [...f1b(-1.5, z, 0, { c1: '#f4f4f0', c2: '#1f8a3a' }), ...f1b(1.5, rz, 0, { c1: '#f3d23a', c2: '#2a2a2a' })], 'day');
+  tag('INGLATERRA • 1983', ls(4) + .1, le(4), t); headline('CAMPEÃO DA F3', ls(4) + 1.4, le(4), t, 200, 62, '#ffd400');
+  speedLines(t, .3); POST.vig = .55; flash(t, ls(4), .5);
 }
 function M6(t) { // Mônaco 1984: passando um por um... bandeira vermelha
   const k = t - ls(5), z = 30 + k * 17, red = t > ls(5) + 5.6;
-  aimCam(1.3 + Math.sin(k) * .3, .9, z - 6, [-.4, .6, z + 3], 62, t, 1.8);
-  const rivals = [[1.2, 12], [-1.2, 30], [1.0, 50], [-.9, 72]].map(([rx, rz]) => f1b(rx, 30 + rz + k * 9, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
-  track(t, [...f1b(-.4, z, Math.sin(k * 1.4) * .05, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-.4, .5, z - 1.6], 1);
+  aimCam(-.2 + Math.sin(k) * .2, .9, z - 6.5, [-1.2, .6, z + 3], 62, t, 1.8);
+  const rivals = [12, 34, 58, 84].map(rz => f1b(1.45, 30 + rz + k * 9, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
+  track(t, [...f1b(-1.45, z, 0, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-1.45, .5, z - 1.6], 1);
   if (red) { b.fillStyle = `rgba(200,20,20,${.25 + .15 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', ls(5) + 5.6, le(5), t, 220, 60, '#fff'); }
   tag('MÔNACO • 1984', ls(5) + .1, le(5), t); if (!red) headline('UM POR UM...', ls(5) + 3, ls(5) + 5.5, t, 210, 56, '#ffd400');
   speedLines(t, .5); POST.vig = .7; flash(t, ls(5), .5); flash(t, ls(5) + 5.6, .6);
@@ -2679,7 +2682,7 @@ function M8(t) { // bandeira do Brasil na volta da vitória
 }
 function M9(t) { // Interlagos 1991: em casa, torcida
   const k = t - ls(8), z = 30 + k * 20; aimCam(9, 2, z - 4, [0, .6, z + 3], 54, t, 1); CROWDJ = 1;
-  track(t, [...f1b(0, z, 0), ...f1b(.8, z - 22, 0, { c1: '#2456a8', c2: '#f3d23a' })], 'day'); tag('INTERLAGOS • 1991', ls(8) + .1, le(8), t); headline('EM CASA', ls(8) + 2.6, le(8), t, 210, 70, '#ffd400');
+  track(t, [...f1b(-1.4, z, 0), ...f1b(1.6, z - 22, 0, { c1: '#2456a8', c2: '#f3d23a' })], 'day'); tag('INTERLAGOS • 1991', ls(8) + .1, le(8), t); headline('EM CASA', ls(8) + 2.6, le(8), t, 210, 70, '#ffd400');
   speedLines(t, .4); POST.vig = .55; flash(t, ls(8), .5);
 }
 function M10(t) { // câmbio travado: HUD

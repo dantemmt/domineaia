@@ -20,8 +20,9 @@
 
 ## Retenção (regra fixa para todo vídeo)
 - Gancho nos primeiros 3s, curiosidade e perguntas diretas ao espectador ao longo do vídeo.
-- Uma promessa no começo/meio ("fica até o final...") que só é entregue no final. Não entregar tudo no início.
+- NUNCA usar "fica até o final" (faz o espectador pular). Em vídeos de história, segurar a atenção com fatos, datas e momentos marcantes em sequência, sem anunciar o que vem.
 - Terminar com pergunta para comentários. Texto grande na tela nos pontos-chave.
+- Realismo: carros/objetos nunca se atravessam (cada um na sua faixa), proporções coerentes (criança menor, sentada direito).
 
 ## Estilo de personagens (a partir do vídeo do Pelé)
 - Padrão: personagens estilo "Fama em Miniatura" (chibi: cabeça grande, olhos grandes com brilho, bochechas rosadas, contorno escuro) — `drawChibi`, `STYLE = 'chibi'` em `stickman_pele.html`. Cenários continuam os mesmos.
