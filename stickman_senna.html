@@ -2443,7 +2443,7 @@ let MONACO = false;
 function track(t, extra, mode) {
   if (!TRK) buildTrack(); NOWT = t;
   const rain = mode === 'rain' || mode === 'monaco';
-  FOG = rain ? { c: [120, 128, 138], d: .025, m: .9 } : { c: [196, 206, 214], d: .008, m: .8 }; LIGHT = { top: 1.06, bot: .55, l: .8, r: .9, f: .95, bk: .82 };
+  FOG = rain ? { c: [120, 128, 138], d: .016, m: .85 } : { c: [196, 206, 214], d: .008, m: .8 }; LIGHT = { top: 1.06, bot: .55, l: .8, r: .9, f: .95, bk: .82 };
   const ti = CROWDJ > .5 ? 1 + (Math.floor(t * 7) % 2) : 0; for (const it of TRK.crowd) { it.o.tex = TRK.T[ti]; it.o.fog = FOG; }
   const F = focal(), hy = VH / 2 + Math.tan(cam.pitch) * F; const sk = b.createLinearGradient(0, hy - 600, 0, hy);
   if (rain) { sk.addColorStop(0, '#4a525e'); sk.addColorStop(1, '#8a9098'); } else { sk.addColorStop(0, '#5d8fc4'); sk.addColorStop(1, '#dfe6ea'); } b.fillStyle = sk; b.fillRect(0, 0, W, H);
@@ -2572,42 +2572,6 @@ function speedLines(t, k) { if (k <= 0) return; const R = mulberry(Math.floor(t 
 function loftPts(T, a, c) { // a, c = [z, halfW, y0, y1]
   const A = [T(-a[1], a[2], a[0]), T(a[1], a[2], a[0]), T(a[1], a[3], a[0]), T(-a[1], a[3], a[0])], B = [T(-c[1], c[2], c[0]), T(c[1], c[2], c[0]), T(c[1], c[3], c[0]), T(-c[1], c[3], c[0])];
   return [[A[3], A[2], B[2], B[3], 1.06], [A[0], A[3], B[3], B[0], .8], [A[1], A[2], B[2], B[1], .9], [A[0], A[1], A[2], A[3], .95], [B[0], B[1], B[2], B[3], .85]]; }
-function wheel(P, T, cx, cy, cz, r, w, dp) { const n = 16, L = [], Rr = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, y = cy + Math.sin(a) * r, z = cz + Math.cos(a) * r; L.push(T(cx - w, y, z)); Rr.push(T(cx + w, y, z)); }
-  for (let i = 0; i < n; i++) { const j = (i + 1) % n; P.push(Pp([L[i], L[j], Rr[j], Rr[i]], i % 2 ? '#1a1a1c' : '#222226', { dp })); }
-  const out = cx > 0 ? Rr : L; P.push(Pp(out, '#151517', { dp, bias: -.05 })); const rim = out.map((p, i) => [lerp(p[0], T(cx > 0 ? cx + w : cx - w, cy, cz)[0], .45), lerp(p[1], cy, .45), lerp(p[2], T(cx > 0 ? cx + w : cx - w, cy, cz)[2], .45)]); P.push(Pp(rim, '#8a8f96', { dp, bias: -.08 })); }
-function f1b(x, z, yaw, o = {}) {
-  const c1 = o.c1 || '#f4f4f0', c2 = o.c2 || '#d42a2a', cs = Math.cos(yaw), sn = Math.sin(yaw), Tp = (lx, y, lz) => [x + lx * cs + lz * sn, y, z - lx * sn + lz * cs], dp = Tp(0, .4, 0), P = [];
-  const lf = (a, c, col) => { for (const f of loftPts(Tp, a, c)) P.push(Pp(f.slice(0, 4), shade(C(col), f[4]), { dp })); };
-  P.push(Pp([Tp(-1.05, .02, -2.3), Tp(1.05, .02, -2.3), Tp(1.05, .02, 2.6), Tp(-1.05, .02, 2.6)], '#000', { a: .45, dp, bias: 2 }));
-  lf([2.75, .08, .14, .26], [1.5, .3, .1, .48], c1); lf([2.95, .03, .16, .22], [2.75, .08, .14, .26], c2);
-  lf([1.5, .3, .1, .48], [-.4, .36, .1, .62], c1); lf([.7, .62, .1, .42], [-.6, .7, .1, .44], c2); lf([-.6, .7, .1, .44], [-1.3, .45, .1, .4], c2);
-  lf([.2, .14, .55, .78], [-1.4, .12, .4, .55], c1); lf([-.4, .36, .1, .62], [-1.5, .2, .1, .42], c1);
-  for (const s of [-1, 1]) P.push(Pp([Tp(s * 1.0, .06, 3.05), Tp(s * 1.0, .32, 3.05), Tp(s * 1.0, .32, 2.7), Tp(s * 1.0, .06, 2.7)], '#202024', { dp }));
-  lf([-1.45, .6, .78, .86], [-1.75, .6, .78, .86], c2); lf([-1.45, .6, .9, .98], [-1.7, .6, .9, .98], c2);
-  for (const s of [-1, 1]) P.push(Pp([Tp(s * .62, .45, -1.3), Tp(s * .62, 1.0, -1.3), Tp(s * .62, 1.0, -1.8), Tp(s * .62, .45, -1.8)], '#202024', { dp }));
-  P.push(Pp([Tp(-.16, .6, .62), Tp(.16, .6, .62), Tp(.2, .6, .05), Tp(-.2, .6, .05)], '#111', { dp, bias: -.1 }));
-  wheel(P, Tp, -.86, .37, -1.15, .37, .23, dp); wheel(P, Tp, .86, .37, -1.15, .37, .23, dp); wheel(P, Tp, -.84, .3, 2.0, .3, .15, dp); wheel(P, Tp, .84, .3, 2.0, .3, .15, dp);
-  for (const s of [-1, 1]) { P.push(Ln(Tp(s * .3, .32, 1.8), Tp(s * .7, .3, 2.0), '#222', 2, { dp })); P.push(Ln(Tp(s * .3, .2, 2.1), Tp(s * .7, .28, 2.0), '#222', 2, { dp })); P.push(Ln(Tp(s * .6, .35, -1.0), Tp(s * .7, .37, -1.15), '#222', 2, { dp }));
-    P.push(Bx(...Tp(s * .42 - .06, .62, .55), ...Tp(s * .42 + .06, .7, .62), '#222', { dp })); }
-  P.push(Pp([Tp(-.18, .6, .66), Tp(.18, .6, .66), Tp(.14, .72, .5), Tp(-.14, .72, .5)], '#2a3446', { dp, bias: -.2 }));
-  P.push(Pp([Tp(-.06, .2, -1.52), Tp(.06, .2, -1.52), Tp(.06, .28, -1.52), Tp(-.06, .28, -1.52)], '#ff2a2a', { dp, bias: -.1, nofog: true }));
-  const hp = Tp(0, .72, .3); P.push(Fn(hp, (ctx) => { const q = toCam(hp); if (q[2] < .3) return; const s = proj(q), r = .16 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); ctx.lineWidth = Math.max(1, r * .1); ctx.strokeStyle = OUT; ctx.fillStyle = '#f2d22a'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.stroke(); ctx.clip(); ctx.fillStyle = '#1f8a3a'; ctx.fillRect(-r, -r * .1, 2 * r, r * .22); ctx.fillStyle = '#2456a8'; ctx.fillRect(-r, r * .12, 2 * r, r * .1); ctx.restore(); }, { bias: -.6 }));
-  if (o.flag) P.push(Fn(Tp(0, 1.6, .2), (ctx, it) => flag3(ctx, it.p, NOWT), { bias: -1 }));
-  return P; }
-function kart2(x, z, yaw, o = {}) {
-  const cs = Math.cos(yaw), sn = Math.sin(yaw), Tp = (lx, y, lz) => [x + lx * cs + lz * sn, y, z - lx * sn + lz * cs], dp = Tp(0, .3, 0), P = [], col = o.col || '#d42a2a';
-  const lf = (a, c, cl) => { for (const f of loftPts(Tp, a, c)) P.push(Pp(f.slice(0, 4), shade(C(cl), f[4]), { dp })); };
-  P.push(Pp([Tp(-.6, .02, -.75), Tp(.6, .02, -.75), Tp(.6, .02, .85), Tp(-.6, .02, .85)], '#000', { a: .4, dp, bias: 2 }));
-  lf([.85, .45, .08, .2], [.55, .38, .08, .34], col); lf([.55, .1, .1, .34], [.2, .1, .1, .26], col);
-  for (const s of [-1, 1]) for (const f of loftPts((lx, y, lz) => Tp(lx + s * .5, y, lz), [.3, .07, .09, .2], [-.3, .07, .09, .2])) P.push(Pp(f.slice(0, 4), shade(C(col), f[4]), { dp }));
-  lf([-.15, .2, .12, .42], [-.45, .2, .12, .5], '#1d1e22');
-  lf([-.7, .55, .1, .2], [-.8, .55, .1, .2], '#2a2a2e');
-  P.push(Pp([Tp(-.14, .3, .25), Tp(.14, .3, .25), Tp(.14, .2, .25), Tp(-.14, .2, .25)], '#f4f4f0', { dp, bias: -.1 }));
-  wheel(P, Tp, -.55, .13, .55, .13, .07, dp); wheel(P, Tp, .55, .13, .55, .13, .07, dp); wheel(P, Tp, -.58, .15, -.55, .15, .1, dp); wheel(P, Tp, .58, .15, -.55, .15, .1, dp);
-  P.push(St(Tp(0, .2, -.3), .62, Object.assign({ seated: true, helmet: o.helmet !== false, suit: SUITK, armL: [1.25, 1.35, .17, .17], armR: [1.25, 1.35, .17, .17], bias: -.4 }, o.kid || {})));
-  P.push(Fn(Tp(0, .42, .08), (ctx, it) => { const q = toCam(it.p); if (q[2] < .2) return; const s = proj(q), r = .1 * focal() / q[2]; ctx.strokeStyle = '#111'; ctx.lineWidth = Math.max(1.5, r * .2); ctx.beginPath(); ctx.ellipse(s[0], s[1], r, r * .45, 0, 0, 7); ctx.stroke(); }, { bias: -.7 }));
-  return P; }
-
 const ls = i => LST[i], le = i => LST[i] + LDUR[i];
 function rainFx(t, k) { if (k <= 0) return; b.save(); b.globalAlpha = k; b.strokeStyle = 'rgba(210,220,235,.5)'; b.lineWidth = 1.5; const R = mulberry(Math.floor(t * 30)); b.beginPath(); for (let i = 0; i < 300; i++) { const x = R() * (W + 200) - 100, y = R() * H; b.moveTo(x, y); b.lineTo(x - 12, y + 40); } b.stroke(); b.restore(); }
 function M1(t) { // gancho: carro saindo da névoa de chuva + raio
@@ -2650,8 +2614,8 @@ function M5(t) { // 1983: campeão da F3 inglesa
 }
 function M6(t) { // Mônaco 1984: passando um por um... bandeira vermelha
   const k = t - ls(5), z = 30 + k * 13, red = t > ls(5) + 6.2;
-  aimCam(-.2 + Math.sin(k) * .2, .9, z - 6.5, [-1.2, .6, z + 3], 62, t, 1.8);
-  const rivals = [12, 34, 58, 84].map(rz => f1b(1.45, 30 + rz + k * 6, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
+  aimCam(.3 + Math.sin(k) * .2, 2.4, z - 8, [0, .4, z + 5], 62, t, 1.2);
+  const rivals = [8, 22, 36, 50].map(rz => f1b(1.45, 30 + rz + k * 6, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
   track(t, [...f1b(-1.45, z, 0, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-1.45, .5, z - 1.6], 1);
   if (red) { b.fillStyle = `rgba(200,20,20,${.25 + .15 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', ls(5) + 6.2, le(5), t, 220, 60, '#fff'); }
   tag('MÔNACO • 1984', ls(5) + .1, le(5), t); if (!red) headline('UM POR UM...', ls(5) + 3.6, ls(5) + 6.1, t, 210, 56, '#ffd400');
@@ -2709,6 +2673,56 @@ function M14(t) { // pergunta + chamada final
   if (t > le(13)) { tag('SEGUE PRA MAIS HISTÓRIAS', le(13), VEND, t, 470, '#ffd400'); tag('FAMA EM MINIATURA', le(13) + .4, VEND, t, 540, '#ffffff'); }
   POST.vig = .6; POST.black = ss(VEND - .3, VEND, t);
 }
+/* ---- F1 1991 (proporções do McLaren MP4/6: 4,5 m x 2,12 m x 0,97 m, entre-eixos 2,97 m) ---- */
+function f1b(x, z, yaw, o = {}) {
+  const c1 = o.c1 || '#f4f4f0', c2 = o.c2 || '#e8262a', cs = Math.cos(yaw), sn = Math.sin(yaw), Tp = (lx, y, lz) => [x + lx * cs + lz * sn, y, z - lx * sn + lz * cs], P = [];
+  const lf = (a, c, col) => { for (const f of loftPts(Tp, a, c)) P.push(Pp(f.slice(0, 4), shade(C(col), f[4]), {})); };
+  const bx = (x0, y0, z0, x1, y1, z1, col) => lf([z1, (x1 - x0) / 2, y0, y1], [z0, (x1 - x0) / 2, y0, y1], col);
+  P.push(Pp([Tp(-1.06, .01, -2.0), Tp(1.06, .01, -2.0), Tp(1.06, .01, 2.6), Tp(-1.06, .01, 2.6)], '#000', { a: .55, bias: 3 }));
+  P.push(Pp([Tp(-.7, .05, -1.5), Tp(.7, .05, -1.5), Tp(.7, .05, 1.35), Tp(-.7, .05, 1.35)], '#1c1c20', { bias: 2 }));
+  lf([2.55, .07, .13, .22], [2.25, .12, .12, .3], c2); lf([2.25, .12, .12, .3], [1.3, .22, .1, .42], c1);
+  lf([1.3, .22, .1, .42], [.1, .34, .1, .56], c1);
+  P.push(Pp([Tp(-.2, .561, .62), Tp(.2, .561, .62), Tp(.22, .561, .02), Tp(-.22, .561, .02)], '#141416', { bias: -.05 }));
+  lf([.6, .72, .1, .3], [-.8, .72, .1, .44], c2); lf([.6, .72, .3, .44], [-.8, .72, .44, .46], c1);
+  P.push(Pp([Tp(-.72, .12, .6), Tp(-.36, .12, .6), Tp(-.36, .42, .6), Tp(-.72, .42, .6)], '#101012', { bias: -.05 })); P.push(Pp([Tp(.36, .12, .6), Tp(.72, .12, .6), Tp(.72, .42, .6), Tp(.36, .42, .6)], '#101012', { bias: -.05 }));
+  lf([.05, .15, .56, .92], [-1.05, .12, .44, .6], c1); P.push(Pp([Tp(-.1, .62, .06), Tp(.1, .62, .06), Tp(.1, .88, .06), Tp(-.1, .88, .06)], '#0e0e10', { bias: -.05 }));
+  bx(-.15, .12, -1.7, .15, .38, -1.0, '#3a3c42'); bx(-.32, .18, -1.2, -.18, .32, -.85, '#55575e'); bx(.18, .18, -1.2, .32, .32, -.85, '#55575e');
+  for (const s of [-1, 1]) { bx(s * .26 - .04, .22, -1.55, s * .26 + .04, .28, -1.25, '#9a9ca2'); }
+  lf([-1.55, .04, .04, .14], [-1.95, .55, .04, .22], '#1c1c20');
+  for (const s of [-1, 1]) bx(s * .57 - .015, .32, -2.0, s * .57 + .015, .98, -1.5, '#1c1c20');
+  bx(-.56, .82, -1.95, .56, .88, -1.62, c2); bx(-.56, .9, -1.85, .56, .96, -1.6, c2); bx(-.4, .42, -1.9, .4, .46, -1.6, '#1c1c20'); bx(-.03, .46, -1.8, .03, .82, -1.75, '#1c1c20');
+  bx(-1.05, .06, 2.32, 1.05, .1, 2.6, c2); bx(-1.0, .11, 2.36, 1.0, .14, 2.5, c1);
+  for (const s of [-1, 1]) bx(s * 1.05 - .015, .05, 2.25, s * 1.05 + .015, .3, 2.62, '#1c1c20');
+  for (const s of [-1, 1]) { bx(s * .38 - .05, .6, .5, s * .38 + .05, .67, .58, '#1c1c20'); P.push(Ln(Tp(s * .33, .62, .54), Tp(s * .25, .56, .5), '#1c1c20', 2)); }
+  for (const s of [-1, 1]) { P.push(Ln(Tp(s * .2, .3, 1.75), Tp(s * .72, .33, 1.72), '#1c1c20', 2)); P.push(Ln(Tp(s * .2, .2, 1.6), Tp(s * .72, .3, 1.72), '#1c1c20', 2)); P.push(Ln(Tp(s * .22, .4, 1.5), Tp(s * .7, .22, 1.72), '#1c1c20', 2));
+    P.push(Ln(Tp(s * .15, .32, -1.15), Tp(s * .62, .34, -1.25), '#1c1c20', 2)); P.push(Ln(Tp(s * .15, .18, -1.35), Tp(s * .62, .3, -1.25), '#1c1c20', 2)); }
+  wheel(P, Tp, -.8, .33, -1.25, .33, .19); wheel(P, Tp, .8, .33, -1.25, .33, .19); wheel(P, Tp, -.85, .32, 1.72, .32, .14); wheel(P, Tp, .85, .32, 1.72, .32, .14);
+  P.push(Pp([Tp(-.06, .24, -1.71), Tp(.06, .24, -1.71), Tp(.06, .32, -1.71), Tp(-.06, .32, -1.71)], '#ff2a2a', { bias: -.1, nofog: true }));
+  const hp = Tp(0, .66, .28); P.push(Fn(hp, (ctx) => { const q = toCam(hp); if (q[2] < .3) return; const s = proj(q), r = .15 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); ctx.lineWidth = Math.max(1, r * .1); ctx.strokeStyle = OUT; ctx.fillStyle = o.helm || '#f2d22a'; ctx.beginPath(); ctx.arc(0, 0, r, Math.PI, 0); ctx.lineTo(r, r * .35); ctx.lineTo(-r, r * .35); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.clip(); ctx.fillStyle = '#1f8a3a'; ctx.fillRect(-r, -r * .2, 2 * r, r * .2); ctx.fillStyle = '#2456a8'; ctx.fillRect(-r, 0, 2 * r, r * .12); ctx.restore(); }, { bias: -.4 }));
+  if (o.flag) P.push(Fn(Tp(0, 1.5, .2), (ctx, it) => flag3(ctx, it.p, NOWT), { bias: -1 }));
+  return P; }
+function wheel(P, T, cx, cy, cz, r, w) { const n = 16, L = [], Rr = []; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, y = cy + Math.sin(a) * r, z = cz + Math.cos(a) * r; L.push(T(cx - w, y, z)); Rr.push(T(cx + w, y, z)); }
+  for (let i = 0; i < n; i++) { const j = (i + 1) % n; P.push(Pp([L[i], L[j], Rr[j], Rr[i]], i % 2 ? '#18181a' : '#202024', {})); }
+  for (const side of [L, Rr]) { const sx = side === L ? cx - w : cx + w; P.push(Pp(side, '#141416', {})); const c = T(sx, cy, cz); P.push(Pp(side.map(p => [lerp(p[0], c[0], .42), lerp(p[1], c[1], .42), lerp(p[2], c[2], .42)]), '#7d828a', { bias: -.02 })); } }
+/* ---- kart (inspirado em kart 100cc: chassi tubular baixo, carenagem, para-choques, motor à direita) ---- */
+function kart2(x, z, yaw, o = {}) {
+  const cs = Math.cos(yaw), sn = Math.sin(yaw), Tp = (lx, y, lz) => [x + lx * cs + lz * sn, y, z - lx * sn + lz * cs], P = [], col = o.col || '#d42a2a';
+  const lf = (a, c, cl) => { for (const f of loftPts(Tp, a, c)) P.push(Pp(f.slice(0, 4), shade(C(cl), f[4]), {})); };
+  const bx = (x0, y0, z0, x1, y1, z1, cl) => { const cx0 = (x0 + x1) / 2; for (const f of loftPts((lx, y, lz) => Tp(lx + cx0, y, lz), [z1, (x1 - x0) / 2, y0, y1], [z0, (x1 - x0) / 2, y0, y1])) P.push(Pp(f.slice(0, 4), shade(C(cl), f[4]), {})); };
+  P.push(Pp([Tp(-.68, .01, -.85), Tp(.68, .01, -.85), Tp(.68, .01, .95), Tp(-.68, .01, .95)], '#000', { a: .45, bias: 3 }));
+  bx(-.42, .06, -.7, .42, .08, .7, '#2a2a2e');
+  lf([.92, .5, .06, .16], [.7, .45, .06, .26], col); lf([.7, .16, .1, .3], [.35, .12, .1, .24], col);
+  bx(-.62, .08, -.35, -.42, .2, .4, col); bx(.42, .08, -.35, .62, .2, .4, col);
+  bx(-.6, .08, -.85, .6, .16, -.75, '#2a2a2e');
+  bx(-.2, .08, -.45, .2, .42, -.1, '#1d1e22'); bx(-.2, .3, -.48, .2, .5, -.42, '#1d1e22');
+  bx(.25, .1, -.55, .42, .36, -.25, '#8a8c92'); bx(.28, .36, -.5, .4, .42, -.3, '#5a5c62'); P.push(Ln(Tp(.42, .25, -.45), Tp(.55, .3, -.75), '#555', 3));
+  P.push(Pp([Tp(-.14, .26, .78), Tp(.14, .26, .78), Tp(.14, .16, .8), Tp(-.14, .16, .8)], '#f4f4f0', { bias: -.1 }));
+  P.push(Ln(Tp(0, .22, .45), Tp(0, .42, .12), '#222', 3));
+  wheel(P, Tp, -.55, .12, .55, .12, .06); wheel(P, Tp, .55, .12, .55, .12, .06); wheel(P, Tp, -.58, .14, -.6, .14, .1); wheel(P, Tp, .58, .14, -.6, .14, .1);
+  P.push(St(Tp(0, .2, -.3), .62, Object.assign({ seated: true, helmet: o.helmet !== false, suit: SUITK, armL: [1.25, 1.35, .17, .17], armR: [1.25, 1.35, .17, .17], bias: -.4 }, o.kid || {})));
+  P.push(Fn(Tp(0, .43, .1), (ctx, it) => { const q = toCam(it.p); if (q[2] < .2) return; const s = proj(q), r = .1 * focal() / q[2]; ctx.strokeStyle = '#111'; ctx.lineWidth = Math.max(1.5, r * .2); ctx.beginPath(); ctx.ellipse(s[0], s[1], r, r * .45, 0, 0, 7); ctx.stroke(); }, { bias: -.7 }));
+  return P; }
+
 function VS2(t) { const f = [M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); const st = i ? LST[i] : 0, en = st + LDUR[i]; if (i) POST.black = Math.max(POST.black || 0, 1 - ss(st, st + .35, t)); if (i < 13) POST.black = Math.max(POST.black || 0, ss(en - .3, en, t) * .9); captions(t); }
 function scheduleS2() {
   const R = Math.random;
