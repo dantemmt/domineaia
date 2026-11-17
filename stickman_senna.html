@@ -2441,12 +2441,12 @@ function kart(x, z, yaw, kidO) { const cs = Math.cos(yaw), sn = Math.sin(yaw), T
   return P; }
 let MONACO = false;
 function track(t, extra, mode) {
-  if (!TRK) buildTrack(); NOWT = t;
+  if (!TRK) buildTrack(); upgradeTrack(); NOWT = t;
   const rain = mode === 'rain' || mode === 'monaco';
   FOG = rain ? { c: [120, 128, 138], d: .016, m: .85 } : { c: [196, 206, 214], d: .008, m: .8 }; LIGHT = { top: 1.06, bot: .55, l: .8, r: .9, f: .95, bk: .82 };
   const ti = CROWDJ > .5 ? 1 + (Math.floor(t * 7) % 2) : 0; for (const it of TRK.crowd) { it.o.tex = TRK.T[ti]; it.o.fog = FOG; }
   const F = focal(), hy = VH / 2 + Math.tan(cam.pitch) * F; const sk = b.createLinearGradient(0, hy - 600, 0, hy);
-  if (rain) { sk.addColorStop(0, '#4a525e'); sk.addColorStop(1, '#8a9098'); } else { sk.addColorStop(0, '#5d8fc4'); sk.addColorStop(1, '#dfe6ea'); } b.fillStyle = sk; b.fillRect(0, 0, W, H);
+  if (rain) { sk.addColorStop(0, '#4a525e'); sk.addColorStop(1, '#8a9098'); } else { sk.addColorStop(0, '#5d8fc4'); sk.addColorStop(1, '#dfe6ea'); } b.fillStyle = sk; b.fillRect(0, 0, W, H); if (!rain) clouds(t);
   const list = [...(mode === 'monaco' ? TRK.mon : TRK.L), ...(extra || [])];
   render3D(b, TRK.base, list);
   if (rain) { b.fillStyle = 'rgba(70,80,95,.25)'; b.fillRect(0, 0, W, H); b.strokeStyle = 'rgba(210,220,235,.45)'; b.lineWidth = 1.4; const R = mulberry(Math.floor(t * 30)); b.beginPath(); for (let i = 0; i < 260; i++) { const x = R() * (W + 200) - 100, y = R() * H; b.moveTo(x, y); b.lineTo(x - 10, y + 34); } b.stroke(); }
@@ -2537,9 +2537,9 @@ function scheduleS() {
    SENNA v2 — visual profissional: carros reais, kart, cards, legendas palavra a palavra
    ========================================================================= */
 const LINES = ["Ele tinha medo de chuva. E virou o rei da chuva.", "Aos quatro anos, ganhou o primeiro kart do pai.", "Perdia no molhado.", "Então treinava quando chovia.", "", "Mônaco, 84: carro fraco, chuva forte, passou um por um.", "Três títulos mundiais. Quarenta e uma vitórias.", "", "Interlagos, 91:", "câmbio travado na sexta marcha.", "Mesmo assim, venceu em casa", "e ergueu o troféu.", "", "Qual corrida dele você nunca esquece?"];
-const LDUR = [5.0, 5.0, 3.2, 4.6, 0, 8.0, 5.5, 7.0, 4.0, 4.2, 3.6, 3.8, 0, 2.6];
-const LST = [0.0, 5.0, 10.0, 13.2, 17.8, 17.8, 25.8, 31.3, 38.3, 42.3, 46.5, 50.1, 53.9, 53.9];
-const CS = [0.5, 5.5, 10.5, 13.7, 0, 18.3, 26.3, 0, 38.8, 42.8, 47.0, 50.6, 0, 54.4], CD = [2.93, 2.77, 0.95, 1.53, 0, 5.39, 2.96, 0, 1.69, 1.59, 2.0, 1.06, 0, 1.63]; // início e duração de cada fala
+const LDUR = [5.0, 5.0, 3.2, 4.6, 0, 9.5, 5.5, 5.5, 4.0, 4.2, 3.6, 3.8, 0, 2.6];
+const LST = [0.0, 5.0, 10.0, 13.2, 17.8, 17.8, 27.3, 32.8, 38.3, 42.3, 46.5, 50.1, 53.9, 53.9];
+const CS = [0.5, 5.5, 10.5, 13.7, 0, 18.3, 27.8, 0, 38.8, 42.8, 47.0, 50.6, 0, 54.4], CD = [2.93, 2.77, 0.95, 1.53, 0, 5.39, 2.96, 0, 1.69, 1.59, 2.0, 1.06, 0, 1.63]; // início e duração de cada fala
 const VEND = 60; // vídeo de exatamente 60s
 const HL = ['1983,', 'CAMPEÃO', 'CHANCE', 'CHUVA', 'MEDO', 'KART', 'PERDIA', 'TREINAR.', 'NINGUÉM', 'FINAL,', 'TERMINOU.', 'MÔNACO,', 'INTERROMPIDA.', 'TÍTULOS:', 'VITÓRIAS.', 'BANDEIRA', 'BRASIL', 'INTERLAGOS,', 'CÂMBIO', 'SEXTA', 'BANDEIRADA.', 'GRITANDO.', 'TROFÉU', 'BEM', 'FEITO...', 'NÃO', 'FAZ.', 'ESQUECE?', 'COMENTA'];
 /* ---- legenda palavra a palavra (estilo TikTok) ---- */
@@ -2612,21 +2612,6 @@ function M5(t) { // 1983: campeão da F3 inglesa
   tag('INGLATERRA • 1983', ls(4) + .1, le(4), t); headline('CAMPEÃO DA F3', ls(4) + 1.4, le(4), t, 200, 62, '#ffd400');
   speedLines(t, .3); POST.vig = .55; flash(t, ls(4), .5);
 }
-function M6(t) { // Mônaco 1984: passando um por um... bandeira vermelha
-  const k = t - ls(5), z = 30 + k * 13, red = t > ls(5) + 6.2;
-  aimCam(.3 + Math.sin(k) * .2, 2.4, z - 8, [0, .4, z + 5], 62, t, 1.2);
-  const rivals = [8, 22, 36, 50].map(rz => f1b(1.45, 30 + rz + k * 6, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
-  track(t, [...f1b(-1.45, z, 0, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-1.45, .5, z - 1.6], 1);
-  if (red) { b.fillStyle = `rgba(200,20,20,${.25 + .15 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', ls(5) + 6.2, le(5), t, 220, 60, '#fff'); }
-  tag('MÔNACO • 1984', ls(5) + .1, le(5), t); if (!red) headline('UM POR UM...', ls(5) + 3.6, ls(5) + 6.1, t, 210, 56, '#ffd400');
-  speedLines(t, .5); POST.vig = .7; flash(t, ls(5), .5); flash(t, ls(5) + 6.2, .4);
-}
-function M7(t) { // títulos
-  aimCam(0, 3, 40, [12, 4, 70], 60, t, .5); CROWDJ = 1; track(t, [], 'day'); b.fillStyle = 'rgba(0,0,0,.6)'; b.fillRect(0, 0, W, H);
-  const yrs = ['1988', '1990', '1991']; for (let i = 0; i < 3; i++) { const t0 = ls(6) + .6 + i * .8, a = ss(t0, t0 + .15, t); if (a > 0) { const s = pop(t0, t); trophy(400 + i * 240, 360, 1.4 * s); b.save(); b.globalAlpha = a; b.font = '900 40px "DejaVu Sans", Arial'; b.textAlign = 'center'; b.lineWidth = 8; b.strokeStyle = '#000'; b.strokeText(yrs[i], 400 + i * 240, 480); b.fillStyle = '#ffd400'; b.fillText(yrs[i], 400 + i * 240, 480); b.restore(); flash(t, t0, .25); } }
-  tag('TRICAMPEÃO MUNDIAL', ls(6) + .1, le(6), t); const n = Math.min(41, Math.floor(ss(ls(6) + 2.9, ls(6) + 4.0, t) * 41)); if (t > ls(6) + 2.9) headline(n + ' VITÓRIAS', ls(6) + 2.9, le(6), t, 110, 66, '#fff');
-  POST.vig = .6;
-}
 function M8(t) { // bandeira do Brasil na volta da vitória
   const k = t - ls(7), z = 70 + k * 8; aimCam(5, 1.4, z - 6, [0, 1.2, z + 1], 52, t, .6); CROWDJ = 1;
   track(t, f1b(0, z, 0, { flag: true }), 'day'); confetti(t, .5); tag('A VOLTA DA VITÓRIA', ls(7) + .1, le(7), t, 92, '#1f9a45'); POST.vig = .55; flash(t, ls(7), .5);
@@ -2650,14 +2635,6 @@ function M11(t) { // bandeirada em câmera lenta
   const chk = Fn([-8.5, 2.2, 60.6], (ctx, it) => { const q = toCam(it.p); if (q[2] < .3) return; const s = proj(q), u = .9 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); for (let i = 0; i < 6; i++) for (let j = 0; j < 4; j++) { ctx.fillStyle = (i + j) % 2 ? '#111' : '#fff'; ctx.fillRect(i * u * .2, j * u * .2 + Math.sin(t * 12 + i) * u * .04, u * .2, u * .2); } ctx.restore(); });
   track(t, [...f1b(0, z, 0), chk, St([-8.5, 0, 60.4], 1.75, { armR: [2.9, 3.0, .17, .16], armL: [.3, .2], cloth: '#e8e8e8', pants: '#e8e8e8', skin: '#e2b48a', hairC: '#3a2a1c' })], 'day'); confetti(t, ss(ls(10) + 1.2, ls(10) + 1.7, t));
   headline('VENCEU EM CASA!', ls(10) + 1.3, le(10), t, 150, 76, '#ffd400'); flash(t, ls(10) + 1.3, .4); POST.vig = .55;
-}
-function M12(t) { // pódio, exausto, troféu
-  aimCam(0, 1.9, 54, [0, 2.3, 60], 46, t, .6); CROWDJ = 1; if (!TRK) buildTrack();
-  const pod = [Bx(-1, 0, 59.5, 1, 1.4, 61, '#e8e8e8'), Bx(-3, 0, 59.6, -1, 1.0, 61, '#d8d8d8'), Bx(1, 0, 59.6, 3, .7, 61, '#d0d0d0')], tired = Math.sin(t * 2.4) * .05;
-  const sen = St([0, 1.4, 60.2], 1.75, { suit: SUIT, mouth: 'open', mo: .5, lookY: -.4, armR: [2.9, 3.05, .17, .16], armL: [2.5 + tired, 2.9, .17, .16], sway: tired * .5, hairC: '#3a2a1c', skin: '#e2b48a' });
-  track(t, [...pod, sen, St([-2, 1.0, 60.3], 1.75, { suit: { c: '#2456a8', s: '#f3d23a' }, armL: [1.0, 1.6], armR: [.3, .2], skin: '#efc9a6', hairC: '#c9a050' }), St([2, .7, 60.3], 1.75, { suit: { c: '#c8392a', s: '#f4f4f0' }, armR: [1.0, 1.6], armL: [.3, .2], skin: '#e8c09a', hairC: '#3a2a1c' })], 'day');
-  if (sen._screen) { const s = sen._screen, sc = s.S / 380; trophy(s.x + .34 * s.S, s.y - .78 * s.S - 55 * sc, sc); }
-  confetti(t, 1); tag('DIANTE DO BRASIL INTEIRO', ls(11) + .1, le(11), t, 92, '#1f9a45'); POST.vig = .55; flash(t, ls(11), .6);
 }
 function M13(t) { // a frase
   aimCam(.8, 1.4, 56.8, [0, 1.0, 60.2], 40, t, .3); CROWDJ = 0; track(t, [St([0, 0, 60.2], 1.75, { suit: SUIT, helmet: true })], 'day');
@@ -2722,6 +2699,69 @@ function kart2(x, z, yaw, o = {}) {
   P.push(St(Tp(0, .2, -.3), .62, Object.assign({ seated: true, helmet: o.helmet !== false, suit: SUITK, armL: [1.25, 1.35, .17, .17], armR: [1.25, 1.35, .17, .17], bias: -.4 }, o.kid || {})));
   P.push(Fn(Tp(0, .43, .1), (ctx, it) => { const q = toCam(it.p); if (q[2] < .2) return; const s = proj(q), r = .1 * focal() / q[2]; ctx.strokeStyle = '#111'; ctx.lineWidth = Math.max(1.5, r * .2); ctx.beginPath(); ctx.ellipse(s[0], s[1], r, r * .45, 0, 0, 7); ctx.stroke(); }, { bias: -.7 }));
   return P; }
+
+/* ---- melhorias de cenário: pista, arquibancada, pódio, emoções ---- */
+function upgradeTrack() {
+  if (TRK.up) return; TRK.up = true; const B = TRK.base, L = TRK.L, R = mulberry(77);
+  for (let z = -40; z < 400; z += 6) { B.push(quadY(.003, -1.9 + Math.sin(z * .05) * .4, -1.3 + Math.sin(z * .05) * .4, z, z + 6, '#2e3034', { a: .55 })); B.push(quadY(.003, 1.3 + Math.sin(z * .05) * .4, 1.9 + Math.sin(z * .05) * .4, z, z + 6, '#2e3034', { a: .55 })); }
+  for (let i = 0; i < 40; i++) { const x = -6 + R() * 12, z = R() * 300, w = .6 + R() * 2; B.push(quadY(.002, x, x + w, z, z + w * 2, R() < .5 ? '#34363a' : '#45474c', { a: .6 })); }
+  for (let k = 0; k < 6; k++) for (const s of [-1, 1]) { const z = 44 - k * 8 + (s > 0 ? 4 : 0), x = s * 3; B.push(quadY(.006, x - 1.1, x + 1.1, z, z + .12, '#e8e8e8')); B.push(quadY(.006, x - 1.1, x - .98, z, z + 1.4, '#e8e8e8')); B.push(quadY(.006, x + .98, x + 1.1, z, z + 1.4, '#e8e8e8')); }
+  segY(B, -.015, -24, -9.8, -40, 400, '#c9b48a', {}, 10);
+  for (let z = -30; z < 260; z += .9) { L.push(Bx(-9.45, 0, z, -8.85, .26, z + .8, '#18181a')); L.push(Bx(-9.45, .26, z, -8.85, .34, z + .8, (Math.floor(z) % 2) ? '#f2f2f2' : '#d02828')); }
+  for (let z = 8; z < 156; z += 4) L.push(Bx(10.2, 0, z, 10.3, 4.2, z + .1, '#7a7d84'));
+  L.push(Pp([[10.25, 4.2, 156], [10.25, 4.2, 8], [10.25, 1.1, 8], [10.25, 1.1, 156]], '#c8ccd2', { a: .18 }));
+  for (let i = 0; i < 12; i++) { const z0 = 10 + i * 12; L.push(Bx(10.9, 13.2, z0, 27, 13.6, z0 + 12, '#2e3138')); L.push(Bx(11.2, 1, z0 + .1, 11.5, 13.2, z0 + .4, '#55585f')); L.push(Bx(10.6, 1.1, z0 + .5, 10.75, 2.0, z0 + 11.5, ['#1f8a3a', '#f3d23a', '#1f4fa0', '#e8e8e8'][i % 4])); }
+  for (let z = -20; z < 300; z += 13) { const x = -28 - R() * 8, bl = []; for (let k = 0; k < 6; k++) bl.push([x + (R() - .5) * 4, 4 + R() * 3, z + (R() - .5) * 4, 1.8 + R()]);
+    L.push(Fn([x, 5, z], (ctx) => { for (const q0 of bl) { const q = toCam(q0); if (q[2] < .5) continue; const p = proj(q), r = q0[3] * focal() / q[2]; ctx.fillStyle = css(mix([52, 84, 48], FOG.c, fogK(FOG, Math.hypot(...q)))); ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill(); } })); }
+}
+function clouds(t) { const R = mulberry(2); b.save(); for (let i = 0; i < 7; i++) { const x = ((R() * 1600 + t * 6 * (R() + .5)) % 1700) - 200, y = 40 + R() * 160, w = 160 + R() * 220; b.globalAlpha = .55; b.fillStyle = '#ffffff'; for (let k = 0; k < 5; k++) { b.beginPath(); b.ellipse(x + k * w * .2, y + Math.sin(k * 2) * 10, w * .22, w * .12, 0, 0, 7); b.fill(); } } b.restore(); }
+function crowdFront(t, k) { // cabeças da torcida em primeiro plano (pódio)
+  const R = mulberry(9); for (let i = 0; i < 26; i++) { const x = i * 52 + R() * 20 - 20, y = 700 + R() * 30 - Math.abs(Math.sin(t * 6 + i)) * 18 * k, r = 34 + R() * 10;
+    b.fillStyle = ['#e2b48a', '#c98f66', '#8e5c3c', '#f0cfae'][i % 4]; b.beginPath(); b.arc(x, y, r, 0, 7); b.fill(); b.fillStyle = ['#2a1d14', '#3a2a1c', '#c9a050', '#1b1512'][i % 4]; b.beginPath(); b.arc(x, y - r * .1, r, Math.PI, 0); b.fill();
+    if (i % 3 === 0) { b.strokeStyle = '#2a2a2e'; b.lineWidth = 12; b.lineCap = 'round'; b.beginPath(); b.moveTo(x + r * .8, y); b.lineTo(x + r * 1.2, y - 90 - Math.sin(t * 6 + i) * 20 * k); b.stroke(); }
+    if (i % 5 === 2) { const fx = x - 10, fy = y - 150; b.fillStyle = '#1f9a45'; b.fillRect(fx, fy + Math.sin(t * 5 + i) * 4, 90, 58); b.fillStyle = '#f7d21e'; b.beginPath(); b.moveTo(fx + 8, fy + 29); b.lineTo(fx + 45, fy + 6); b.lineTo(fx + 82, fy + 29); b.lineTo(fx + 45, fy + 52); b.fill(); b.fillStyle = '#2a4aa8'; b.beginPath(); b.arc(fx + 45, fy + 29, 12, 0, 7); b.fill(); } } }
+let PODT = null;
+function podiumTex() { if (PODT) return PODT; const c = mk(1024, 220), x = c.getContext('2d'); const g = x.createLinearGradient(0, 0, 0, 220); g.addColorStop(0, '#0f2a66'); g.addColorStop(1, '#0a1c44'); x.fillStyle = g; x.fillRect(0, 0, 1024, 220);
+  x.fillStyle = '#f3d23a'; x.fillRect(0, 0, 1024, 10); x.fillRect(0, 210, 1024, 10); x.fillStyle = '#fff'; x.font = '900 64px "DejaVu Sans", Arial'; x.textAlign = 'center'; x.fillText('GRANDE PRÊMIO DO BRASIL', 512, 100); x.fillStyle = '#f3d23a'; x.font = '900 52px "DejaVu Sans", Arial'; x.fillText('INTERLAGOS • 1991', 512, 170);
+  const n = mk(128, 128); const nx = n.getContext('2d'); PODT = { banner: c, nums: [1, 2, 3].map(k => { const cc = mk(128, 128), xx = cc.getContext('2d'); xx.fillStyle = '#f4f4f0'; xx.fillRect(0, 0, 128, 128); xx.fillStyle = k === 1 ? '#c9a640' : '#555'; xx.font = '900 96px "DejaVu Sans"'; xx.textAlign = 'center'; xx.textBaseline = 'middle'; xx.fillText(k, 64, 70); return cc; }) }; return PODT; }
+function M12(t) { // pódio: exausto, com dor, ergue o troféu
+  const T0 = ls(11), lift = sm(T0 + .6, T0 + 2.4, t); aimCam(0, 2.4, 50.2, [0, 2.7, 61], 56, t, .5); CROWDJ = 1; if (!TRK) buildTrack();
+  const P = podiumTex();
+  const set = [Bx(-6, 0, 62.4, 6, 5.2, 62.8, '#0a1c44'), Pp([[-5.2, 4.9, 62.39], [5.2, 4.9, 62.39], [5.2, 2.7, 62.39], [-5.2, 2.7, 62.39]], '#888', { tex: P.banner }),
+    Bx(-1, 0, 59.5, 1, 1.4, 61, '#e8e8e8'), Bx(-3, 0, 59.6, -1, 1.0, 61, '#d8d8d8'), Bx(1, 0, 59.6, 3, .7, 61, '#d0d0d0'),
+    Pp([[-.45, 1.25, 59.49], [.45, 1.25, 59.49], [.45, .35, 59.49], [-.45, .35, 59.49]], '#888', { tex: P.nums[0], bias: -.1 }), Pp([[-2.45, .9, 59.59], [-1.55, .9, 59.59], [-1.55, .1, 59.59], [-2.45, .1, 59.59]], '#888', { tex: P.nums[1], bias: -.1 }), Pp([[1.55, .62, 59.59], [2.45, .62, 59.59], [2.45, .05, 59.59], [1.55, .05, 59.59]], '#888', { tex: P.nums[2], bias: -.1 }),
+    Fn([-.3, 6.4, 62.2], (ctx, it) => flag3(ctx, it.p, t), { bias: 1 })];
+  const tired = Math.sin(t * 2.4) * .05;
+  const sen = St([0, 1.4, 60.2], 1.75, { suit: SUIT, tears: true, mouth: 'open', mo: .45, lookY: lerp(.8, -.4, lift), armR: [lerp(.4, 2.9, lift), lerp(.3, 3.05, lift), .17, .16], armL: [lerp(.3, 2.5, lift) + tired, lerp(.2, 2.9, lift), .17, .16], sway: tired * .5, hairC: '#3a2a1c', skin: '#e2b48a' });
+  const clap = Math.sin(t * 9) * .3;
+  track(t, [...set, sen, St([-2, 1.0, 60.3], 1.75, { suit: { c: '#2456a8', s: '#f3d23a' }, armL: [1.3 + clap, 1.9, .17, .16], armR: [1.3 + clap, 1.9, .17, .16], skin: '#efc9a6', hairC: '#c9a050', mouth: 'smile' }), St([2, .7, 60.3], 1.75, { suit: { c: '#c8392a', s: '#f4f4f0' }, armR: [1.3 + clap, 1.9, .17, .16], armL: [1.3 + clap, 1.9, .17, .16], skin: '#e8c09a', hairC: '#3a2a1c', mouth: 'smile' })], 'day');
+  if (sen._screen && lift > .2) { const s = sen._screen, sc = s.S / 380; trophy(s.x + lerp(.25, .34, lift) * s.S, s.y - lerp(.45, .78, lift) * s.S - 55 * sc, sc); }
+  crowdFront(t, 1); confetti(t, 1);
+  tag('VITÓRIA EM CASA', T0 + .1, le(11), t, 92, '#1f9a45'); POST.vig = .55;
+}
+function M6(t) { // Mônaco 1984: ultrapassa um por um... corrida interrompida — momento triste
+  const T0 = ls(5), k = t - T0, red = t > T0 + 5.6;
+  if (k < 6.4) { const z = 30 + k * 13; aimCam(.3 + Math.sin(k) * .2, 2.4, z - 8, [0, .4, z + 5], 62, t, 1.2);
+    const rivals = [8, 22, 36, 50].map(rz => f1b(1.45, 30 + rz + k * 6, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
+    track(t, [...f1b(-1.45, z, 0, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-1.45, .5, z - 1.6], 1);
+    tag('MÔNACO • 1984', T0 + .1, T0 + 6.4, t); if (!red) headline('UM POR UM...', T0 + 3.4, T0 + 5.6, t, 210, 56, '#ffd400'); else { b.fillStyle = `rgba(200,20,20,${.22 + .12 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', T0 + 5.6, T0 + 6.4, t, 220, 60, '#fff'); }
+    speedLines(t, .4); }
+  else { const zc = 120; aimCam(-3.6, 1.3, zc - 3.2, [-1.2, 1.1, zc + .6], 46, t, .4);
+    const sad = St([-2.3, 0, zc + .2], 1.75, { suit: { c: '#f4f4f0', s: '#2456a8' }, lookY: 1, hy: .15, armL: [.25, .1], armR: [.3, .15], hairC: '#3a2a1c', skin: '#e2b48a', sway: Math.sin(t * .8) * .02 });
+    track(t, [...f1b(-.6, zc, .15, { c1: '#f4f4f0', c2: '#2456a8' }), sad], 'monaco');
+    b.globalCompositeOperation = 'saturation'; b.fillStyle = 'rgba(128,128,128,.5)'; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
+    tag('CORRIDA INTERROMPIDA', T0 + 6.5, le(5), t, 92, '#d02828'); headline('ELE ESTAVA CHEGANDO NO LÍDER', T0 + 7, le(5), t, 200, 42, '#fff'); }
+  POST.vig = .72;
+}
+function M7(t) { // títulos: momento feliz
+  const T0 = ls(6), j = Math.abs(Math.sin((t - T0) * 5)) * .35;
+  aimCam(0, 1.6, 52, [0, 1.6, 60], 54, t, .5); CROWDJ = 1;
+  track(t, [St([0, j, 60], 1.75, { suit: SUIT, mouth: 'open', mo: .8, armR: [2.95, 3.1, .17, .16], armL: [.6, .3], hairC: '#3a2a1c', skin: '#e2b48a' })], 'day');
+  b.fillStyle = 'rgba(0,0,0,.35)'; b.fillRect(0, 0, W, H);
+  const yrs = ['1988', '1990', '1991']; for (let i = 0; i < 3; i++) { const t0 = T0 + .6 + i * .8, a = ss(t0, t0 + .15, t); if (a > 0) { const s = pop(t0, t); trophy(300 + i * 340, 250, 1.1 * s); b.save(); b.globalAlpha = a; b.font = '900 36px "DejaVu Sans", Arial'; b.textAlign = 'center'; b.lineWidth = 8; b.strokeStyle = '#000'; b.strokeText(yrs[i], 300 + i * 340, 350); b.fillStyle = '#ffd400'; b.fillText(yrs[i], 300 + i * 340, 350); b.restore(); } }
+  tag('TRICAMPEÃO MUNDIAL', T0 + .1, le(6), t); const n = Math.min(41, Math.floor(ss(T0 + 2.9, T0 + 4.0, t) * 41)); if (t > T0 + 2.9) headline(n + ' VITÓRIAS', T0 + 2.9, le(6), t, 440, 60, '#fff');
+  confetti(t, .7); POST.vig = .55;
+}
 
 function VS2(t) { const f = [M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); const st = i ? LST[i] : 0, en = st + LDUR[i]; if (i) POST.black = Math.max(POST.black || 0, 1 - ss(st, st + .35, t)); if (i < 13) POST.black = Math.max(POST.black || 0, ss(en - .3, en, t) * .9); captions(t); }
 function scheduleS2() {
