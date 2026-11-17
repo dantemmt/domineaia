@@ -54,7 +54,7 @@
    Tudo sintetizado: imagem (canvas 2D + mini motor 3D), som (Web Audio),
    narração (speechSynthesis pt-BR).
    ========================================================================= */
-const W = 1280, H = 720, DUR = 35;
+const W = 1280, H = 720, DUR = 60;
 const $ = id => document.getElementById(id);
 function mk(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
 
@@ -2537,14 +2537,15 @@ function scheduleS() {
    SENNA v2 — visual profissional: carros reais, kart, cards, legendas palavra a palavra
    ========================================================================= */
 const LINES = ["Ele tinha medo de chuva. E virou o rei da chuva.", "Aos quatro anos, ganhou o primeiro kart do pai.", "Perdia no molhado.", "Então treinava quando chovia.", "", "Mônaco, 84: carro fraco, chuva forte, passou um por um.", "Três títulos mundiais. Quarenta e uma vitórias.", "", "Interlagos, 91:", "câmbio travado na sexta marcha.", "Mesmo assim, venceu em casa", "e ergueu o troféu.", "", "Qual corrida dele você nunca esquece?"];
-const LDUR = [3.39, 3.21, 1.4, 2.08, 0, 5.97, 3.47, 0, 2.28, 2.3, 2.29, 1.68, 0, 2.63];
-const LST = [0.3, 3.69, 6.9, 8.3, 10.38, 10.38, 16.35, 19.82, 19.82, 22.1, 24.4, 26.69, 28.37, 28.37];
-const VEND = LST[13] + LDUR[13] + 3.5; // + cartão final
+const LDUR = [5.0, 5.0, 3.2, 4.6, 0, 8.0, 5.5, 7.0, 4.0, 4.2, 3.6, 3.8, 0, 2.6];
+const LST = [0.0, 5.0, 10.0, 13.2, 17.8, 17.8, 25.8, 31.3, 38.3, 42.3, 46.5, 50.1, 53.9, 53.9];
+const CS = [0.5, 5.5, 10.5, 13.7, 0, 18.3, 26.3, 0, 38.8, 42.8, 47.0, 50.6, 0, 54.4], CD = [2.93, 2.77, 0.95, 1.53, 0, 5.39, 2.96, 0, 1.69, 1.59, 2.0, 1.06, 0, 1.63]; // início e duração de cada fala
+const VEND = 60; // vídeo de exatamente 60s
 const HL = ['1983,', 'CAMPEÃO', 'CHANCE', 'CHUVA', 'MEDO', 'KART', 'PERDIA', 'TREINAR.', 'NINGUÉM', 'FINAL,', 'TERMINOU.', 'MÔNACO,', 'INTERROMPIDA.', 'TÍTULOS:', 'VITÓRIAS.', 'BANDEIRA', 'BRASIL', 'INTERLAGOS,', 'CÂMBIO', 'SEXTA', 'BANDEIRADA.', 'GRITANDO.', 'TROFÉU', 'BEM', 'FEITO...', 'NÃO', 'FAZ.', 'ESQUECE?', 'COMENTA'];
 /* ---- legenda palavra a palavra (estilo TikTok) ---- */
 function captions(t) {
-  let i = -1; for (let k = 0; k < 14; k++) if (t >= LST[k] && t < LST[k] + LDUR[k] - .15) i = k; if (i < 0) return;
-  const words = LINES[i].split(' '), tot = LINES[i].length, p = clamp((t - LST[i]) / (LDUR[i] * .92));
+  let i = -1; for (let k = 0; k < 14; k++) if (CD[k] && t >= CS[k] && t < CS[k] + CD[k] + .5) i = k; if (i < 0) return;
+  const words = LINES[i].split(' '), tot = LINES[i].length, p = clamp((t - CS[i]) / CD[i]);
   let acc = 0, cur = 0; for (let k = 0; k < words.length; k++) { acc += words[k].length + 1; if (p * tot < acc) { cur = k; break; } cur = k; }
   const g0 = Math.floor(cur / 3) * 3, grp = words.slice(g0, g0 + 3);
   b.save(); b.font = '900 46px "DejaVu Sans", Arial, sans-serif'; b.textBaseline = 'middle'; b.lineJoin = 'round';
@@ -2565,7 +2566,7 @@ function headline(txt, t0, t1, t, y, size, col) { // título central com pop
   const a = ss(t0, t0 + .12, t) * (1 - ss(t1 - .25, t1, t)); if (a <= 0) return; const s = pop(t0, t);
   b.save(); b.globalAlpha = a; b.translate(640, Math.max(y, 150)); b.scale(s, s); b.transform(1, 0, -.12, 1, 0, 0); b.font = `900 ${size || 58}px "DejaVu Sans", Arial, sans-serif`; b.textAlign = 'center'; b.textBaseline = 'middle'; b.lineJoin = 'round';
   b.lineWidth = 12; b.strokeStyle = '#000'; b.strokeText(txt, 0, 0); b.fillStyle = col || '#fff'; b.fillText(txt, 0, 0); b.restore(); }
-function flash(t, t0, k) { const a = (1 - ss(t0, t0 + .25, t)) * (t >= t0 ? 1 : 0) * (k ?? .8); if (a > 0) { b.fillStyle = `rgba(255,255,255,${a})`; b.fillRect(0, 0, W, H); } }
+function flash(t, t0, k) { if (LST.includes(t0)) return; const a = (1 - ss(t0, t0 + .35, t)) * (t >= t0 ? 1 : 0) * Math.min(k ?? .8, .45); if (a > 0) { b.fillStyle = `rgba(255,255,255,${a})`; b.fillRect(0, 0, W, H); } }
 function speedLines(t, k) { if (k <= 0) return; const R = mulberry(Math.floor(t * 20)); b.save(); b.globalAlpha = k; b.strokeStyle = 'rgba(255,255,255,.5)'; b.lineWidth = 2; b.beginPath(); for (let i = 0; i < 40; i++) { const a = R() * Math.PI * 2, r0 = 300 + R() * 200, r1 = r0 + 120 + R() * 200; b.moveTo(640 + Math.cos(a) * r0, 360 + Math.sin(a) * r0); b.lineTo(640 + Math.cos(a) * r1, 360 + Math.sin(a) * r1); } b.stroke(); b.restore(); }
 /* ---- modelos 3D melhores ---- */
 function loftPts(T, a, c) { // a, c = [z, halfW, y0, y1]
@@ -2611,13 +2612,13 @@ const ls = i => LST[i], le = i => LST[i] + LDUR[i];
 function rainFx(t, k) { if (k <= 0) return; b.save(); b.globalAlpha = k; b.strokeStyle = 'rgba(210,220,235,.5)'; b.lineWidth = 1.5; const R = mulberry(Math.floor(t * 30)); b.beginPath(); for (let i = 0; i < 300; i++) { const x = R() * (W + 200) - 100, y = R() * H; b.moveTo(x, y); b.lineTo(x - 12, y + 40); } b.stroke(); b.restore(); }
 function M1(t) { // gancho: carro saindo da névoa de chuva + raio
   const k = t, z = 30 + k * 16;
-  const ltn = (t > .9 && t < 1.02) || (t > 1.2 && t < 1.3);
+  const ltn = (t > 1.1 && t < 1.22) || (t > 1.4 && t < 1.5);
   aimCam(-.9 + Math.sin(t * 2) * .1, .55, z + 9 - Math.min(k, 3) * 1.2, [0, .5, z], 62, t, 2);
   cam.yaw = Math.atan2(0 - cam.x, z - cam.z); 
   track(t, [...f1b(0, z, Math.PI, {}), ...f1b(2.9, z - 12, Math.PI, { c1: '#2456a8', c2: '#f4f4f0' })], 'rain'); spray(t, [0, .5, z + 2.4], 1.2);
   if (ltn) { b.fillStyle = 'rgba(230,235,255,.7)'; b.fillRect(0, 0, W, H); }
-  if (t > 1.9) { const a = ss(1.9, 2.2, t); b.fillStyle = `rgba(0,0,0,${.55 * a})`; b.fillRect(0, 0, W, H); headline('AYRTON SENNA', 2.0, le(0), t, 300, 92, '#ffd400'); tag('O REI DA CHUVA', 2.3, le(0), t, 370, '#1f9a45'); }
-  POST.vig = .7; POST.black = 1 - ss(0, .2, t); POST.shx += Math.sin(t * 40) * 2; flash(t, 2.0, .9);
+  if (t > 2.5) { const a = ss(2.5, 2.9, t); b.fillStyle = `rgba(0,0,0,${.55 * a})`; b.fillRect(0, 0, W, H); headline('AYRTON SENNA', 2.6, le(0), t, 300, 92, '#ffd400'); tag('O REI DA CHUVA', 3.1, le(0), t, 370, '#1f9a45'); }
+  POST.vig = .7; POST.black = 1 - ss(0, .2, t); POST.shx += Math.sin(t * 40) * 1; flash(t, 2.6, .5);
 }
 function M2(t) { // São Paulo 1960: o pai e o kart
   const z = 22;
@@ -2633,9 +2634,9 @@ function M3(t) { // perdia na chuva: os outros passam
   headline('PERDIA NA CHUVA', ls(2) + .2, le(2), t, 120, 58, '#fff'); POST.vig = .65; flash(t, ls(2), .5);
 }
 function M4(t) { // treinava na chuva, sozinho, à noite
-  const k = t - ls(3), spin = sm(ls(3) + 1.2, ls(3) + 2.3, t), z = 36 + k * 3.5;
+  const k = (t - ls(3)) * .7, spin = sm(ls(3) + 1.2, ls(3) + 2.3, t), z = 36 + k * 3.5;
   aimCam(-2.4, 1.0, z - 3, [0, .4, z + 1], 52, t, 1.3);
-  track(t, kart2(lerp(0, 1.2, spin), z, spin * Math.PI * 2 * (1 - ss(ls(3) + 1.3, ls(3) + 1.6, t)) + Math.sin(k * 3) * .05), 'rain'); spray(t, [lerp(0, 1.2, spin), .3, z - .8], .8);
+  track(t, kart2(lerp(0, 1.2, spin), z, spin * Math.PI * 2 * (1 - ss(ls(3) + 2.6, ls(3) + 3.0, t)) + Math.sin(k * 3) * .05), 'rain'); spray(t, [lerp(0, 1.2, spin), .3, z - .8], .8);
   b.fillStyle = 'rgba(10,15,35,.35)'; b.fillRect(0, 0, W, H); rainFx(t, .6);
   headline('TREINAVA NA CHUVA', ls(3) + .1, le(3), t, 200, 60, '#ffd400');
   POST.vig = .75; flash(t, ls(3), .5);
@@ -2648,27 +2649,27 @@ function M5(t) { // 1983: campeão da F3 inglesa
   speedLines(t, .3); POST.vig = .55; flash(t, ls(4), .5);
 }
 function M6(t) { // Mônaco 1984: passando um por um... bandeira vermelha
-  const k = t - ls(5), z = 30 + k * 17, red = t > ls(5) + 5.6;
+  const k = t - ls(5), z = 30 + k * 13, red = t > ls(5) + 6.2;
   aimCam(-.2 + Math.sin(k) * .2, .9, z - 6.5, [-1.2, .6, z + 3], 62, t, 1.8);
-  const rivals = [12, 34, 58, 84].map(rz => f1b(1.45, 30 + rz + k * 9, 0, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
+  const rivals = [12, 34, 58, 84].map(rz => f1b(1.45, 30 + rz + k * 6, { c1: '#c8392a', c2: '#f4f4f0' })).flat();
   track(t, [...f1b(-1.45, z, 0, { c1: '#f4f4f0', c2: '#2456a8' }), ...rivals], 'monaco'); spray(t, [-1.45, .5, z - 1.6], 1);
-  if (red) { b.fillStyle = `rgba(200,20,20,${.25 + .15 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', ls(5) + 5.6, le(5), t, 220, 60, '#fff'); }
-  tag('MÔNACO • 1984', ls(5) + .1, le(5), t); if (!red) headline('UM POR UM...', ls(5) + 3, ls(5) + 5.5, t, 210, 56, '#ffd400');
-  speedLines(t, .5); POST.vig = .7; flash(t, ls(5), .5); flash(t, ls(5) + 5.6, .6);
+  if (red) { b.fillStyle = `rgba(200,20,20,${.25 + .15 * Math.sin(t * 12)})`; b.fillRect(0, 0, W, H); headline('BANDEIRA VERMELHA', ls(5) + 6.2, le(5), t, 220, 60, '#fff'); }
+  tag('MÔNACO • 1984', ls(5) + .1, le(5), t); if (!red) headline('UM POR UM...', ls(5) + 3.6, ls(5) + 6.1, t, 210, 56, '#ffd400');
+  speedLines(t, .5); POST.vig = .7; flash(t, ls(5), .5); flash(t, ls(5) + 6.2, .4);
 }
 function M7(t) { // títulos
   aimCam(0, 3, 40, [12, 4, 70], 60, t, .5); CROWDJ = 1; track(t, [], 'day'); b.fillStyle = 'rgba(0,0,0,.6)'; b.fillRect(0, 0, W, H);
-  const yrs = ['1988', '1990', '1991']; for (let i = 0; i < 3; i++) { const t0 = ls(6) + .2 + i * .45, a = ss(t0, t0 + .15, t); if (a > 0) { const s = pop(t0, t); trophy(400 + i * 240, 360, 1.4 * s); b.save(); b.globalAlpha = a; b.font = '900 40px "DejaVu Sans", Arial'; b.textAlign = 'center'; b.lineWidth = 8; b.strokeStyle = '#000'; b.strokeText(yrs[i], 400 + i * 240, 480); b.fillStyle = '#ffd400'; b.fillText(yrs[i], 400 + i * 240, 480); b.restore(); flash(t, t0, .25); } }
-  tag('TRICAMPEÃO MUNDIAL', ls(6) + .1, le(6), t); const n = Math.min(41, Math.floor(ss(ls(6) + 1.7, ls(6) + 2.6, t) * 41)); if (t > ls(6) + 1.7) headline(n + ' VITÓRIAS', ls(6) + 1.7, le(6), t, 110, 66, '#fff');
+  const yrs = ['1988', '1990', '1991']; for (let i = 0; i < 3; i++) { const t0 = ls(6) + .6 + i * .8, a = ss(t0, t0 + .15, t); if (a > 0) { const s = pop(t0, t); trophy(400 + i * 240, 360, 1.4 * s); b.save(); b.globalAlpha = a; b.font = '900 40px "DejaVu Sans", Arial'; b.textAlign = 'center'; b.lineWidth = 8; b.strokeStyle = '#000'; b.strokeText(yrs[i], 400 + i * 240, 480); b.fillStyle = '#ffd400'; b.fillText(yrs[i], 400 + i * 240, 480); b.restore(); flash(t, t0, .25); } }
+  tag('TRICAMPEÃO MUNDIAL', ls(6) + .1, le(6), t); const n = Math.min(41, Math.floor(ss(ls(6) + 2.9, ls(6) + 4.0, t) * 41)); if (t > ls(6) + 2.9) headline(n + ' VITÓRIAS', ls(6) + 2.9, le(6), t, 110, 66, '#fff');
   POST.vig = .6;
 }
 function M8(t) { // bandeira do Brasil na volta da vitória
-  const k = t - ls(7), z = 80 + k * 9; aimCam(5, 1.4, z - 6, [0, 1.2, z + 1], 52, t, .6); CROWDJ = 1;
+  const k = t - ls(7), z = 70 + k * 8; aimCam(5, 1.4, z - 6, [0, 1.2, z + 1], 52, t, .6); CROWDJ = 1;
   track(t, f1b(0, z, 0, { flag: true }), 'day'); confetti(t, .5); tag('A VOLTA DA VITÓRIA', ls(7) + .1, le(7), t, 92, '#1f9a45'); POST.vig = .55; flash(t, ls(7), .5);
 }
 function M9(t) { // Interlagos 1991: em casa, torcida
   const k = t - ls(8), z = 30 + k * 20; aimCam(9, 2, z - 4, [0, .6, z + 3], 54, t, 1); CROWDJ = 1;
-  track(t, [...f1b(-1.4, z, 0), ...f1b(1.6, z - 22, 0, { c1: '#2456a8', c2: '#f3d23a' })], 'day'); tag('INTERLAGOS • 1991', ls(8) + .1, le(8), t); headline('EM CASA', ls(8) + .9, le(8), t, 210, 70, '#ffd400');
+  track(t, [...f1b(-1.4, z, 0), ...f1b(1.6, z - 22, 0, { c1: '#2456a8', c2: '#f3d23a' })], 'day'); tag('INTERLAGOS • 1991', ls(8) + .1, le(8), t); headline('EM CASA', ls(8) + 1.6, le(8), t, 210, 70, '#ffd400');
   speedLines(t, .4); POST.vig = .55; flash(t, ls(8), .5);
 }
 function M10(t) { // câmbio travado: HUD
@@ -2683,8 +2684,8 @@ function M10(t) { // câmbio travado: HUD
 function M11(t) { // bandeirada em câmera lenta
   const k = t - ls(10), z = 50 + k * 4; aimCam(8, 1.4, 60.6, [0, .8, z + 2], 44, t, .6); CROWDJ = 1;
   const chk = Fn([-8.5, 2.2, 60.6], (ctx, it) => { const q = toCam(it.p); if (q[2] < .3) return; const s = proj(q), u = .9 * focal() / q[2]; ctx.save(); ctx.translate(s[0], s[1]); for (let i = 0; i < 6; i++) for (let j = 0; j < 4; j++) { ctx.fillStyle = (i + j) % 2 ? '#111' : '#fff'; ctx.fillRect(i * u * .2, j * u * .2 + Math.sin(t * 12 + i) * u * .04, u * .2, u * .2); } ctx.restore(); });
-  track(t, [...f1b(0, z, 0), chk, St([-8.5, 0, 60.4], 1.75, { armR: [2.9, 3.0, .17, .16], armL: [.3, .2], cloth: '#e8e8e8', pants: '#e8e8e8', skin: '#e2b48a', hairC: '#3a2a1c' })], 'day'); confetti(t, ss(ls(10) + .7, ls(10) + 1.2, t));
-  headline('VENCEU EM CASA!', ls(10) + .8, le(10), t, 150, 76, '#ffd400'); flash(t, ls(10) + .8, .9); POST.vig = .55;
+  track(t, [...f1b(0, z, 0), chk, St([-8.5, 0, 60.4], 1.75, { armR: [2.9, 3.0, .17, .16], armL: [.3, .2], cloth: '#e8e8e8', pants: '#e8e8e8', skin: '#e2b48a', hairC: '#3a2a1c' })], 'day'); confetti(t, ss(ls(10) + 1.2, ls(10) + 1.7, t));
+  headline('VENCEU EM CASA!', ls(10) + 1.3, le(10), t, 150, 76, '#ffd400'); flash(t, ls(10) + 1.3, .4); POST.vig = .55;
 }
 function M12(t) { // pódio, exausto, troféu
   aimCam(0, 1.9, 54, [0, 2.3, 60], 46, t, .6); CROWDJ = 1; if (!TRK) buildTrack();
@@ -2708,19 +2709,19 @@ function M14(t) { // pergunta + chamada final
   if (t > le(13)) { tag('SEGUE PRA MAIS HISTÓRIAS', le(13), VEND, t, 470, '#ffd400'); tag('FAMA EM MINIATURA', le(13) + .4, VEND, t, 540, '#ffffff'); }
   POST.vig = .6; POST.black = ss(VEND - .3, VEND, t);
 }
-function VS2(t) { const f = [M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); captions(t); }
+function VS2(t) { const f = [M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14]; let i = 0; for (let k = 0; k < 14; k++) if (t >= (k ? LST[k] : 0)) i = k; if (t >= VEND) { S8(t); return; } f[i](t); const st = i ? LST[i] : 0, en = st + LDUR[i]; if (i) POST.black = Math.max(POST.black || 0, 1 - ss(st, st + .35, t)); if (i < 13) POST.black = Math.max(POST.black || 0, ss(en - .3, en, t) * .9); captions(t); }
 function scheduleS2() {
   const R = Math.random;
   const pad = (a, c, fr, v) => { const pg = gn(0), pl = filt('lowpass', 1400); chain(pl, pg, mus); for (const f of fr) { const o = A.createOscillator(); o.type = 'triangle'; o.frequency.value = f; o.connect(pl); o.start(T(a)); o.stop(T(c + .1)); } pg.gain.setValueAtTime(0, T(a)); pg.gain.linearRampToValueAtTime(v, T(a + 1)); pg.gain.setValueAtTime(v, T(c - .8)); pg.gain.linearRampToValueAtTime(0, T(c)); };
   pad(0, ls(5), [110, 130.8, 164.8], .04); pad(ls(5), VEND, [146.8, 185, 220, 293.7], .045);
   // batida (kick + baixo) a partir de Mônaco — energia
   for (let t = ls(5); t < le(12) - .5; t += .5) { const o = A.createOscillator(); o.frequency.setValueAtTime(120, T(t)); o.frequency.exponentialRampToValueAtTime(42, T(t + .12)); const e = gn(0); chain(o, e, mus); env(e.gain, t, .003, .5, .18); o.start(T(t)); o.stop(T(t + .25)); if ((t - ls(5)) % 1 > .4) { const s = nsrc(NW, t, t + .06), f = filt('highpass', 7000), e2 = gn(0); chain(s, f, e2, mus); env(e2.gain, t, .001, .08, .04); } }
-  const whoosh = (t) => { const s = nsrc(NW, t - .25, t + .15), f = filt('bandpass', 600, 1.2), e = gn(0); chain(s, f, e, sfx); f.frequency.setValueAtTime(300, T(t - .25)); f.frequency.exponentialRampToValueAtTime(3000, T(t + .1)); e.gain.setValueAtTime(0, T(t - .25)); e.gain.linearRampToValueAtTime(.5, T(t)); e.gain.linearRampToValueAtTime(0, T(t + .15)); };
+  const whoosh = (t) => { const s = nsrc(NW, t - .25, t + .15), f = filt('bandpass', 600, 1.2), e = gn(0); chain(s, f, e, sfx); f.frequency.setValueAtTime(300, T(t - .25)); f.frequency.exponentialRampToValueAtTime(3000, T(t + .1)); e.gain.setValueAtTime(0, T(t - .25)); e.gain.linearRampToValueAtTime(.25, T(t)); e.gain.linearRampToValueAtTime(0, T(t + .15)); };
   const hit = (t, k = 1) => { const o = A.createOscillator(); o.frequency.setValueAtTime(90, T(t)); o.frequency.exponentialRampToValueAtTime(30, T(t + .6)); const e = gn(0); chain(o, e, sfx); env(e.gain, t, .004, .9 * k, .7); o.start(T(t)); o.stop(T(t + .8)); const s = nsrc(NW, t, t + .2), f = filt('lowpass', 2500), e2 = gn(0); chain(s, f, e2, sfx); env(e2.gain, t, .002, .3 * k, .15); };
-  for (let i = 1; i < 14; i++) whoosh(LST[i]);
-  hit(2.0, 1.2); hit(ls(3) + .1, .7); for (let i = 0; i < 3; i++) hit(ls(6) + .2 + i * .45, .6); hit(ls(8) + .9, .7); hit(ls(10) + .8, 1.2);
+  for (let i = 1; i < 14; i++) if (LDUR[i]) whoosh(LST[i]);
+  hit(2.6, 1.0); for (let i = 0; i < 3; i++) hit(ls(6) + .6 + i * .8, .5); hit(ls(8) + 1.6, .6); hit(ls(10) + 1.3, 1.0);
   const riser = (a, c) => { const s = nsrc(NW, a, c), f = filt('bandpass', 400, 2), e = gn(0); chain(s, f, e, sfx); f.frequency.setValueAtTime(300, T(a)); f.frequency.exponentialRampToValueAtTime(5000, T(c)); e.gain.setValueAtTime(0, T(a)); e.gain.linearRampToValueAtTime(.35, T(c)); e.gain.linearRampToValueAtTime(0, T(c + .05)); };
-  riser(.6, 2.0); riser(ls(10) - 1.2, ls(10) + .8);
+  riser(1.0, 2.6); riser(ls(10) - .6, ls(10) + 1.3);
   { const s = nsrc(NB, .9, 3.0), f = filt('lowpass', 300), e = gn(0); chain(s, f, e, sfx); send(e, 1); e.gain.setValueAtTime(0, T(.9)); e.gain.linearRampToValueAtTime(.9, T(1.0)); e.gain.exponentialRampToValueAtTime(.01, T(3.0)); }
   const rain = (a, c) => { const s = nsrc(NW, a, c), f = filt('highpass', 2500), e = gn(0); chain(s, f, e, sfx); e.gain.setValueAtTime(0, T(a)); e.gain.linearRampToValueAtTime(.09, T(a + .3)); e.gain.setValueAtTime(.09, T(c - .3)); e.gain.linearRampToValueAtTime(0, T(c)); };
   rain(0, le(0)); rain(ls(2), le(3)); rain(ls(5), le(5));
@@ -2729,7 +2730,7 @@ function scheduleS2() {
   { const o = A.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 520; const lf = A.createOscillator(); lf.frequency.value = 9; const lg = gn(30); chain(lf, lg, o.frequency); const f = filt('lowpass', 1800, 3), e = gn(0); chain(o, f, e, sfx); e.gain.setValueAtTime(0, T(ls(9))); e.gain.linearRampToValueAtTime(.06, T(ls(9) + .5)); e.gain.setValueAtTime(.06, T(le(9) - .3)); e.gain.linearRampToValueAtTime(0, T(le(9))); o.start(T(ls(9))); o.stop(T(le(9))); lf.start(T(ls(9))); lf.stop(T(le(9))); }
   { const t0 = ls(3) + .3, s = nsrc(NW, t0, t0 + 1.0), f = filt('bandpass', 2600, 4), e = gn(0); chain(s, f, e, sfx); e.gain.setValueAtTime(0, T(t0)); e.gain.linearRampToValueAtTime(.25, T(t0 + .1)); e.gain.linearRampToValueAtTime(0, T(t0 + 1.1)); }
   const roar = (a, c, k) => { const s = nsrc(NB, a, c), f1 = filt('bandpass', 600, .8), e = gn(0); chain(s, f1, e, sfx); send(e, .5); e.gain.setValueAtTime(0, T(a)); e.gain.linearRampToValueAtTime(k, T(a + .3)); e.gain.setValueAtTime(k, T(c - .6)); e.gain.linearRampToValueAtTime(0, T(c)); };
-  roar(ls(6), le(7), .4); roar(ls(8), le(9), .5); roar(ls(10) + 1.1, le(11), 1.1); roar(ls(13), VEND, .3);
+  roar(ls(6), le(7), .6); roar(ls(8), le(9), .5); roar(ls(10) + 1.1, le(11), 1.1); roar(ls(13), VEND, .3);
   sfx.gain.setValueAtTime(1, T(VEND)); sfx.gain.setValueAtTime(0, T(VEND + .02)); mus.gain.setValueAtTime(1, T(VEND)); mus.gain.setValueAtTime(0, T(VEND + .02));
 }
 
@@ -2760,7 +2761,7 @@ function renderAt(t) {
 /* =========================================================================
    LEGENDAS, NARRAÇÃO, MENSAGEM DISCRETA E TÍTULO
    ========================================================================= */
-const CUES = LST.map((t, i) => [t - .05, t + LDUR[i], LINES[i]]);
+const CUES = LST.map((t, i) => [CS[i] - .05, CS[i] + CD[i], LINES[i]]);
 const subEl = $('sub').firstElementChild, ctaEl = $('cta'), ctaLn = ctaEl.querySelector('.ln'), titleEl = $('title');
 let curSub = '';
 function overlays(t) {
