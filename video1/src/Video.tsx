@@ -3,6 +3,7 @@ import { AbsoluteFill, Audio, interpolate, spring, staticFile, useCurrentFrame, 
 import T from './timeline.json';
 import { FONT, W, H, clamp } from './ui';
 import { Captions } from './captions';
+import { BackgroundFX } from './backgroundfx';
 import { Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11 } from './scenes';
 
 const SCENES: [keyof typeof T.scenes, React.FC][] = [
@@ -75,6 +76,7 @@ export const Video: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: '#050505', overflow: 'hidden' }}>
       <Background />
+      <BackgroundFX />
       {SCENES.map(([k, C]) => {
         const [a, b] = T.scenes[k];
         return frame >= a && frame < b ? <C key={k} /> : null;
