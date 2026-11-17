@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const T = JSON.parse(fs.readFileSync(path.join(__dirname, '../src/timeline.json'), 'utf8'));
@@ -12,6 +13,7 @@ const SR = 48000;
 const DUR = T.durationInFrames / T.fps; // 63 s
 const N = Math.round(SR * DUR);
 const fr = (f) => f / T.fps; // frame -> segundos
+const END_T = DUR - 2.4; // início do acorde final / fade da música
 
 // Barramentos estéreo
 const music = [new Float32Array(N), new Float32Array(N)];
@@ -123,7 +125,7 @@ function musicGain(t) {
     const b = Math.min(1, Math.max(0, (duckOut + 0.6 - t) / 0.8));
     g = 1 - 0.94 * Math.min(a, b);
   }
-  if (t > 61) g *= Math.max(0, 1 - (t - 61) / 1.6);
+  if (t > END_T) g *= Math.max(0, 1 - (t - END_T) / 1.6);
   if (t < 0.4) g *= t / 0.4;
   return g;
 }
@@ -160,7 +162,7 @@ function musicGain(t) {
     const t = i / SR;
     let g = 0.45;
     if (t > S6[0] - 0.3 && t < S6[1] + 0.5) g = 1.0; // cresce no dia 20
-    if (t > 61) g *= Math.max(0, 1 - (t - 61) / 1.8);
+    if (t > END_T) g *= Math.max(0, 1 - (t - END_T) / 1.8);
     if (t < 0.5) g *= t / 0.5;
     p1 += (2 * Math.PI * 55) / SR; p2 += (2 * Math.PI * 55.4) / SR; p3 += (2 * Math.PI * 82.4) / SR;
     const v = (Math.sin(p1) + Math.sin(p2) + 0.35 * Math.sin(p3)) * 0.05 * g * (0.85 + 0.15 * Math.sin(2 * Math.PI * 0.2 * t));
@@ -197,11 +199,11 @@ for (let b = 0; b * BEAT < DUR; b++) {
   const BAR = BEAT * 4;
   let bar = 0;
   const pianoHarm = [1, 0.45, 0.22, 0.12, 0.06];
-  for (let t = start; t < 61; t += BAR, bar++) {
+  for (let t = start; t < END_T; t += BAR, bar++) {
     const ch = chords[bar % 4];
     pattern.forEach((pi, k) => {
       const tt = t + k * BEAT / 2;
-      if (tt >= 61) return;
+      if (tt >= END_T) return;
       const amp = (k === 0 ? 0.11 : 0.075) * Math.min(1, (tt - start) / 1.5 + 0.35);
       tone(music, tt, 1.6, mtof(ch[pi]), amp, { attack: 0.004, decay: 0.45, release: 0.2, harm: pianoHarm, pan: (pi - 1.5) * 0.2 });
     });
@@ -210,7 +212,7 @@ for (let b = 0; b * BEAT < DUR; b++) {
   }
   // acorde final em Lá menor, deixado soar com reverb
   [45, 57, 64, 69, 72].forEach((m, i) =>
-    tone(music, 61 + i * 0.06, 2.0, mtof(m), 0.07, { attack: 0.004, decay: 0.9, release: 0.4, harm: pianoHarm, pan: (i - 2) * 0.2 }));
+    tone(music, END_T + i * 0.06, 2.0, mtof(m), 0.07, { attack: 0.004, decay: 0.9, release: 0.4, harm: pianoHarm, pan: (i - 2) * 0.2 }));
 }
 
 // =====================================================================
@@ -455,13 +457,41 @@ function reverb(input, wet, roomScale = 1, offset = 0) {
 
 const MUSIC_GAIN = db(-18 + 9); // música ~9 dB abaixo dos efeitos
 const SFX_GAIN = db(0);
-const out = [new Float32Array(N), new Float32Array(N)];
+const bed = [new Float32Array(N), new Float32Array(N)];
 for (let c = 0; c < 2; c++) {
   const mRev = reverb(music[c], 0.35, 1.1, c * 23);
   const sRev = reverb(sfx[c], 0.25, 0.9, c * 23);
   for (let i = 0; i < N; i++) {
-    out[c][i] = (music[c][i] + mRev[i]) * MUSIC_GAIN * db(-9) + (sfx[c][i] + sRev[i]) * SFX_GAIN;
+    bed[c][i] = (music[c][i] + mRev[i]) * MUSIC_GAIN * db(-9) + (sfx[c][i] + sRev[i]) * SFX_GAIN;
   }
+}
+
+// ---------- NARRAÇÃO (public/voz.mp3, gravada no ElevenLabs) ----------
+// Decodifica com ffmpeg, coloca ~8 dB acima da trilha e abaixa música/efeitos (ducking) enquanto a voz fala.
+const VOICE = path.join(__dirname, '../public/voz.mp3');
+const out = [new Float32Array(N), new Float32Array(N)];
+if (fs.existsSync(VOICE)) {
+  const raw = execFileSync('ffmpeg', ['-v', 'error', '-i', VOICE, '-ac', '1', '-ar', String(SR), '-f', 'f32le', '-'], { maxBuffer: 1 << 30 });
+  const v = new Float32Array(N);
+  const src = new Float32Array(raw.buffer, raw.byteOffset, Math.floor(raw.length / 4));
+  v.set(src.subarray(0, N));
+  // filtro passa-altas leve para limpar graves
+  const hp = biquad('hp', 80);
+  for (let i = 0; i < N; i++) v[i] = hp(v[i]);
+  const vL = lufs([v, v]), bL = lufs(bed);
+  const vg = db(bL + 8 - vL);
+  console.log(`Voz ${vL.toFixed(1)} LUFS, trilha ${bL.toFixed(1)} LUFS -> ganho da voz ${(20 * Math.log10(vg)).toFixed(1)} dB`);
+  // envelope da voz (ataque 15 ms, release 350 ms)
+  const att = Math.exp(-1 / (0.015 * SR)), rel = Math.exp(-1 / (0.35 * SR));
+  let e = 0;
+  for (let i = 0; i < N; i++) {
+    const a = Math.min(1, Math.abs(v[i]) * vg * 6);
+    e = a > e ? a + (e - a) * att : a + (e - a) * rel;
+    const duck = 1 - 0.45 * Math.min(1, e * 3); // até ~-5 dB na trilha
+    for (let c = 0; c < 2; c++) out[c][i] = bed[c][i] * duck + v[i] * vg;
+  }
+} else {
+  for (let c = 0; c < 2; c++) out[c].set(bed[c]);
 }
 
 // =====================================================================

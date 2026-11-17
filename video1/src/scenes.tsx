@@ -267,7 +267,7 @@ const Flyer: React.FC<{ s: (typeof T.s5.spends)[number]; idx: number }> = ({ s, 
     const left = order % 2 === 0;
     const tx = left ? 215 : 865;
     const ty = 905;
-    const life = { cheers: 62, shoes: 38, cart: 58, house: 999 }[s.icon as 'cheers'] ?? 60;
+    const life = { cheers: 62, shoes: 75, cart: 58, house: 999 }[s.icon as 'cheers'] ?? 60;
     const out = interpolate(f, [s.f + life, s.f + life + 10], [0, 1], clamp);
     if (out >= 1) return null;
     x = interpolate(p, [0, 1], [sx, tx]);

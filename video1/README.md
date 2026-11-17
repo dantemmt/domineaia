@@ -1,6 +1,6 @@
 # Vídeo 1 — "Nunca comemore o dia do pagamento"
 
-Vídeo vertical 1080x1920, 30fps, 63s, feito em Remotion. Sem narração; áudio 100% sintetizado.
+Vídeo vertical 1080x1920, 30fps, 63s, feito em Remotion. Narração em `public/voz.mp3` (ElevenLabs); trilha e efeitos 100% sintetizados. A timeline foi reajustada para acompanhar a voz (77s), e as legendas seguem as frases da narração.
 
 - `src/timeline.json` — todos os tempos (em frames) das cenas e eventos; vídeo e áudio leem daqui, então ficam sincronizados.
 - `scripts/gen-audio.mjs` — gera `public/audio.wav` (música 90 BPM em Lá menor + efeitos, reverb, -14 LUFS, limiter).
