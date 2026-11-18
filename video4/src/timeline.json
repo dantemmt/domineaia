@@ -1,0 +1,36 @@
+{
+  "fps": 30,
+  "durationInFrames": 1890,
+  "scenes": {
+    "s1": [0, 90], "s2": [90, 165], "s3": [165, 360], "s4": [360, 570], "s5": [570, 810], "s6": [810, 1020],
+    "s7": [1020, 1230], "s8": [1230, 1380], "s9": [1380, 1560], "s10": [1560, 1710], "s11": [1710, 1800], "s12": [1800, 1890]
+  },
+  "s1": { "spinStart": 0, "spinEnd": 30, "label": 34, "hookText": 40 },
+  "s2": { "text": 96, "glitches": [104, 128] },
+  "s3": { "bar1": 175, "bar2": 196, "fuseStart": 222, "fuseEnd": 250, "merged": 252, "glitch": 296, "strike": 304, "strikeEnd": 314, "bold": 318 },
+  "s4": { "phone": 366, "notif": 380, "confetti": 384, "whistle": 392, "text1": 366, "text2": 470, "freeze": 470, "drop": 480 },
+  "s5": { "text": 650, "open": 590, "openEnd": 616, "deepStart": 622, "deepEnd": 724 },
+  "s6": { "text1": 816, "app": 822, "cursorIn": 850, "hover": 880, "hesitateEnd": 925, "text2": 930, "click": 962 },
+  "s7": { "text": 1026, "months": [1048, 1066, 1084, 1102, 1120, 1138], "hit": 1144, "bold": 1168, "law": 1192 },
+  "s8": { "text": 1236, "boxStart": 1250, "boxEnd": 1285, "reveal": 1288, "sub": 1315 },
+  "s9": { "bank": 1386, "line1": 1392, "line2": 1470 },
+  "s10": { "text": 1566, "other": 1572, "icons": [1588, 1614, 1640], "click": 1652, "bold": 1672 },
+  "s11": { "text": 1714, "noteFall": 1716, "noteLand": 1730, "typeStart": 1736, "framesPerChar": 0.98,
+           "typeText": "SÓ PASSE NO CARTÃO\nO QUE VOCÊ PAGARIA\nÀ VISTA HOJE." },
+  "s12": { "text": 1804, "pill1": 1818, "ou": 1824, "pill2": 1830, "impact": 1840, "fadeStart": 1875 },
+  "coursePill": [[120, 270], [1560, 1710], [1800, 99999]],
+  "captions": [
+    [0, "PARA TUDO."], [24, "OLHA ESSE CARTÃO."], [56, "CINCO MIL."],
+    [96, "VOCÊ SABE DISSO."], [128, "MAS SENTE OUTRA COISA."],
+    [171, "OLHA O SALÁRIO."], [196, "AGORA O LIMITE."], [226, "O CÉREBRO JUNTA TUDO."], [262, "SETE MIL E OITOCENTOS."], [296, "SÓ QUE NÃO."], [326, "O RESTO É DO BANCO."],
+    [366, "CHEGA A NOTIFICAÇÃO."], [396, "PARABÉNS!"], [424, "OITO MIL."], [446, "PARECE FESTA."], [476, "MAS NÃO É."], [512, "É ISCA."],
+    [580, "OLHA PRO CHÃO."], [622, "ELE SE ABRE."], [660, "CADA REAL DE LIMITE…"], [700, "É MAIS FUNDO."], [740, "E VOCÊ NA BEIRA."], [776, "OLHANDO PRA BAIXO."],
+    [816, "CHEGA A FATURA."], [850, "DOIS MIL."], [880, "VOCÊ HESITA…"], [930, "E ESCOLHE O MÍNIMO."], [966, "CLIQUE."], [992, "ALÍVIO? NÃO."],
+    [1026, "O RESTO ROLA."], [1048, "UM MÊS."], [1066, "DOIS."], [1084, "TRÊS…"], [1110, "A DÍVIDA CRESCE."], [1144, "QUATRO MIL."], [1180, "O DOBRO."],
+    [1236, "NÃO É BURRICE."], [1288, "É COMO O CÉREBRO CONTA."], [1330, "LIMITE VIRA SALÁRIO."], [1352, "NA SUA CABEÇA."],
+    [1392, "PRESTA ATENÇÃO."], [1430, "O MELHOR CLIENTE…"], [1470, "NÃO SAI NUNCA."], [1510, "PAGA PRA SEMPRE."],
+    [1566, "AGORA OLHA ELE."], [1588, "LIMITE BAIXO."], [1614, "FATURA INTEIRA."], [1640, "DINHEIRO QUE JÁ TEM."], [1672, "SIMPLES ASSIM."],
+    [1714, "ANOTA AÍ."], [1744, "PRINTA ISSO."],
+    [1804, "SEM MENTIR."], [1830, "QUAL DOS DOIS?"], [1852, "COMENTA AQUI."]
+  ]
+}
