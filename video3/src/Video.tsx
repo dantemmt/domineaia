@@ -3,6 +3,8 @@ import { AbsoluteFill, Audio, interpolate, spring, staticFile, useCurrentFrame, 
 import T from './timeline.json';
 import { FONT, W, H, clamp } from './ui';
 import { Captions } from './captions';
+import { FxLayer, useCameraPunch } from './fx';
+import { BackgroundFX } from './backgroundfx';
 import { Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11, Scene12 } from './scenes';
 
 const SCENES: [keyof typeof T.scenes, React.FC][] = [
@@ -72,13 +74,18 @@ const CoursePill: React.FC = () => {
 export const Video: React.FC = () => {
   const frame = useCurrentFrame();
   const fade = interpolate(frame, [T.s12.fadeStart, T.durationInFrames], [0, 1], clamp);
+  const punch = useCameraPunch();
   return (
     <AbsoluteFill style={{ background: '#050505', overflow: 'hidden' }}>
       <Background />
+      <BackgroundFX />
+      <div style={{ position: 'absolute', inset: 0, ...punch }}>
       {SCENES.map(([k, C]) => {
         const [a, b] = T.scenes[k];
         return frame >= a && frame < b ? <C key={k} /> : null;
       })}
+        <FxLayer />
+      </div>
       <Vignette />
       <Captions />
       <CoursePill />

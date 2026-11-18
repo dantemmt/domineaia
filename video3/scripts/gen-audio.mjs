@@ -384,6 +384,22 @@ impact(fr(T.s10.bold), 0.8);
   impact(fr(T.s12.impact), 0.55);
 }
 
+
+// ---- RECOMPENSAS: whoosh nos cortes, brilho nos estouros, som crescente + impacto na resposta
+Object.values(T.scenes).slice(1).forEach(([a], i) => {
+  noise(sfx, fr(a) - 0.12, 0.32, 0.13, { bp: 700, bpEnd: 3200, q: 1.3, attack: 0.12, release: 0.15, pan: i % 2 ? 0.3 : -0.3 });
+});
+T.fx.filter((e) => e.k === 'gold').forEach((e) => {
+  for (let k = 0; k < 6; k++) tone(sfx, fr(e.f) + 0.02 + k * 0.03, 0.5, 2400 + rnd() * 3000, 0.035, { decay: 0.12, pan: (e.x - 540) / 600 });
+});
+T.fx.filter((e) => e.k === 'spark').forEach((e) => tone(sfx, fr(e.f), 0.25, 3136, 0.03, { decay: 0.06, pan: (e.x - 540) / 600 }));
+T.risers.forEach(([a, b]) => {
+  noise(sfx, fr(a), fr(b - a), 0.2, { bp: 400, bpEnd: 5000, q: 1.2, attack: fr(b - a) * 0.9, release: 0.03 });
+  tone(sfx, fr(a), fr(b - a), 110, 0.08, { freqEnd: 440, attack: fr(b - a) * 0.9, release: 0.03, wave: 'tri' });
+});
+impact(fr(T.s3.answer), 0.95);
+for (let k = 0; k < 14; k++) tone(sfx, fr(T.s3.answerBurst) + k * 0.03, 0.8, 2000 + rnd() * 4000, 0.045, { decay: 0.22, pan: 0.5 });
+
 // pequenos "pops" nas entradas de texto de topo (sutil)
 ['s2', 's3', 's5', 's6', 's7', 's10', 's11'].forEach((k) => pop(fr(T[k].text), 0.1));
 [T.s4.text1, T.s4.text2].forEach((f) => pop(fr(f), 0.1));
@@ -435,9 +451,9 @@ for (let c = 0; c < 2; c++) {
 
 // ---------- NARRAÇÃO OPCIONAL (public/narracao.mp3) ----------
 // Se existir: voz ~8 dB acima da trilha; música abaixa para -24 dB (6 dB a mais) enquanto houver voz.
-const VOICE = path.join(__dirname, '../public/narracao.mp3');
+const VOICE = [path.join(__dirname, '../public/narracao_montada.wav'), path.join(__dirname, '../public/narracao.mp3')].find((p) => fs.existsSync(p)) || '';
 const out = [new Float32Array(N), new Float32Array(N)];
-if (fs.existsSync(VOICE)) {
+if (VOICE && fs.existsSync(VOICE)) {
   const raw = execFileSync('ffmpeg', ['-v', 'error', '-i', VOICE, '-ac', '1', '-ar', String(SR), '-f', 'f32le', '-'], { maxBuffer: 1 << 30 });
   const v = new Float32Array(N);
   const src = new Float32Array(raw.buffer, raw.byteOffset, Math.floor(raw.length / 4));

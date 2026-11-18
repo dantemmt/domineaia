@@ -1,7 +1,7 @@
 import React from 'react';
 import { Easing, interpolate, random, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import T from './timeline.json';
-import { W, H, GROUND, GOLD, BLUE, FONT, GLOW, clamp, useSpring, Title, Person, SceneFrame } from './ui';
+import { W, H, GROUND, TEXT_Y, GOLD, BLUE, FONT, GLOW, clamp, useSpring, Title, Person, SceneFrame } from './ui';
 import { Icon, Note } from './icons';
 import { Calculator } from './icons2';
 import {
@@ -57,8 +57,8 @@ export const Scene1: React.FC = () => {
       <Icon x={0} y={0}>
         <StoreMap door={door} riceGlow={glow} />
       </Icon>
-      <Impact at={T.s1.hookText} y={400} size={56}>
-        O SUPERMERCADO ESCONDE O ARROZ NO FUNDO. DE PROPÓSITO.
+      <Impact at={T.s1.hookText} y={400} size={58}>
+        POR QUE O ARROZ FICA SEMPRE NO FUNDO DO MERCADO?
       </Impact>
     </SceneFrame>
   );
@@ -97,11 +97,18 @@ export const Scene3: React.FC = () => {
   const count = T.s3.items.filter((it) => f >= it.f + fly).length;
   const lastPop = T.s3.items.map((it) => it.f + fly).filter((x) => x <= f).pop();
   const bump = lastPop !== undefined ? Math.exp(-(f - lastPop) / 4) : 0;
+  const ansIn = interpolate(f, [T.s3.answer - 6, T.s3.answer], [1, 0], clamp);
+  const burst = f >= T.s3.answerBurst ? 1 + 0.6 * Math.exp(-(f - T.s3.answerBurst) / 10) : 1;
   return (
     <SceneFrame start={T.scenes.s3[0]} duration={dur('s3')} ground={false}>
-      <Title at={T.s3.text} size={46}>PRA CHEGAR NELE, VOCÊ ATRAVESSA A LOJA INTEIRA.</Title>
+      <div style={{ position: 'absolute', inset: 0, opacity: ansIn }}>
+        <Title at={T.s3.text} size={46}>PRA CHEGAR NELE, VOCÊ ATRAVESSA A LOJA INTEIRA.</Title>
+      </div>
+      <Impact at={T.s3.answer} y={TEXT_Y} size={52}>
+        O SUPERMERCADO ESCONDE O ARROZ NO FUNDO. DE PROPÓSITO.
+      </Impact>
       <Icon x={0} y={0}>
-        <StoreMap door={1} riceGlow={0.7 + 0.3 * Math.sin(f * 0.25)} />
+        <StoreMap door={1} riceGlow={(0.7 + 0.3 * Math.sin(f * 0.25)) * burst} />
         <polyline points={poly(SNAKE)} fill="none" stroke={BLUE} strokeOpacity={0.18} strokeWidth={3} strokeDasharray="2 12" strokeLinecap="round" />
         <polyline points={poly(trail)} fill="none" stroke={BLUE} strokeWidth={4} strokeDasharray="2 12" strokeLinecap="round" />
       </Icon>
@@ -123,10 +130,10 @@ export const Scene3: React.FC = () => {
           </Icon>
         );
       })}
-      <Icon x={CART.x} y={CART.y} scale={1 + bump * 0.06}>
+      <Icon x={CART.x} y={CART.y} scale={1 + bump * 0.06} opacity={0.35 + 0.65 * ansIn}>
         <CartSide s={0.62} />
       </Icon>
-      <div style={{ position: 'absolute', left: 300, width: 420, top: CART.y - 40, transform: 'translateY(-50%)', textAlign: 'right', fontFamily: FONT, fontWeight: 800, fontSize: 36, letterSpacing: 4, color: '#fff', textShadow: '0 0 12px rgba(255,255,255,0.4)' }}>
+      <div style={{ opacity: 0.35 + 0.65 * ansIn, position: 'absolute', left: 300, width: 420, top: CART.y - 40, transform: 'translateY(-50%)', textAlign: 'right', fontFamily: FONT, fontWeight: 800, fontSize: 36, letterSpacing: 4, color: '#fff', textShadow: '0 0 12px rgba(255,255,255,0.4)' }}>
         ITENS: <span style={{ display: 'inline-block', transform: `scale(${1 + bump * 0.35})`, fontVariantNumeric: 'tabular-nums' }}>{count}</span>
       </div>
     </SceneFrame>

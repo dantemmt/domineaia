@@ -1,176 +1,179 @@
 {
   "fps": 30,
-  "durationInFrames": 2250,
+  "durationInFrames": 2304,
   "scenes": {
     "s1": [
       0,
-      164
+      82
     ],
     "s2": [
-      164,
-      225
+      82,
+      143
     ],
     "s3": [
-      225,
-      495
+      143,
+      549
     ],
     "s4": [
-      495,
-      750
+      549,
+      804
     ],
     "s5": [
-      750,
-      838
+      804,
+      892
     ],
     "s6": [
-      838,
-      978
+      892,
+      1032
     ],
     "s7": [
-      978,
-      1159
+      1032,
+      1213
     ],
     "s8": [
-      1159,
-      1341
+      1213,
+      1395
     ],
     "s9": [
-      1341,
-      1514
+      1395,
+      1568
     ],
     "s10": [
-      1514,
-      1863
+      1568,
+      1917
     ],
     "s11": [
-      1863,
-      2022
+      1917,
+      2076
     ],
     "s12": [
-      2022,
-      2250
+      2076,
+      2304
     ]
   },
   "s1": {
-    "doorOpen": 4,
-    "hookText": 40
+    "doorOpen": 2,
+    "hookText": 8
   },
   "s2": {
-    "text": 166,
-    "wheelsStart": 168,
-    "wheelsEnd": 210
+    "text": 84,
+    "wheelsStart": 86,
+    "wheelsEnd": 128
   },
   "s3": {
-    "text": 227,
-    "walkStart": 240,
-    "walkEnd": 477,
+    "text": 145,
+    "walkStart": 158,
+    "walkEnd": 395,
     "flyFrames": 14,
     "items": [
       {
-        "f": 327,
+        "f": 245,
         "icon": "chocolate"
       },
       {
-        "f": 344,
+        "f": 262,
         "icon": "biscoito"
       },
       {
-        "f": 360,
+        "f": 278,
         "icon": "vinho"
       },
       {
-        "f": 380,
+        "f": 298,
         "icon": "queijo"
       },
       {
-        "f": 399,
+        "f": 317,
         "icon": "refri"
       },
       {
-        "f": 418,
+        "f": 336,
         "icon": "salgadinho"
       },
       {
-        "f": 438,
+        "f": 356,
         "icon": "sorvete"
       },
       {
-        "f": 456,
+        "f": 374,
         "icon": "paodealho"
       }
-    ]
+    ],
+    "answer": 420,
+    "answerBurst": 502,
+    "answerOut": 540
   },
   "s4": {
-    "text1": 498,
-    "shimmer": 522,
-    "text2": 583,
-    "beamDown": 600,
-    "beamDownEnd": 636,
-    "cheapLit": 636
+    "text1": 552,
+    "shimmer": 576,
+    "text2": 637,
+    "beamDown": 654,
+    "beamDownEnd": 690,
+    "cheapLit": 690
   },
   "s5": {
-    "text": 755,
-    "cart1": 768,
-    "cart2": 798,
-    "wheelsStart": 758,
-    "wheelsEnd": 816
+    "text": 809,
+    "cart1": 822,
+    "cart2": 852,
+    "wheelsStart": 812,
+    "wheelsEnd": 870
   },
   "s6": {
-    "text": 843,
-    "sub": 870,
-    "walkStart": 843,
-    "walkEnd": 975
+    "text": 897,
+    "sub": 924,
+    "walkStart": 897,
+    "walkEnd": 1029
   },
   "s7": {
-    "text": 981,
-    "queue": 987,
-    "clockStart": 999,
-    "sigh": 1022,
-    "hand": 1092,
-    "handEnd": 1131
+    "text": 1035,
+    "queue": 1041,
+    "clockStart": 1053,
+    "sigh": 1076,
+    "hand": 1146,
+    "handEnd": 1185
   },
   "s8": {
-    "printer": 1160,
-    "lineStart": 1163,
+    "printer": 1214,
+    "lineStart": 1217,
     "lineStep": 4,
-    "total": 1198,
-    "bold": 1263
+    "total": 1252,
+    "bold": 1317
   },
   "s9": {
-    "text": 1344,
-    "boxStart": 1350,
-    "boxEnd": 1376,
-    "reveal": 1377,
-    "sub": 1437
+    "text": 1398,
+    "boxStart": 1404,
+    "boxEnd": 1430,
+    "reveal": 1431,
+    "sub": 1491
   },
   "s10": {
-    "text": 1516,
-    "other": 1524,
+    "text": 1570,
+    "other": 1578,
     "icons": [
-      1586,
-      1617,
-      1656
+      1640,
+      1671,
+      1710
     ],
-    "mapIn": 1698,
-    "pathStart": 1715,
-    "pathEnd": 1782,
-    "bold": 1792
+    "mapIn": 1752,
+    "pathStart": 1769,
+    "pathEnd": 1836,
+    "bold": 1846
   },
   "s11": {
-    "text": 1866,
-    "noteFall": 1869,
-    "noteLand": 1887,
-    "typeStart": 1904,
+    "text": 1920,
+    "noteFall": 1923,
+    "noteLand": 1941,
+    "typeStart": 1958,
     "framesPerChar": 1.772,
     "typeText": "SE NÃO ESTAVA NA LISTA,\nFOI A LOJA QUE\nESCOLHEU POR VOCÊ."
   },
   "s12": {
-    "text": 2025,
-    "pill1": 2052,
-    "ou": 2076,
-    "pill2": 2091,
-    "impact": 2143,
-    "fadeStart": 2235
+    "text": 2079,
+    "pill1": 2106,
+    "ou": 2130,
+    "pill2": 2145,
+    "impact": 2197,
+    "fadeStart": 2289
   },
   "receipt": [
     [
@@ -212,258 +215,420 @@
   ],
   "coursePill": [
     [
-      186,
-      374
+      104,
+      292
     ],
     [
-      1514,
-      1801
+      1568,
+      1855
     ],
     [
-      2022,
+      2076,
       99999
     ]
   ],
   "captions": [
     [
       0,
-      "PARA TUDO."
+      ""
     ],
     [
-      40,
-      "O SUPERMERCADO ESCONDE"
-    ],
-    [
-      88,
-      "O ARROZ NO FUNDO."
-    ],
-    [
-      122,
-      "DE PROPÓSITO."
-    ],
-    [
-      166,
+      84,
       "VOCÊ SÓ IA"
     ],
     [
-      190,
+      108,
       "COMPRAR ARROZ."
     ],
     [
-      227,
+      145,
       "MAS PRA CHEGAR NELE,"
     ],
     [
-      256,
+      174,
       "VOCÊ ATRAVESSA A"
     ],
     [
-      289,
+      207,
       "LOJA INTEIRA."
     ],
     [
-      327,
+      245,
       "UM CHOCOLATE AQUI."
     ],
     [
-      364,
+      282,
       "UM VINHO ALI."
     ],
     [
-      406,
+      324,
       "QUANDO VÊ,"
     ],
     [
-      427,
+      345,
       "JÁ SÃO OITO"
     ],
     [
-      455,
+      373,
       "ITENS A MAIS."
     ],
     [
-      498,
+      420,
+      ""
+    ],
+    [
+      552,
       "O MAIS CARO"
     ],
     [
-      519,
+      573,
       "FICA NA ALTURA"
     ],
     [
-      535,
+      589,
       "DOS SEUS OLHOS."
     ],
     [
-      583,
+      637,
       "O MAIS BARATO,"
     ],
     [
-      615,
+      669,
       "PERTO DO CHÃO."
     ],
     [
-      653,
+      707,
       "MESMO PRODUTO,"
     ],
     [
-      692,
+      746,
       "QUASE METADE DO PREÇO."
     ],
     [
-      755,
+      809,
       "O CARRINHO É GRANDE"
     ],
     [
-      787,
+      841,
       "PRA COMPRA PARECER PEQUENA."
     ],
     [
-      843,
+      897,
       "A MÚSICA É LENTA."
     ],
     [
-      884,
+      938,
       "VOCÊ ANDA DEVAGAR."
     ],
     [
-      935,
+      989,
       "E COMPRA MAIS."
     ],
     [
-      981,
+      1035,
       "AÍ VEM A FILA."
     ],
     [
-      1022,
+      1076,
       "CANSADO, ESPERANDO…"
     ],
     [
-      1092,
+      1146,
       "E BEM DO LADO,"
     ],
     [
-      1122,
+      1176,
       "SÓ UM CHOCOLATE."
     ],
     [
-      1173,
+      1227,
       "NA NOTA:"
     ],
     [
-      1197,
+      1251,
       "CENTO E SESSENTA"
     ],
     [
-      1229,
+      1283,
       "E OITO REAIS."
     ],
     [
-      1263,
+      1317,
       "E VOCÊ ENTROU PRA"
     ],
     [
-      1293,
+      1347,
       "GASTAR VINTE E CINCO."
     ],
     [
-      1344,
+      1398,
       "ISSO TEM NOME:"
     ],
     [
-      1377,
+      1431,
       "ARQUITETURA DE ESCOLHA."
     ],
     [
-      1437,
+      1491,
       "A LOJA DECIDE"
     ],
     [
-      1470,
+      1524,
       "ANTES DE VOCÊ."
     ],
     [
-      1516,
+      1570,
       "QUEM ACUMULA ENTRA DIFERENTE."
     ],
     [
-      1586,
+      1640,
       "LISTA NA MÃO."
     ],
     [
-      1615,
+      1669,
       "BARRIGA CHEIA."
     ],
     [
-      1656,
+      1710,
       "OLHO NA PRATELEIRA"
     ],
     [
-      1688,
+      1742,
       "DE BAIXO."
     ],
     [
-      1715,
+      1769,
       "ENTRA,"
     ],
     [
-      1736,
+      1790,
       "PEGA O ARROZ"
     ],
     [
-      1766,
+      1820,
       "E SAI."
     ],
     [
-      1792,
+      1846,
       "MESMA LOJA."
     ],
     [
-      1828,
+      1882,
       "OUTRA CONTA."
     ],
     [
-      1866,
+      1920,
       "GUARDA ESSA REGRA:"
     ],
     [
-      1904,
+      1958,
       "SE NÃO ESTAVA"
     ],
     [
-      1931,
+      1985,
       "NA LISTA,"
     ],
     [
-      1947,
+      2001,
       "FOI A LOJA QUE"
     ],
     [
-      1973,
+      2027,
       "ESCOLHEU POR VOCÊ."
     ],
     [
-      2025,
+      2079,
       "E VOCÊ?"
     ],
     [
-      2052,
+      2106,
       "COMPRA O QUE"
     ],
     [
-      2072,
+      2126,
       "A LOJA QUER,"
     ],
     [
-      2092,
+      2146,
       "OU COMPRA"
     ],
     [
-      2111,
+      2165,
       "O QUE PRECISA?"
     ],
     [
-      2143,
+      2197,
       "COMENTA AQUI EMBAIXO."
+    ]
+  ],
+  "fx": [
+    {
+      "f": 8,
+      "k": "impact",
+      "x": 540,
+      "y": 400
+    },
+    {
+      "f": 259,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 276,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 292,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 312,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 331,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 350,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 370,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 388,
+      "k": "spark",
+      "x": 840,
+      "y": 1450
+    },
+    {
+      "f": 420,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    },
+    {
+      "f": 502,
+      "k": "spark",
+      "x": 870,
+      "y": 598
+    },
+    {
+      "f": 502,
+      "k": "impact",
+      "x": 870,
+      "y": 598
+    },
+    {
+      "f": 637,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    },
+    {
+      "f": 690,
+      "k": "gold",
+      "x": 410,
+      "y": 1112
+    },
+    {
+      "f": 852,
+      "k": "spark",
+      "x": 710,
+      "y": 1000
+    },
+    {
+      "f": 1185,
+      "k": "spark",
+      "x": 790,
+      "y": 1080
+    },
+    {
+      "f": 1252,
+      "k": "gold",
+      "x": 690,
+      "y": 1010
+    },
+    {
+      "f": 1252,
+      "k": "impact",
+      "x": 540,
+      "y": 1010
+    },
+    {
+      "f": 1317,
+      "k": "impact",
+      "x": 540,
+      "y": 1420
+    },
+    {
+      "f": 1431,
+      "k": "impact",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 1431,
+      "k": "spark",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 1640,
+      "k": "spark",
+      "x": 270,
+      "y": 620
+    },
+    {
+      "f": 1671,
+      "k": "spark",
+      "x": 540,
+      "y": 620
+    },
+    {
+      "f": 1710,
+      "k": "spark",
+      "x": 810,
+      "y": 620
+    },
+    {
+      "f": 1846,
+      "k": "impact",
+      "x": 540,
+      "y": 1430
+    },
+    {
+      "f": 2145,
+      "k": "gold",
+      "x": 735,
+      "y": 722
+    },
+    {
+      "f": 2197,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    }
+  ],
+  "risers": [
+    [
+      398,
+      420
     ]
   ]
 }
