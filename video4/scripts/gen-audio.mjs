@@ -398,8 +398,8 @@ T.fx.filter((e) => e.k === 'gold').forEach((e) => {
 });
 T.fx.filter((e) => e.k === 'spark').forEach((e) => tone(sfx, fr(e.f), 0.25, 3136, 0.03, { decay: 0.06, pan: (e.x - 540) / 600 }));
 T.risers.forEach((f) => {
-  noise(sfx, fr(f), fr(T.s9.line1 - f), 0.18, { bp: 400, bpEnd: 5000, q: 1.2, attack: fr(T.s9.line1 - f) * 0.9, release: 0.03 });
-  tone(sfx, fr(f), fr(T.s9.line1 - f), 110, 0.08, { freqEnd: 440, attack: fr(T.s9.line1 - f) * 0.9, release: 0.03, wave: 'tri' });
+  noise(sfx, fr(f), fr(T.s9.answer - f), 0.18, { bp: 400, bpEnd: 5000, q: 1.2, attack: fr(T.s9.answer - f) * 0.9, release: 0.03 });
+  tone(sfx, fr(f), fr(T.s9.answer - f), 110, 0.08, { freqEnd: 440, attack: fr(T.s9.answer - f) * 0.9, release: 0.03, wave: 'tri' });
 });
 
 // pequenos "pops" nas entradas de texto de topo (sutil)
