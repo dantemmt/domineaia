@@ -1,44 +1,469 @@
 {
   "fps": 30,
-  "durationInFrames": 1890,
+  "durationInFrames": 2250,
   "scenes": {
-    "s1": [0, 90], "s2": [90, 165], "s3": [165, 420], "s4": [420, 630], "s5": [630, 810], "s6": [810, 960],
-    "s7": [960, 1140], "s8": [1140, 1320], "s9": [1320, 1470], "s10": [1470, 1650], "s11": [1650, 1770], "s12": [1770, 1890]
+    "s1": [
+      0,
+      164
+    ],
+    "s2": [
+      164,
+      225
+    ],
+    "s3": [
+      225,
+      495
+    ],
+    "s4": [
+      495,
+      750
+    ],
+    "s5": [
+      750,
+      838
+    ],
+    "s6": [
+      838,
+      978
+    ],
+    "s7": [
+      978,
+      1159
+    ],
+    "s8": [
+      1159,
+      1341
+    ],
+    "s9": [
+      1341,
+      1514
+    ],
+    "s10": [
+      1514,
+      1863
+    ],
+    "s11": [
+      1863,
+      2022
+    ],
+    "s12": [
+      2022,
+      2250
+    ]
   },
-  "s1": { "doorOpen": 4, "hookText": 30 },
-  "s2": { "text": 96, "wheelsStart": 98, "wheelsEnd": 150 },
-  "s3": { "text": 171, "walkStart": 185, "walkEnd": 400, "flyFrames": 14,
-          "items": [
-            { "f": 200, "icon": "chocolate" }, { "f": 226, "icon": "biscoito" }, { "f": 252, "icon": "vinho" },
-            { "f": 278, "icon": "queijo" }, { "f": 304, "icon": "refri" }, { "f": 330, "icon": "salgadinho" },
-            { "f": 356, "icon": "sorvete" }, { "f": 380, "icon": "paodealho" } ] },
-  "s4": { "text1": 426, "shimmer": 445, "text2": 525, "beamDown": 540, "beamDownEnd": 562, "cheapLit": 562 },
-  "s5": { "text": 636, "cart1": 652, "cart2": 684, "wheelsStart": 640, "wheelsEnd": 720 },
-  "s6": { "text": 816, "sub": 842, "walkStart": 816, "walkEnd": 958 },
-  "s7": { "text": 966, "queue": 972, "clockStart": 985, "sigh": 1015, "hand": 1058, "handEnd": 1090 },
-  "s8": { "printer": 1146, "lineStart": 1160, "lineStep": 11, "total": 1268, "bold": 1290 },
-  "s9": { "text": 1326, "boxStart": 1340, "boxEnd": 1375, "reveal": 1378, "sub": 1405 },
-  "s10": { "text": 1476, "other": 1482, "icons": [1500, 1525, 1550], "mapIn": 1565, "pathStart": 1572, "pathEnd": 1622, "bold": 1616 },
-  "s11": { "text": 1656, "noteFall": 1660, "noteLand": 1678, "typeStart": 1688, "framesPerChar": 1.2,
-           "typeText": "SE NÃO ESTAVA NA LISTA,\nFOI A LOJA QUE\nESCOLHEU POR VOCÊ." },
-  "s12": { "text": 1776, "pill1": 1796, "ou": 1804, "pill2": 1812, "impact": 1822, "fadeStart": 1875 },
+  "s1": {
+    "doorOpen": 4,
+    "hookText": 40
+  },
+  "s2": {
+    "text": 166,
+    "wheelsStart": 168,
+    "wheelsEnd": 210
+  },
+  "s3": {
+    "text": 227,
+    "walkStart": 240,
+    "walkEnd": 477,
+    "flyFrames": 14,
+    "items": [
+      {
+        "f": 327,
+        "icon": "chocolate"
+      },
+      {
+        "f": 344,
+        "icon": "biscoito"
+      },
+      {
+        "f": 360,
+        "icon": "vinho"
+      },
+      {
+        "f": 380,
+        "icon": "queijo"
+      },
+      {
+        "f": 399,
+        "icon": "refri"
+      },
+      {
+        "f": 418,
+        "icon": "salgadinho"
+      },
+      {
+        "f": 438,
+        "icon": "sorvete"
+      },
+      {
+        "f": 456,
+        "icon": "paodealho"
+      }
+    ]
+  },
+  "s4": {
+    "text1": 498,
+    "shimmer": 522,
+    "text2": 583,
+    "beamDown": 600,
+    "beamDownEnd": 636,
+    "cheapLit": 636
+  },
+  "s5": {
+    "text": 755,
+    "cart1": 768,
+    "cart2": 798,
+    "wheelsStart": 758,
+    "wheelsEnd": 816
+  },
+  "s6": {
+    "text": 843,
+    "sub": 870,
+    "walkStart": 843,
+    "walkEnd": 975
+  },
+  "s7": {
+    "text": 981,
+    "queue": 987,
+    "clockStart": 999,
+    "sigh": 1022,
+    "hand": 1092,
+    "handEnd": 1131
+  },
+  "s8": {
+    "printer": 1160,
+    "lineStart": 1163,
+    "lineStep": 4,
+    "total": 1198,
+    "bold": 1263
+  },
+  "s9": {
+    "text": 1344,
+    "boxStart": 1350,
+    "boxEnd": 1376,
+    "reveal": 1377,
+    "sub": 1437
+  },
+  "s10": {
+    "text": 1516,
+    "other": 1524,
+    "icons": [
+      1586,
+      1617,
+      1656
+    ],
+    "mapIn": 1698,
+    "pathStart": 1715,
+    "pathEnd": 1782,
+    "bold": 1792
+  },
+  "s11": {
+    "text": 1866,
+    "noteFall": 1869,
+    "noteLand": 1887,
+    "typeStart": 1904,
+    "framesPerChar": 1.772,
+    "typeText": "SE NÃO ESTAVA NA LISTA,\nFOI A LOJA QUE\nESCOLHEU POR VOCÊ."
+  },
+  "s12": {
+    "text": 2025,
+    "pill1": 2052,
+    "ou": 2076,
+    "pill2": 2091,
+    "impact": 2143,
+    "fadeStart": 2235
+  },
   "receipt": [
-    ["ARROZ", "R$ 24,90"], ["CHOCOLATE", "R$ 8,99"], ["BISCOITO", "R$ 6,49"], ["VINHO", "R$ 39,90"], ["QUEIJO", "R$ 22,50"],
-    ["REFRIGERANTE", "R$ 9,99"], ["SALGADINHO", "R$ 12,90"], ["SORVETE", "R$ 27,90"], ["PÃO DE ALHO", "R$ 14,90"]
+    [
+      "ARROZ",
+      "R$ 24,90"
+    ],
+    [
+      "CHOCOLATE",
+      "R$ 8,99"
+    ],
+    [
+      "BISCOITO",
+      "R$ 6,49"
+    ],
+    [
+      "VINHO",
+      "R$ 39,90"
+    ],
+    [
+      "QUEIJO",
+      "R$ 22,50"
+    ],
+    [
+      "REFRIGERANTE",
+      "R$ 9,99"
+    ],
+    [
+      "SALGADINHO",
+      "R$ 12,90"
+    ],
+    [
+      "SORVETE",
+      "R$ 27,90"
+    ],
+    [
+      "PÃO DE ALHO",
+      "R$ 14,90"
+    ]
   ],
-  "coursePill": [[120, 270], [1470, 1620], [1770, 99999]],
+  "coursePill": [
+    [
+      186,
+      374
+    ],
+    [
+      1514,
+      1801
+    ],
+    [
+      2022,
+      99999
+    ]
+  ],
   "captions": [
-    [0, "PARA TUDO."], [22, "OLHA ESSA PLANTA."], [50, "NADA AQUI É ACASO."],
-    [96, "SÓ UM PACOTE."], [126, "ENTRA E SAI."],
-    [171, "MAS O ARROZ…"], [200, "TÁ LÁ NO FUNDO."], [236, "CORREDOR POR CORREDOR."], [276, "UM CHOCOLATE AQUI."], [310, "UM VINHO ALI."], [345, "“JÁ QUE TÔ AQUI…”"], [380, "OITO ITENS A MAIS."],
-    [426, "OLHA A PRATELEIRA."], [470, "O CARO TE ENCARA."], [525, "AGORA OLHA PRA BAIXO."], [570, "MESMO PRODUTO."], [600, "QUASE METADE DO PREÇO."],
-    [636, "REPARA NO CARRINHO."], [680, "O PEQUENO ENCHE."], [720, "O GIGANTE ENGOLE."], [760, "E VOCÊ COLOCA MAIS."],
-    [816, "ESCUTA A MÚSICA."], [850, "DEVAGAR…"], [885, "MAIS DEVAGAR…"], [920, "E O CARRINHO ENCHE."],
-    [966, "CHEGOU NO CAIXA."], [1000, "FILA PARADA."], [1035, "VOCÊ CANSADO."], [1070, "E BEM DO LADO…"], [1100, "SÓ UM CHOCOLATE."],
-    [1146, "AGORA A NOTA."], [1185, "ITEM POR ITEM."], [1230, "VAI SOMANDO…"], [1268, "CENTO E SESSENTA E OITO."], [1300, "POR UM ARROZ."],
-    [1326, "NÃO FOI FRAQUEZA."], [1365, "FOI PROJETO."], [1410, "PENSADO PRA VOCÊ"], [1440, "GASTAR MAIS."],
-    [1476, "AGORA OLHA ELE."], [1500, "LISTA NA MÃO."], [1525, "BARRIGA CHEIA."], [1550, "OLHO NO CHÃO."], [1572, "ENTRA."], [1592, "PEGA O ARROZ."], [1612, "E SAI."],
-    [1656, "ANOTA AÍ."], [1690, "PRINTA SE PRECISAR."], [1730, "LÊ COMIGO."],
-    [1776, "SEM MENTIR."], [1800, "QUAL DOS DOIS?"], [1830, "COMENTA AQUI EMBAIXO."], [1856, "E SALVA ESSE VÍDEO."]
+    [
+      0,
+      "PARA TUDO."
+    ],
+    [
+      40,
+      "O SUPERMERCADO ESCONDE"
+    ],
+    [
+      88,
+      "O ARROZ NO FUNDO."
+    ],
+    [
+      122,
+      "DE PROPÓSITO."
+    ],
+    [
+      166,
+      "VOCÊ SÓ IA"
+    ],
+    [
+      190,
+      "COMPRAR ARROZ."
+    ],
+    [
+      227,
+      "MAS PRA CHEGAR NELE,"
+    ],
+    [
+      256,
+      "VOCÊ ATRAVESSA A"
+    ],
+    [
+      289,
+      "LOJA INTEIRA."
+    ],
+    [
+      327,
+      "UM CHOCOLATE AQUI."
+    ],
+    [
+      364,
+      "UM VINHO ALI."
+    ],
+    [
+      406,
+      "QUANDO VÊ,"
+    ],
+    [
+      427,
+      "JÁ SÃO OITO"
+    ],
+    [
+      455,
+      "ITENS A MAIS."
+    ],
+    [
+      498,
+      "O MAIS CARO"
+    ],
+    [
+      519,
+      "FICA NA ALTURA"
+    ],
+    [
+      535,
+      "DOS SEUS OLHOS."
+    ],
+    [
+      583,
+      "O MAIS BARATO,"
+    ],
+    [
+      615,
+      "PERTO DO CHÃO."
+    ],
+    [
+      653,
+      "MESMO PRODUTO,"
+    ],
+    [
+      692,
+      "QUASE METADE DO PREÇO."
+    ],
+    [
+      755,
+      "O CARRINHO É GRANDE"
+    ],
+    [
+      787,
+      "PRA COMPRA PARECER PEQUENA."
+    ],
+    [
+      843,
+      "A MÚSICA É LENTA."
+    ],
+    [
+      884,
+      "VOCÊ ANDA DEVAGAR."
+    ],
+    [
+      935,
+      "E COMPRA MAIS."
+    ],
+    [
+      981,
+      "AÍ VEM A FILA."
+    ],
+    [
+      1022,
+      "CANSADO, ESPERANDO…"
+    ],
+    [
+      1092,
+      "E BEM DO LADO,"
+    ],
+    [
+      1122,
+      "SÓ UM CHOCOLATE."
+    ],
+    [
+      1173,
+      "NA NOTA:"
+    ],
+    [
+      1197,
+      "CENTO E SESSENTA"
+    ],
+    [
+      1229,
+      "E OITO REAIS."
+    ],
+    [
+      1263,
+      "E VOCÊ ENTROU PRA"
+    ],
+    [
+      1293,
+      "GASTAR VINTE E CINCO."
+    ],
+    [
+      1344,
+      "ISSO TEM NOME:"
+    ],
+    [
+      1377,
+      "ARQUITETURA DE ESCOLHA."
+    ],
+    [
+      1437,
+      "A LOJA DECIDE"
+    ],
+    [
+      1470,
+      "ANTES DE VOCÊ."
+    ],
+    [
+      1516,
+      "QUEM ACUMULA ENTRA DIFERENTE."
+    ],
+    [
+      1586,
+      "LISTA NA MÃO."
+    ],
+    [
+      1615,
+      "BARRIGA CHEIA."
+    ],
+    [
+      1656,
+      "OLHO NA PRATELEIRA"
+    ],
+    [
+      1688,
+      "DE BAIXO."
+    ],
+    [
+      1715,
+      "ENTRA,"
+    ],
+    [
+      1736,
+      "PEGA O ARROZ"
+    ],
+    [
+      1766,
+      "E SAI."
+    ],
+    [
+      1792,
+      "MESMA LOJA."
+    ],
+    [
+      1828,
+      "OUTRA CONTA."
+    ],
+    [
+      1866,
+      "GUARDA ESSA REGRA:"
+    ],
+    [
+      1904,
+      "SE NÃO ESTAVA"
+    ],
+    [
+      1931,
+      "NA LISTA,"
+    ],
+    [
+      1947,
+      "FOI A LOJA QUE"
+    ],
+    [
+      1973,
+      "ESCOLHEU POR VOCÊ."
+    ],
+    [
+      2025,
+      "E VOCÊ?"
+    ],
+    [
+      2052,
+      "COMPRA O QUE"
+    ],
+    [
+      2072,
+      "A LOJA QUER,"
+    ],
+    [
+      2092,
+      "OU COMPRA"
+    ],
+    [
+      2111,
+      "O QUE PRECISA?"
+    ],
+    [
+      2143,
+      "COMENTA AQUI EMBAIXO."
+    ]
   ]
 }
