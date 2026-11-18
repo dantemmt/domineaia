@@ -1,0 +1,42 @@
+{
+  "fps": 30,
+  "durationInFrames": 1890,
+  "scenes": {
+    "s1": [0, 90], "s2": [90, 165], "s3": [165, 360], "s4": [360, 600],
+    "s5": [600, 840], "s6": [840, 930], "s7": [930, 1200], "s8": [1200, 1380],
+    "s9": [1380, 1560], "s10": [1560, 1740], "s11": [1740, 1890]
+  },
+  "s1": { "hookText": 30, "creaks": [8, 26, 44, 62, 80] },
+  "s2": { "text": 96, "glitches": [104, 128] },
+  "s3": { "windowStart": 171, "windowEnd": 200, "lightUp": 202, "tag": 222, "thought": 255, "thoughtText": 266 },
+  "s4": { "text": 366, "calc": 380, "keys": [392, 397, 402, 407, 412, 417], "equals": 430, "rollEnd": 468,
+          "pix": 482, "approachStart": 505, "approachEnd": 525, "diff": 530, "bold": 556 },
+  "s5": { "text": 606, "boxStart": 622, "boxEnd": 656, "reveal": 660, "demo": 680, "upStart": 692, "upEnd": 730,
+          "slice": 758, "downStart": 768, "downEnd": 806, "sub": 806 },
+  "s6": { "text": 846, "step": 858, "tag": 884 },
+  "s7": { "counter": 940, "blocks": [
+            { "f": 958, "label": "CELULAR", "value": 180 },
+            { "f": 1008, "label": "TÊNIS", "value": 65 },
+            { "f": 1058, "label": "TV", "value": 99 },
+            { "f": 1108, "label": "SOFÁ", "value": 150 } ],
+          "fallFrames": 12, "bold": 1150 },
+  "s8": { "line1": 1210, "calendars": 1222, "xStart": 1240, "xStep": 7, "line2": 1318, "lowNote": 1318 },
+  "s9": { "text": 1386, "other": 1398, "icons": [1418, 1446, 1474], "flipEnd": 1488, "sandEnd": 1530, "bold": 1516 },
+  "s10": { "text": 1566, "noteFall": 1574, "noteLand": 1594, "typeStart": 1606, "framesPerChar": 1.45,
+           "typeText": "ANTES DE PARCELAR,\nMULTIPLIQUE.\nANTES DE COMPRAR,\nPERGUNTE O PREÇO À VISTA." },
+  "s11": { "text": 1746, "pill1": 1768, "ou": 1778, "pill2": 1788, "impact": 1800, "fadeStart": 1875 },
+  "coursePill": [[120, 270], [1380, 1530], [1800, 99999]],
+  "captions": [
+    [0, "PARA TUDO."], [24, "OLHA ESSA ETIQUETA."], [56, "TODO MUNDO CAI."],
+    [96, "VOCÊ JÁ PENSOU:"], [122, "“SEM JUROS? ÓTIMO.”"], [146, "SÓ QUE NÃO."],
+    [171, "VOCÊ PASSA NA LOJA."], [202, "A VITRINE ACENDE."], [228, "O PREÇO PARECE PEQUENO."], [266, "“CABE NO BOLSO.”"], [300, "E É AÍ QUE MORA"], [330, "O TRUQUE."],
+    [366, "PEGA A CALCULADORA."], [394, "DEZ VEZES CENTO E OITENTA."], [432, "MIL E OITOCENTOS."], [482, "AGORA PERGUNTA NO PIX."], [508, "COMPARA AS DUAS."], [530, "DUZENTOS E DEZESSEIS."], [556, "QUE VOCÊ NEM VIU."],
+    [606, "E NÃO É ACASO."], [640, "É PSICOLOGIA."], [680, "PAGAR TUDO DE UMA VEZ…"], [712, "DÓI."], [740, "MAS EM DEZ PEDAÇOS…"], [776, "NEM SENTE."], [806, "E O CÉREBRO RELAXA."],
+    [846, "E AÍ, O QUE ACONTECE?"], [884, "MAIS UMA."],
+    [940, "UMA PARCELA AQUI."], [1008, "OUTRA ALI."], [1058, "MAIS UMA."], [1108, "E MAIS UMA."], [1150, "TODO MÊS."], [1176, "SEM FALTAR UM."],
+    [1210, "PRESTA ATENÇÃO."], [1240, "UM MÊS."], [1262, "DOIS."], [1282, "TRÊS…"], [1318, "PENSA NISSO."], [1352, "SÉRIO."],
+    [1386, "AGORA OLHA ELE."], [1418, "PRIMEIRO, A CONTA."], [1446, "DEPOIS, O PIX."], [1474, "E ELE ESPERA."], [1500, "DOIS DIAS."], [1520, "SEM PRESSA."],
+    [1566, "ANOTA AÍ."], [1600, "PRINTA SE PRECISAR."], [1645, "LÊ COMIGO."], [1690, "MULTIPLICA."], [1712, "PERGUNTA."],
+    [1746, "SEM MENTIR."], [1768, "QUAL DOS DOIS?"], [1800, "COMENTA AQUI EMBAIXO."], [1840, "E SALVA ESSE VÍDEO."]
+  ]
+}
