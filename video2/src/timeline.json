@@ -1,42 +1,443 @@
 {
   "fps": 30,
-  "durationInFrames": 1890,
+  "durationInFrames": 2310,
   "scenes": {
-    "s1": [0, 90], "s2": [90, 165], "s3": [165, 360], "s4": [360, 600],
-    "s5": [600, 840], "s6": [840, 930], "s7": [930, 1200], "s8": [1200, 1380],
-    "s9": [1380, 1560], "s10": [1560, 1740], "s11": [1740, 1890]
+    "s1": [
+      0,
+      135
+    ],
+    "s2": [
+      135,
+      201
+    ],
+    "s3": [
+      201,
+      452
+    ],
+    "s4": [
+      452,
+      900
+    ],
+    "s5": [
+      900,
+      1152
+    ],
+    "s6": [
+      1152,
+      1197
+    ],
+    "s7": [
+      1197,
+      1437
+    ],
+    "s8": [
+      1437,
+      1584
+    ],
+    "s9": [
+      1584,
+      1886
+    ],
+    "s10": [
+      1886,
+      2088
+    ],
+    "s11": [
+      2088,
+      2310
+    ]
   },
-  "s1": { "hookText": 30, "creaks": [8, 26, 44, 62, 80] },
-  "s2": { "text": 96, "glitches": [104, 128] },
-  "s3": { "windowStart": 171, "windowEnd": 200, "lightUp": 202, "tag": 222, "thought": 255, "thoughtText": 266 },
-  "s4": { "text": 366, "calc": 380, "keys": [392, 397, 402, 407, 412, 417], "equals": 430, "rollEnd": 468,
-          "pix": 482, "approachStart": 505, "approachEnd": 525, "diff": 530, "bold": 556 },
-  "s5": { "text": 606, "boxStart": 622, "boxEnd": 656, "reveal": 660, "demo": 680, "upStart": 692, "upEnd": 730,
-          "slice": 758, "downStart": 768, "downEnd": 806, "sub": 806 },
-  "s6": { "text": 846, "step": 858, "tag": 884 },
-  "s7": { "counter": 940, "blocks": [
-            { "f": 958, "label": "CELULAR", "value": 180 },
-            { "f": 1008, "label": "TÊNIS", "value": 65 },
-            { "f": 1058, "label": "TV", "value": 99 },
-            { "f": 1108, "label": "SOFÁ", "value": 150 } ],
-          "fallFrames": 12, "bold": 1150 },
-  "s8": { "line1": 1210, "calendars": 1222, "xStart": 1240, "xStep": 7, "line2": 1318, "lowNote": 1318 },
-  "s9": { "text": 1386, "other": 1398, "icons": [1418, 1446, 1474], "flipEnd": 1488, "sandEnd": 1530, "bold": 1516 },
-  "s10": { "text": 1566, "noteFall": 1574, "noteLand": 1594, "typeStart": 1606, "framesPerChar": 1.45,
-           "typeText": "ANTES DE PARCELAR,\nMULTIPLIQUE.\nANTES DE COMPRAR,\nPERGUNTE O PREÇO À VISTA." },
-  "s11": { "text": 1746, "pill1": 1768, "ou": 1778, "pill2": 1788, "impact": 1800, "fadeStart": 1875 },
-  "coursePill": [[120, 270], [1380, 1530], [1800, 99999]],
+  "s1": {
+    "hookText": 40,
+    "creaks": [
+      11,
+      35,
+      62,
+      91,
+      119
+    ]
+  },
+  "s2": {
+    "text": 137,
+    "glitches": [
+      145,
+      167
+    ]
+  },
+  "s3": {
+    "windowStart": 202,
+    "windowEnd": 231,
+    "lightUp": 240,
+    "tag": 289,
+    "thought": 383,
+    "thoughtText": 415
+  },
+  "s4": {
+    "text": 453,
+    "calc": 468,
+    "keys": [
+      496,
+      502,
+      509,
+      515,
+      522,
+      528
+    ],
+    "equals": 553,
+    "rollEnd": 589,
+    "pix": 603,
+    "approachStart": 729,
+    "approachEnd": 749,
+    "diff": 760,
+    "bold": 830
+  },
+  "s5": {
+    "text": 902,
+    "boxStart": 912,
+    "boxEnd": 930,
+    "reveal": 932,
+    "demo": 960,
+    "upStart": 977,
+    "upEnd": 1031,
+    "slice": 1043,
+    "downStart": 1053,
+    "downEnd": 1096,
+    "sub": 1047
+  },
+  "s6": {
+    "text": 1154,
+    "step": 1167,
+    "tag": 1182
+  },
+  "s7": {
+    "counter": 1200,
+    "blocks": [
+      {
+        "f": 1203,
+        "label": "CELULAR",
+        "value": 180
+      },
+      {
+        "f": 1231,
+        "label": "TÊNIS",
+        "value": 65
+      },
+      {
+        "f": 1252,
+        "label": "TV",
+        "value": 99
+      },
+      {
+        "f": 1271,
+        "label": "SOFÁ",
+        "value": 150
+      }
+    ],
+    "fallFrames": 12,
+    "bold": 1393
+  },
+  "s8": {
+    "line1": 1442,
+    "calendars": 1458,
+    "xStart": 1498,
+    "xStep": 6,
+    "line2": 1494,
+    "lowNote": 1560
+  },
+  "s9": {
+    "text": 1586,
+    "other": 1599,
+    "icons": [
+      1648,
+      1695,
+      1744
+    ],
+    "flipEnd": 1758,
+    "sandEnd": 1797,
+    "bold": 1812
+  },
+  "s10": {
+    "text": 1888,
+    "noteFall": 1893,
+    "noteLand": 1912,
+    "typeStart": 1925,
+    "framesPerChar": 1.973,
+    "typeText": "ANTES DE PARCELAR,\nMULTIPLIQUE.\nANTES DE COMPRAR,\nPERGUNTE O PREÇO À VISTA."
+  },
+  "s11": {
+    "text": 2090,
+    "pill1": 2115,
+    "ou": 2139,
+    "pill2": 2160,
+    "impact": 2203,
+    "fadeStart": 2295
+  },
+  "coursePill": [
+    [
+      159,
+      416
+    ],
+    [
+      1584,
+      1821
+    ],
+    [
+      2203,
+      99999
+    ]
+  ],
   "captions": [
-    [0, "PARA TUDO."], [24, "OLHA ESSA ETIQUETA."], [56, "TODO MUNDO CAI."],
-    [96, "VOCÊ JÁ PENSOU:"], [122, "“SEM JUROS? ÓTIMO.”"], [146, "SÓ QUE NÃO."],
-    [171, "VOCÊ PASSA NA LOJA."], [202, "A VITRINE ACENDE."], [228, "O PREÇO PARECE PEQUENO."], [266, "“CABE NO BOLSO.”"], [300, "E É AÍ QUE MORA"], [330, "O TRUQUE."],
-    [366, "PEGA A CALCULADORA."], [394, "DEZ VEZES CENTO E OITENTA."], [432, "MIL E OITOCENTOS."], [482, "AGORA PERGUNTA NO PIX."], [508, "COMPARA AS DUAS."], [530, "DUZENTOS E DEZESSEIS."], [556, "QUE VOCÊ NEM VIU."],
-    [606, "E NÃO É ACASO."], [640, "É PSICOLOGIA."], [680, "PAGAR TUDO DE UMA VEZ…"], [712, "DÓI."], [740, "MAS EM DEZ PEDAÇOS…"], [776, "NEM SENTE."], [806, "E O CÉREBRO RELAXA."],
-    [846, "E AÍ, O QUE ACONTECE?"], [884, "MAIS UMA."],
-    [940, "UMA PARCELA AQUI."], [1008, "OUTRA ALI."], [1058, "MAIS UMA."], [1108, "E MAIS UMA."], [1150, "TODO MÊS."], [1176, "SEM FALTAR UM."],
-    [1210, "PRESTA ATENÇÃO."], [1240, "UM MÊS."], [1262, "DOIS."], [1282, "TRÊS…"], [1318, "PENSA NISSO."], [1352, "SÉRIO."],
-    [1386, "AGORA OLHA ELE."], [1418, "PRIMEIRO, A CONTA."], [1446, "DEPOIS, O PIX."], [1474, "E ELE ESPERA."], [1500, "DOIS DIAS."], [1520, "SEM PRESSA."],
-    [1566, "ANOTA AÍ."], [1600, "PRINTA SE PRECISAR."], [1645, "LÊ COMIGO."], [1690, "MULTIPLICA."], [1712, "PERGUNTA."],
-    [1746, "SEM MENTIR."], [1768, "QUAL DOS DOIS?"], [1800, "COMENTA AQUI EMBAIXO."], [1840, "E SALVA ESSE VÍDEO."]
+    [
+      0,
+      "PARA TUDO."
+    ],
+    [
+      40,
+      "O SEM JUROS"
+    ],
+    [
+      64,
+      "É A COMPRA"
+    ],
+    [
+      87,
+      "MAIS CARA QUE"
+    ],
+    [
+      110,
+      "VOCÊ FAZ."
+    ],
+    [
+      137,
+      "PARECE MENTIRA."
+    ],
+    [
+      176,
+      "NÃO É."
+    ],
+    [
+      202,
+      "VOCÊ PASSA NA LOJA."
+    ],
+    [
+      239,
+      "A VITRINE ACENDE."
+    ],
+    [
+      289,
+      "DEZ VEZES DE"
+    ],
+    [
+      315,
+      "CENTO E OITENTA,"
+    ],
+    [
+      353,
+      "SEM JUROS."
+    ],
+    [
+      383,
+      "E VOCÊ PENSA:"
+    ],
+    [
+      415,
+      "CABE NO BOLSO."
+    ],
+    [
+      453,
+      "AGORA FAZ A CONTA."
+    ],
+    [
+      496,
+      "DEZ VEZES CENTO"
+    ],
+    [
+      523,
+      "E OITENTA:"
+    ],
+    [
+      553,
+      "MIL E OITOCENTOS."
+    ],
+    [
+      603,
+      "PERGUNTA O PREÇO"
+    ],
+    [
+      636,
+      "À VISTA NO PIX:"
+    ],
+    [
+      665,
+      "MIL QUINHENTOS"
+    ],
+    [
+      689,
+      "E OITENTA E QUATRO."
+    ],
+    [
+      729,
+      "A DIFERENÇA?"
+    ],
+    [
+      760,
+      "DUZENTOS E DEZESSEIS REAIS."
+    ],
+    [
+      830,
+      "OS JUROS JÁ"
+    ],
+    [
+      853,
+      "ESTAVAM NO PREÇO."
+    ],
+    [
+      902,
+      "ISSO TEM NOME:"
+    ],
+    [
+      932,
+      "DOR DE PAGAR."
+    ],
+    [
+      977,
+      "PAGAR TUDO DE"
+    ],
+    [
+      1007,
+      "UMA VEZ DÓI."
+    ],
+    [
+      1043,
+      "DIVIDIDO EM DEZ,"
+    ],
+    [
+      1079,
+      "DÓI MENOS."
+    ],
+    [
+      1106,
+      "E VOCÊ COMPRA MAIS."
+    ],
+    [
+      1154,
+      "ENTÃO VOCÊ PARCELA"
+    ],
+    [
+      1188,
+      "DE NOVO."
+    ],
+    [
+      1215,
+      "CELULAR."
+    ],
+    [
+      1243,
+      "TÊNIS."
+    ],
+    [
+      1264,
+      "TV."
+    ],
+    [
+      1283,
+      "SOFÁ."
+    ],
+    [
+      1310,
+      "QUATROCENTOS E NOVENTA"
+    ],
+    [
+      1358,
+      "E QUATRO REAIS POR MÊS."
+    ],
+    [
+      1393,
+      "ANTES DO SALÁRIO CAIR."
+    ],
+    [
+      1442,
+      "VOCÊ NÃO COMPROU"
+    ],
+    [
+      1466,
+      "UM CELULAR."
+    ],
+    [
+      1494,
+      "VOCÊ VENDEU DEZ MESES"
+    ],
+    [
+      1539,
+      "DO SEU FUTURO."
+    ],
+    [
+      1586,
+      "QUEM ACUMULA FAZ DIFERENTE."
+    ],
+    [
+      1648,
+      "MULTIPLICA A PARCELA."
+    ],
+    [
+      1695,
+      "PERGUNTA O PREÇO"
+    ],
+    [
+      1722,
+      "À VISTA."
+    ],
+    [
+      1744,
+      "E ESPERA QUARENTA"
+    ],
+    [
+      1777,
+      "E OITO HORAS."
+    ],
+    [
+      1812,
+      "MESMA VONTADE."
+    ],
+    [
+      1850,
+      "OUTRA DECISÃO."
+    ],
+    [
+      1888,
+      "GUARDA ESSA REGRA:"
+    ],
+    [
+      1925,
+      "ANTES DE PARCELAR, MULTIPLIQUE."
+    ],
+    [
+      1996,
+      "ANTES DE COMPRAR,"
+    ],
+    [
+      2024,
+      "PERGUNTE O PREÇO"
+    ],
+    [
+      2059,
+      "À VISTA."
+    ],
+    [
+      2090,
+      "E VOCÊ?"
+    ],
+    [
+      2115,
+      "PARCELA SEM PENSAR"
+    ],
+    [
+      2157,
+      "OU FAZ A CONTA ANTES?"
+    ],
+    [
+      2203,
+      "COMENTA AQUI EMBAIXO."
+    ]
   ]
 }

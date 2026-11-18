@@ -32,7 +32,7 @@ const Gold: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 
 // ===================== CENA 1 — GANCHO =====================
 // ângulo da etiqueta: extremos exatamente nos quadros dos rangidos
-const swing = (f: number, amp = 7) => amp * Math.cos((Math.PI * (f - T.s1.creaks[0])) / 18);
+const swing = (f: number, amp = 7) => amp * Math.cos((Math.PI * (f - T.s1.creaks[0])) / (T.s1.creaks[1] - T.s1.creaks[0]));
 
 export const Scene1: React.FC = () => {
   const f = useCurrentFrame();
