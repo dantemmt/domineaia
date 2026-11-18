@@ -68,7 +68,7 @@ export const Scene2: React.FC = () => {
     <SceneFrame start={T.scenes.s2[0]} duration={dur('s2')} transition="glitch">
       <Glitch active={g} seed="s2" strength={34}>
         <Title at={T.s2.text} size={54} bold>
-          FICA ATÉ O FIM. A RESPOSTA VAI TE INCOMODAR.
+          VOCÊ NUNCA PEDIU. ELE DEU MESMO ASSIM.
         </Title>
       </Glitch>
       <Person x={540} glow={0.35} label="VOCÊ" />
