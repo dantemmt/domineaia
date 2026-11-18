@@ -53,8 +53,8 @@ export const Scene1: React.FC = () => {
       <div style={{ position: 'absolute', left: 120, width: 840, top: 940, opacity: label, transform: `translateY(${(1 - label) * 14}px)`, textAlign: 'center', fontFamily: FONT, fontWeight: 700, fontSize: 30, letterSpacing: 3, color: '#fff' }}>
         LIMITE DISPONÍVEL: <Gold>R$ 5.000</Gold>
       </div>
-      <Impact at={T.s1.hookText} y={1370} size={60}>
-        SEU LIMITE DO CARTÃO NÃO É SEU DINHEIRO.
+      <Impact at={T.s1.hookText} y={1370} size={58}>
+        POR QUE O BANCO AUMENTA SEU LIMITE SEM VOCÊ PEDIR?
       </Impact>
     </SceneFrame>
   );
@@ -68,7 +68,7 @@ export const Scene2: React.FC = () => {
     <SceneFrame start={T.scenes.s2[0]} duration={dur('s2')} transition="glitch">
       <Glitch active={g} seed="s2" strength={34}>
         <Title at={T.s2.text} size={54} bold>
-          PARECE ÓBVIO. MAS O SEU CÉREBRO NÃO ACHA.
+          FICA ATÉ O FIM. A RESPOSTA VAI TE INCOMODAR.
         </Title>
       </Glitch>
       <Person x={540} glow={0.35} label="VOCÊ" />
@@ -346,6 +346,7 @@ export const Scene8: React.FC = () => {
 // ===================== CENA 9 — A VIRADA =====================
 export const Scene9: React.FC = () => {
   const bank = useSpring(T.s9.bank, { damping: 20, stiffness: 60 });
+  const ans = useSpring(T.s9.answer, { damping: 14 });
   return (
     <SceneFrame start={T.scenes.s9[0]} duration={dur('s9')}>
       <div style={{ position: 'absolute', left: 290, top: 640, width: 500, height: 520, background: 'radial-gradient(ellipse at 50% 30%, rgba(200,220,255,0.16), rgba(200,220,255,0) 65%)', opacity: bank }} />
@@ -354,7 +355,10 @@ export const Scene9: React.FC = () => {
           <Bank />
         </Icon>
       </div>
-      <Impact at={T.s9.line1} y={430} size={50}>
+      <div style={{ position: 'absolute', left: 120, width: 840, top: 300, opacity: ans, transform: `translateY(${(1 - ans) * 12}px)`, textAlign: 'center', fontFamily: FONT, fontWeight: 700, fontSize: 26, letterSpacing: 8, color: 'rgba(255,255,255,0.8)' }}>
+        A RESPOSTA:
+      </div>
+      <Impact at={T.s9.line1} y={440} size={50}>
         PRO BANCO, O CLIENTE IDEAL NÃO É QUEM PAGA EM DIA.
       </Impact>
       <Impact at={T.s9.line2} y={1370} size={50}>
