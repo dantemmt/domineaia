@@ -1,4 +1,6 @@
-# Vídeo 4 — "Seu limite do cartão não é seu dinheiro"
+# Vídeo 4 — "Por que o banco aumenta seu limite sem você pedir?"
+
+Narração em `public/narracao.mp3` (voz Drew, ElevenLabs); timeline reajustada para acompanhar a voz (71s), legendas seguem a fala.
 
 Vídeo vertical 1080x1920, 30fps, 63s, feito em Remotion. Trilha e efeitos 100% sintetizados (88 BPM, Sol menor, bip frio de maquininha, corte seco na cena 4, coração e baixo subindo meio tom por mês nas cenas 6–7).
 
