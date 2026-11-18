@@ -388,6 +388,20 @@ impact(fr(T.s10.bold), 0.8);
   impact(fr(T.s12.impact), 0.55);
 }
 
+
+// ---- RECOMPENSAS: whoosh em cada corte de cena, brilho nos estouros dourados, riser antes da resposta
+Object.values(T.scenes).slice(1).forEach(([a], i) => {
+  noise(sfx, fr(a) - 0.12, 0.32, 0.13, { bp: 700, bpEnd: 3200, q: 1.3, attack: 0.12, release: 0.15, pan: i % 2 ? 0.3 : -0.3 });
+});
+T.fx.filter((e) => e.k === 'gold').forEach((e) => {
+  for (let k = 0; k < 6; k++) tone(sfx, fr(e.f) + 0.02 + k * 0.03, 0.5, 2400 + rnd() * 3000, 0.035, { decay: 0.12, pan: (e.x - 540) / 600 });
+});
+T.fx.filter((e) => e.k === 'spark').forEach((e) => tone(sfx, fr(e.f), 0.25, 3136, 0.03, { decay: 0.06, pan: (e.x - 540) / 600 }));
+T.risers.forEach((f) => {
+  noise(sfx, fr(f), fr(T.s9.line1 - f), 0.18, { bp: 400, bpEnd: 5000, q: 1.2, attack: fr(T.s9.line1 - f) * 0.9, release: 0.03 });
+  tone(sfx, fr(f), fr(T.s9.line1 - f), 110, 0.08, { freqEnd: 440, attack: fr(T.s9.line1 - f) * 0.9, release: 0.03, wave: 'tri' });
+});
+
 // pequenos "pops" nas entradas de texto de topo (sutil)
 [T.s2.text, T.s4.text1, T.s4.text2, T.s6.text1, T.s6.text2, T.s7.text, T.s10.text, T.s11.text].forEach((f) => pop(fr(f), 0.1));
 pop(fr(T.s5.text), 0.2);

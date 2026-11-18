@@ -16,7 +16,11 @@ export const Captions: React.FC = () => {
   if (idx < 0 || frame >= END) return null;
   const [start, text] = CAPS[idx];
   const words = text.split(' ');
+  const sweep = Math.min(1, Math.max(0, (frame - start) / 7));
+  const ease = 1 - Math.pow(1 - sweep, 3);
   return (
+    <>
+    <div style={{ position: 'absolute', left: 540 - 80 * ease, top: Y + 38, width: 160 * ease, height: 4, borderRadius: 2, background: '#fff', opacity: 0.85 * (1 - Math.max(0, (frame - start - 14) / 10)), boxShadow: '0 0 10px rgba(255,255,255,0.7)' }} />
     <div
       style={{
         position: 'absolute', left: 40, width: 1000, top: Y, transform: 'translateY(-50%)',
@@ -34,5 +38,6 @@ export const Captions: React.FC = () => {
         );
       })}
     </div>
+    </>
   );
 };
