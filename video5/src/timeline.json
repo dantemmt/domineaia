@@ -1,0 +1,494 @@
+{
+  "fps": 30,
+  "durationInFrames": 1890,
+  "scenes": {
+    "s1": [
+      0,
+      105
+    ],
+    "s2": [
+      105,
+      195
+    ],
+    "s3": [
+      195,
+      405
+    ],
+    "s4": [
+      405,
+      525
+    ],
+    "s5": [
+      525,
+      735
+    ],
+    "s6": [
+      735,
+      1035
+    ],
+    "s7": [
+      1035,
+      1215
+    ],
+    "s8": [
+      1215,
+      1365
+    ],
+    "s9": [
+      1365,
+      1545
+    ],
+    "s10": [
+      1545,
+      1725
+    ],
+    "s11": [
+      1725,
+      1890
+    ]
+  },
+  "s1": {
+    "cards": [
+      6,
+      14,
+      22,
+      30
+    ],
+    "question": 38
+  },
+  "s2": {
+    "text": 111,
+    "spot": 126
+  },
+  "s3": {
+    "text": 201,
+    "bar": 208,
+    "coin": 226,
+    "coinLand": 246,
+    "shrinkEnd": 276,
+    "month": 282,
+    "bold": 336
+  },
+  "s4": {
+    "answerLabel": 411,
+    "answer": 420,
+    "glow": 432
+  },
+  "s5": {
+    "text": 531,
+    "card": 538,
+    "pourStart": 552,
+    "pourEnd": 592,
+    "stamp": 600,
+    "brain": 630,
+    "bold": 672
+  },
+  "s6": {
+    "text": 741,
+    "rollStart": 768,
+    "hits": [
+      800,
+      880,
+      960
+    ],
+    "rollEnd": 990,
+    "bold": 998,
+    "note": 1012
+  },
+  "s7": {
+    "text": 1041,
+    "boxStart": 1055,
+    "boxEnd": 1090,
+    "reveal": 1093,
+    "study": 1125
+  },
+  "s8": {
+    "text": 1221,
+    "card": 1232,
+    "bold": 1290
+  },
+  "s9": {
+    "text": 1371,
+    "steps": [
+      1392,
+      1418,
+      1444,
+      1470
+    ],
+    "bold": 1500
+  },
+  "s10": {
+    "text": 1551,
+    "noteFall": 1555,
+    "noteLand": 1575,
+    "typeStart": 1588,
+    "framesPerChar": 1.6,
+    "typeText": "PAGUE O MÍNIMO EM TODAS.\nJOGUE O RESTO NA MENOR.\nACABOU? ROLA PRA PRÓXIMA."
+  },
+  "s11": {
+    "text": 1731,
+    "pill1": 1752,
+    "ou": 1760,
+    "pill2": 1768,
+    "impact": 1780,
+    "fadeStart": 1875
+  },
+  "coursePill": [
+    [
+      120,
+      270
+    ],
+    [
+      1365,
+      1515
+    ],
+    [
+      1725,
+      99999
+    ]
+  ],
+  "captions": [
+    [
+      0,
+      ""
+    ],
+    [
+      111,
+      "PENSA RÁPIDO."
+    ],
+    [
+      140,
+      "A MAIOR DÁ MAIS MEDO."
+    ],
+    [
+      170,
+      "ENTÃO VOCÊ ATACA ELA."
+    ],
+    [
+      201,
+      "VOCÊ PAGA…"
+    ],
+    [
+      236,
+      "E PAGA…"
+    ],
+    [
+      282,
+      "UM MÊS DEPOIS…"
+    ],
+    [
+      310,
+      "FALTA QUASE TUDO."
+    ],
+    [
+      336,
+      "E A VONTADE SOME."
+    ],
+    [
+      370,
+      "VOCÊ DESISTE."
+    ],
+    [
+      405,
+      ""
+    ],
+    [
+      531,
+      "OLHA ISSO."
+    ],
+    [
+      552,
+      "TREZENTOS NA MENOR."
+    ],
+    [
+      600,
+      "QUITADA."
+    ],
+    [
+      630,
+      "PRIMEIRA VITÓRIA."
+    ],
+    [
+      672,
+      "E O CÉREBRO GOSTA."
+    ],
+    [
+      705,
+      "QUER MAIS."
+    ],
+    [
+      741,
+      "AGORA VEM O TRUQUE."
+    ],
+    [
+      768,
+      "O DINHEIRO ROLA."
+    ],
+    [
+      800,
+      "CELULAR. FOI."
+    ],
+    [
+      880,
+      "CARTÃO. FOI."
+    ],
+    [
+      960,
+      "EMPRÉSTIMO. FOI."
+    ],
+    [
+      998,
+      "SETE MESES."
+    ],
+    [
+      1041,
+      "ISSO TEM NOME."
+    ],
+    [
+      1093,
+      "BOLA DE NEVE."
+    ],
+    [
+      1125,
+      "E FOI ESTUDADO."
+    ],
+    [
+      1165,
+      "SEIS MIL PESSOAS."
+    ],
+    [
+      1190,
+      "FUNCIONA."
+    ],
+    [
+      1221,
+      "MAS ATENÇÃO."
+    ],
+    [
+      1250,
+      "ROTATIVO. CHEQUE ESPECIAL."
+    ],
+    [
+      1290,
+      "ESSES VÊM PRIMEIRO."
+    ],
+    [
+      1330,
+      "NEGOCIA."
+    ],
+    [
+      1371,
+      "OLHA A ESCADA."
+    ],
+    [
+      1392,
+      "UM DEGRAU."
+    ],
+    [
+      1418,
+      "DOIS."
+    ],
+    [
+      1444,
+      "TRÊS."
+    ],
+    [
+      1470,
+      "QUATRO."
+    ],
+    [
+      1500,
+      "LIVRE."
+    ],
+    [
+      1551,
+      "ANOTA AÍ."
+    ],
+    [
+      1590,
+      "PRINTA ISSO."
+    ],
+    [
+      1640,
+      "LÊ COMIGO."
+    ],
+    [
+      1690,
+      "SIMPLES ASSIM."
+    ],
+    [
+      1731,
+      "SEM MENTIR."
+    ],
+    [
+      1752,
+      "QUAL VOCÊ FAZ?"
+    ],
+    [
+      1790,
+      "COMENTA AQUI."
+    ],
+    [
+      1835,
+      "E SALVA PRA DEPOIS."
+    ]
+  ],
+  "fx": [
+    {
+      "f": 38,
+      "k": "impact",
+      "x": 540,
+      "y": 400
+    },
+    {
+      "f": 126,
+      "k": "spark",
+      "x": 840,
+      "y": 680
+    },
+    {
+      "f": 246,
+      "k": "gold",
+      "x": 540,
+      "y": 675
+    },
+    {
+      "f": 336,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 420,
+      "k": "impact",
+      "x": 540,
+      "y": 470
+    },
+    {
+      "f": 432,
+      "k": "gold",
+      "x": 240,
+      "y": 680
+    },
+    {
+      "f": 600,
+      "k": "gold",
+      "x": 540,
+      "y": 720
+    },
+    {
+      "f": 600,
+      "k": "impact",
+      "x": 540,
+      "y": 720
+    },
+    {
+      "f": 630,
+      "k": "spark",
+      "x": 540,
+      "y": 720
+    },
+    {
+      "f": 672,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 800,
+      "k": "gold",
+      "x": 330,
+      "y": 1090
+    },
+    {
+      "f": 880,
+      "k": "gold",
+      "x": 580,
+      "y": 1090
+    },
+    {
+      "f": 960,
+      "k": "gold",
+      "x": 830,
+      "y": 1090
+    },
+    {
+      "f": 998,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1093,
+      "k": "impact",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 1093,
+      "k": "spark",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 1232,
+      "k": "spark",
+      "x": 540,
+      "y": 760
+    },
+    {
+      "f": 1290,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1392,
+      "k": "spark",
+      "x": 265,
+      "y": 1080
+    },
+    {
+      "f": 1418,
+      "k": "spark",
+      "x": 435,
+      "y": 1010
+    },
+    {
+      "f": 1444,
+      "k": "spark",
+      "x": 605,
+      "y": 940
+    },
+    {
+      "f": 1470,
+      "k": "gold",
+      "x": 775,
+      "y": 870
+    },
+    {
+      "f": 1500,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1768,
+      "k": "gold",
+      "x": 735,
+      "y": 722
+    },
+    {
+      "f": 1780,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    }
+  ],
+  "risers": [
+    [
+      380,
+      420
+    ]
+  ]
+}
