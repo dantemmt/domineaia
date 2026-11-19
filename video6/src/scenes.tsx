@@ -92,32 +92,116 @@ const Network: React.FC<{ f: number; splits: number[]; youLabel?: boolean; dim?:
   </svg>
 );
 
-// ===================== CENA 1 — A PERGUNTA =====================
+// ===================== CENA 1 — A ISCA (abertura interativa) =====================
+const QWORDS: { w: string; gold?: boolean }[] = [
+  { w: 'CAÍRAM' }, { w: 'R$ 50.000', gold: true }, { w: 'NA' }, { w: 'SUA' }, { w: 'CONTA.' },
+  { w: 'TE' }, { w: 'DÃO' }, { w: 'R$ 2.000', gold: true }, { w: 'SÓ' }, { w: 'PRA' }, { w: 'REPASSAR.' },
+];
 export const Scene1: React.FC = () => {
   const f = useCurrentFrame();
-  const ph = useSpring(T.s1.phone, { damping: 14 });
-  const nt = useSpring(T.s1.notif, { damping: 13, stiffness: 150 });
-  const PX = 540, PY = 760, PW = 300, PH = 380;
+  const { fps } = useVideoConfig();
+  const T1 = T.s1;
+  // celular entra batendo e vibrando
+  const slam = spring({ frame: f - T1.phone, fps, config: { damping: 9, stiffness: 220 } });
+  const buzz = f < T1.buzzEnd ? Math.sin(f * 3.4) * 9 * (1 - f / T1.buzzEnd) : 0;
+  const hitK = f >= T1.hit ? Math.exp(-(f - T1.hit) / 6) : 0;
+  // contador tipo caça-níquel: acelera e trava em 50.000
+  const roll = interpolate(f, [T1.rollStart, T1.hit], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  const shown = f >= T1.hit ? 50000 : Math.floor(roll * 50000 / 37) * 37 + Math.floor(random(`slot${f}`) * 900);
+  const val = 'R$ ' + Math.min(50000, shown).toLocaleString('pt-BR');
+  const msg = useSpring(T1.msg, { damping: 13, stiffness: 160 });
+  const ask = useSpring(T1.ask, { damping: 10, stiffness: 180 });
+  const btn = useSpring(T1.buttons, { damping: 12, stiffness: 170 });
+  const cIdx = T1.count.filter((c) => f >= c).length; // 0..3
+  const lastC = T1.count[cIdx - 1] ?? 0;
+  const cPop = cIdx ? spring({ frame: f - lastC, fps, config: { damping: 9, stiffness: 220 } }) : 0;
+  const ring = interpolate(f, [T1.count[0], T1.count[2] + 14], [1, 0], clamp);
+  // cursor indeciso entre SIM e NÃO
+  const cx = 540 + Math.sin((f - T1.buttons) * 0.16) * 170 * Math.min(1, (f - T1.buttons) / 12);
+  const overSim = cx < 540;
+  const PX = 540, PY = 760, PW = 300, PH = 400;
   return (
-    <SceneFrame start={T.scenes.s1[0]} duration={dur('s1')}>
-      <Impact at={T.s1.question} y={380} size={48}>
-        TE OFERECERAM <Gold>R$ 500</Gold> SÓ PRA PASSAR UM PIX PELA SUA CONTA. VOCÊ ACEITARIA?
-      </Impact>
-      <div style={{ position: 'absolute', inset: 0, opacity: ph, transform: `translateY(${(1 - ph) * 50}px)` }}>
-        <svg width={W} height={H} style={{ position: 'absolute', left: 0, top: 0, filter: GLOW }}>
-          <rect x={PX - PW / 2} y={PY - PH / 2} width={PW} height={PH} rx={36} fill="rgba(5,5,5,0.92)" stroke="#fff" strokeWidth={3} />
-          <line x1={PX - 26} x2={PX + 26} y1={PY - PH / 2 + 22} y2={PY - PH / 2 + 22} stroke="#fff" strokeWidth={3} strokeLinecap="round" />
+    <SceneFrame start={T.scenes.s1[0]} duration={dur('s1')} ground={false}>
+      {/* luz pulsando atrás do celular */}
+      <div style={{ position: 'absolute', left: PX - 330, top: PY - 330, width: 660, height: 660, borderRadius: '50%', background: `radial-gradient(circle, rgba(217,173,69,${0.12 + hitK * 0.35}), rgba(217,173,69,0) 65%)` }} />
+      {/* raios girando quando o Pix cai */}
+      {f >= T1.hit ? (
+        <svg width={W} height={H} style={{ position: 'absolute', left: 0, top: 0, opacity: 0.25 + hitK * 0.4 }}>
+          <g transform={`translate(${PX} ${PY}) rotate(${(f - T1.hit) * 1.5})`}>
+            {new Array(16).fill(0).map((_, i) => (
+              <path key={i} d="M 0 0 L 520 -26 L 520 26 Z" fill={GOLD} opacity={0.12} transform={`rotate(${i * 22.5})`} />
+            ))}
+          </g>
         </svg>
-        <div style={{ position: 'absolute', left: PX - PW / 2 + 14, top: PY - PH / 2 + 46, width: PW - 28, height: PH - 70, overflow: 'hidden', borderRadius: 18 }}>
-          <div style={{ position: 'absolute', left: 4, right: 4, top: interpolate(nt, [0, 1], [-160, 10]), opacity: nt, border: '2px solid #fff', borderRadius: 14, padding: '12px 10px', fontFamily: FONT, textAlign: 'left', background: 'rgba(255,255,255,0.06)', filter: GLOW }}>
-            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, color: 'rgba(255,255,255,0.7)' }}>MENSAGEM · AGORA</div>
-            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: 1, color: '#fff', marginTop: 6, lineHeight: 1.35 }}>
-              ME EMPRESTA SUA CONTA? TE DOU <Gold>R$ 500</Gold>
+      ) : null}
+      <div style={{ position: 'absolute', inset: 0, transform: `translate(${buzz}px, ${(1 - slam) * -40}px) rotate(${buzz * 0.4 + (1 - slam) * -8}deg) scale(${(0.6 + slam * 0.4) * (1 + hitK * 0.05)})`, transformOrigin: `${PX}px ${PY}px` }}>
+        <svg width={W} height={H} style={{ position: 'absolute', left: 0, top: 0, filter: GLOW }}>
+          <rect x={PX - PW / 2} y={PY - PH / 2} width={PW} height={PH} rx={38} fill="rgba(5,5,5,0.94)" stroke="#fff" strokeWidth={3} />
+          <line x1={PX - 26} x2={PX + 26} y1={PY - PH / 2 + 22} y2={PY - PH / 2 + 22} stroke="#fff" strokeWidth={3} strokeLinecap="round" />
+          {f < T1.buzzEnd ? [0, 1].map((k) => (
+            <path key={k} d={`M ${PX + (k ? 1 : -1) * (PW / 2 + 18)} ${PY - 40} q ${(k ? 1 : -1) * 14} 40 0 80`} fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" opacity={0.7} />
+          )) : null}
+        </svg>
+        <div style={{ position: 'absolute', left: PX - PW / 2 + 16, top: PY - PH / 2 + 48, width: PW - 32, textAlign: 'center', fontFamily: FONT }}>
+          <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: 4, color: '#fff' }}>PIX RECEBIDO</div>
+          <div style={{ marginTop: 10, fontSize: 40, fontWeight: 900, letterSpacing: 1, color: GOLD, fontVariantNumeric: 'tabular-nums', transform: `scale(${1 + hitK * 0.25})`, textShadow: `0 0 ${18 + hitK * 30}px rgba(217,173,69,0.8)` }}>{val}</div>
+          <div style={{ marginTop: 18, opacity: msg, transform: `translateY(${(1 - msg) * 30}px) scale(${0.8 + msg * 0.2})`, border: '2px solid #fff', borderRadius: 14, padding: '10px 8px', background: 'rgba(255,255,255,0.06)', textAlign: 'left' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: 'rgba(255,255,255,0.7)' }}>MENSAGEM · AGORA</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginTop: 6, lineHeight: 1.35 }}>
+              REPASSA PRA ESSAS CONTAS. FICA COM <Gold>R$ 2.000</Gold>
             </div>
           </div>
         </div>
       </div>
-      <Person x={830} glow={0.4} label="VOCÊ" scale={0.75} />
+      {/* moedas explodindo do celular */}
+      {f >= T1.hit ? new Array(18).fill(0).map((_, i) => {
+        const t = f - T1.hit;
+        const a = (i / 18) * Math.PI * 2 + random(`ca${i}`) * 0.4;
+        const sp = 9 + random(`cs${i}`) * 7;
+        const x = PX + Math.cos(a) * sp * t;
+        const y = PY + Math.sin(a) * sp * t + 0.45 * t * t;
+        if (y > H || t > 60) return null;
+        return (
+          <Icon key={i} x={x} y={y} rotate={t * 9} scale={0.55} gold opacity={Math.max(0, 1 - t / 60)}>
+            <circle r={20} fill="#050505" stroke={GOLD} strokeWidth={3} />
+            <text y={7} textAnchor="middle" fill={GOLD} fontFamily={FONT} fontWeight={900} fontSize={18}>$</text>
+          </Icon>
+        );
+      }) : null}
+      {/* pergunta entrando palavra por palavra */}
+      <div style={{ position: 'absolute', left: 120, width: 840, top: 300, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', columnGap: 14, rowGap: 4, fontFamily: FONT, fontWeight: 900, fontSize: 44, letterSpacing: 2, color: '#fff', textShadow: '0 0 18px rgba(255,255,255,0.4)' }}>
+        {QWORDS.map((q, i) => {
+          const s = spring({ frame: f - (T1.words + i * T1.wordStep), fps, config: { damping: 10, stiffness: 240, mass: 0.5 } });
+          return (
+            <span key={i} style={{ display: 'inline-block', opacity: Math.min(1, s * 2), transform: `translateY(${(1 - s) * 30}px) scale(${0.5 + s * 0.5})`, color: q.gold ? GOLD : '#fff', textShadow: q.gold ? '0 0 18px rgba(217,173,69,0.6)' : undefined, whiteSpace: 'nowrap' }}>
+              {q.w}
+            </span>
+          );
+        })}
+      </div>
+      <div style={{ position: 'absolute', left: 120, width: 840, top: 1040, transform: `translateY(-50%) scale(${interpolate(ask, [0, 1], [1.6, 1])})`, opacity: Math.min(1, ask * 2), textAlign: 'center', fontFamily: FONT, fontWeight: 900, fontSize: 76, letterSpacing: 3, color: '#fff', textShadow: '0 0 26px rgba(255,255,255,0.6)' }}>
+        VOCÊ ACEITARIA?
+      </div>
+      {/* botões SIM / NÃO com contagem regressiva */}
+      {f >= T1.buttons ? (
+        <div style={{ position: 'absolute', inset: 0, opacity: btn }}>
+          {[{ t: 'SIM', x: 300, on: overSim }, { t: 'NÃO', x: 780, on: !overSim }].map((b) => (
+            <div key={b.t} style={{ position: 'absolute', left: b.x - 120, top: 1205, width: 240, height: 96, boxSizing: 'border-box', transform: `scale(${(0.7 + btn * 0.3) * (b.on ? 1.08 : 1)})`, border: '4px solid #fff', borderRadius: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT, fontWeight: 900, fontSize: 44, letterSpacing: 6, color: b.on ? '#050505' : '#fff', background: b.on ? '#fff' : 'rgba(5,5,5,0.9)', boxShadow: b.on ? '0 0 30px rgba(255,255,255,0.8)' : 'none' }}>
+              {b.t}
+            </div>
+          ))}
+          <svg width={W} height={H} style={{ position: 'absolute', left: 0, top: 0 }}>
+            <circle cx={540} cy={1253} r={56} fill="#050505" stroke="rgba(255,255,255,0.25)" strokeWidth={6} />
+            <circle cx={540} cy={1253} r={56} fill="none" stroke="#fff" strokeWidth={6} strokeLinecap="round" strokeDasharray={2 * Math.PI * 56} strokeDashoffset={2 * Math.PI * 56 * (1 - ring)} transform="rotate(-90 540 1253)" style={{ filter: GLOW }} />
+          </svg>
+          <div style={{ position: 'absolute', left: 540 - 60, top: 1253 - 40, width: 120, textAlign: 'center', fontFamily: FONT, fontWeight: 900, fontSize: 64, lineHeight: '80px', color: '#fff', transform: `scale(${cIdx ? 0.6 + cPop * 0.4 : 1})` }}>
+            {cIdx ? 4 - cIdx : ''}
+          </div>
+          <Icon x={cx} y={1290} scale={0.9}>
+            <path d="M 0 0 L 0 46 L 12 34 L 22 56 L 30 52 L 20 31 L 36 31 Z" fill="#050505" stroke="#fff" strokeWidth={3} strokeLinejoin="round" />
+          </Icon>
+        </div>
+      ) : null}
     </SceneFrame>
   );
 };
@@ -161,7 +245,7 @@ export const Scene3: React.FC = () => {
       <Network f={f} splits={T.s3.splits} />
       {f < T.s3.splits[0] + 4 ? (
         <div style={{ position: 'absolute', left: CX - 110, top: interpolate(into, [0, 1], [540, CY - 30]), width: 220, opacity: blk * (1 - Math.max(0, into - 0.85) * 6), transform: `scale(${1 - into * 0.6})`, textAlign: 'center', fontFamily: FONT, fontWeight: 900, fontSize: 48, color: GOLD, textShadow: '0 0 20px rgba(217,173,69,0.7)' }}>
-          R$ 5.000
+          R$ 50.000
         </div>
       ) : null}
       <Impact at={T.s3.bold} y={1400} size={48}>
@@ -339,7 +423,7 @@ export const Scene7: React.FC = () => {
         SE FOR LAVAGEM (LEI 9.613/98): 3 A 10 ANOS DE RECLUSÃO
       </Small>
       <Impact at={T.s7.bold} y={1410} size={50}>
-        OS <Gold>R$ 500</Gold> SOMEM. O PROCESSO FICA.
+        OS <Gold>R$ 2.000</Gold> SOMEM. O PROCESSO FICA.
       </Impact>
     </SceneFrame>
   );
@@ -379,7 +463,7 @@ export const Scene8: React.FC = () => {
         <Icon x={PX} y={PY - 90} scale={0.55}>
           <Brain />
         </Icon>
-        {pan(lx, ly, <div style={{ fontSize: 40, fontWeight: 900, color: GOLD, opacity: money, transform: `scale(${0.6 + money * 0.4})`, textShadow: '0 0 20px rgba(217,173,69,0.7)' }}>R$ 500</div>)}
+        {pan(lx, ly, <div style={{ fontSize: 40, fontWeight: 900, color: GOLD, opacity: money, transform: `scale(${0.6 + money * 0.4})`, textShadow: '0 0 20px rgba(217,173,69,0.7)' }}>R$ 2.000</div>)}
         {pan(rx, ry, (
           <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: 2, lineHeight: 1.35, color: '#fff', opacity: 0.25 + rev * 0.75, filter: `blur(${(1 - Math.min(1, rev)) * 3}px)` }}>
             NOME SUJO
@@ -391,7 +475,7 @@ export const Scene8: React.FC = () => {
         ))}
       </div>
       <Impact at={T.s8.bold} y={1400} size={44}>
-        O CÉREBRO VÊ OS <Gold>R$ 500</Gold> AGORA. E NÃO ENXERGA O PREÇO DEPOIS.
+        O CÉREBRO VÊ OS <Gold>R$ 2.000</Gold> AGORA. E NÃO ENXERGA O PREÇO DEPOIS.
       </Impact>
     </SceneFrame>
   );
@@ -492,7 +576,7 @@ export const Scene11: React.FC = () => {
     <SceneFrame start={T.scenes.s11[0]} duration={dur('s11')}>
       <Title at={T.s11.text} size={140} bold>E VOCÊ?</Title>
       <div style={{ position: 'absolute', left: 120, width: 840, top: 690, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16 }}>
-        <div style={pill(p1, false)}>ACEITA OS R$ 500</div>
+        <div style={pill(p1, false)}>PEGA OS R$ 2.000</div>
         <div style={{ opacity: ou, fontFamily: FONT, fontWeight: 600, fontSize: 24, letterSpacing: 4, color: 'rgba(255,255,255,0.7)' }}>OU</div>
         <div style={pill(p2, true)}>PROTEGE SEU NOME</div>
       </div>

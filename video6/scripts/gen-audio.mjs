@@ -238,10 +238,42 @@ const glitch = (t, dur = 0.22, amp = 0.28) => {
   }
 };
 
-// ---- CENA 1: mensagem chegando + impacto na pergunta
-pop(fr(T.s1.phone), 0.25);
-ding(fr(T.s1.notif), 0.28);
-impact(fr(T.s1.question), 1.0);
+// ---- CENA 1: celular vibrando, caça-níquel do Pix, jackpot, palavras, SIM/NÃO com contagem
+{
+  const s1 = T.s1;
+  // vibração do celular (zumbido grave pulsado)
+  const a0 = Math.round(fr(s1.phone) * SR), a1 = Math.round(fr(s1.buzzEnd + 6) * SR);
+  let ph = 0;
+  for (let i = a0; i < a1; i++) {
+    const t = (i - a0) / SR;
+    ph += 150 / SR;
+    const gate = Math.sin(2 * Math.PI * 9 * t) > -0.2 ? 1 : 0.2;
+    write(sfx, i, Math.tanh(4 * Math.sin(2 * Math.PI * ph)) * 0.16 * gate * Math.min(1, t / 0.02), 0);
+  }
+  impact(fr(s1.phone), 0.7);
+  ding(fr(s1.phone) + 0.12, 0.3);
+  // números girando cada vez mais rápido
+  let t = fr(s1.rollStart), gap = 0.11;
+  while (t < fr(s1.hit) - 0.02) { click(t, 0.18, rnd() * 0.4 - 0.2); tone(sfx, t, 0.03, 1400 + (t - fr(s1.rollStart)) * 900, 0.06, { decay: 0.01 }); t += gap; gap = Math.max(0.025, gap * 0.86); }
+  // jackpot
+  const h = fr(s1.hit);
+  impact(h, 1.0);
+  [0, 4, 7, 12, 16].forEach((st, i) => tone(sfx, h + i * 0.05, 1.0, mtof(72 + st), 0.1, { decay: 0.35, harm: [1, 0, 0.2] }));
+  for (let k = 0; k < 16; k++) coin(h + 0.05 + k * 0.05 + rnd() * 0.03, 0.15, rnd() * 1.6 - 0.8);
+  pop(fr(s1.msg), 0.35, 0.2);
+  // cada palavra da pergunta com um tique
+  for (let i = 0; i < 11; i++) tone(sfx, fr(s1.words + i * s1.wordStep), 0.05, 1800 + i * 40, 0.05, { decay: 0.015 });
+  impact(fr(s1.ask), 1.0);
+  pop(fr(s1.buttons), 0.3);
+  // coração acelerado durante a escolha + bipes da contagem subindo
+  for (let k = 0; k < 6; k++) {
+    const tt = fr(s1.buttons) + k * 0.32;
+    tone(sfx, tt, 0.2, 70, 0.4, { freqEnd: 45, attack: 0.004, decay: 0.06 });
+    tone(sfx, tt + 0.13, 0.2, 60, 0.25, { freqEnd: 40, attack: 0.004, decay: 0.05 });
+  }
+  s1.count.forEach((c, i) => tone(sfx, fr(c), 0.18, [880, 988, 1175][i], 0.16, { attack: 0.003, decay: 0.08, harm: [1, 0, 0.3] }));
+  noise(sfx, fr(s1.choose), 0.3, 0.2, { bp: 900, bpEnd: 4000, q: 1.3, attack: 0.2, release: 0.05 });
+}
 
 // ---- CENA 2: chuva de moedas + glitch
 for (let k = 0; k < 18; k++) coin(fr(T.s2.rain) + k * 0.09 + rnd() * 0.05, 0.12, rnd() * 1.4 - 0.7);
