@@ -1,0 +1,509 @@
+{
+  "fps": 30,
+  "durationInFrames": 1890,
+  "scenes": {
+    "s1": [
+      0,
+      105
+    ],
+    "s2": [
+      105,
+      195
+    ],
+    "s3": [
+      195,
+      420
+    ],
+    "s4": [
+      420,
+      525
+    ],
+    "s5": [
+      525,
+      810
+    ],
+    "s6": [
+      810,
+      1020
+    ],
+    "s7": [
+      1020,
+      1260
+    ],
+    "s8": [
+      1260,
+      1440
+    ],
+    "s9": [
+      1440,
+      1620
+    ],
+    "s10": [
+      1620,
+      1770
+    ],
+    "s11": [
+      1770,
+      1890
+    ]
+  },
+  "s1": {
+    "phone": 4,
+    "notif": 12,
+    "question": 30
+  },
+  "s2": {
+    "text": 111,
+    "rain": 114,
+    "glitch": 172
+  },
+  "s3": {
+    "text": 201,
+    "block": 214,
+    "splits": [
+      250,
+      296,
+      340
+    ],
+    "bold": 366
+  },
+  "s4": {
+    "label": 428,
+    "boxStart": 436,
+    "boxEnd": 462,
+    "reveal": 464
+  },
+  "s5": {
+    "text": 531,
+    "machine": 538,
+    "inStart": 556,
+    "inEnd": 630,
+    "spinStart": 556,
+    "spinEnd": 770,
+    "outStart": 640,
+    "outEnd": 760,
+    "steps": [
+      560,
+      640,
+      705
+    ]
+  },
+  "s6": {
+    "text": 816,
+    "zoom": 826,
+    "laranja": 858,
+    "bold": 930
+  },
+  "s7": {
+    "stamps": [
+      1036,
+      1066,
+      1096
+    ],
+    "cuffs": 1128,
+    "law1": 1150,
+    "law2": 1178,
+    "bold": 1206
+  },
+  "s8": {
+    "text": 1266,
+    "scale": 1276,
+    "money": 1290,
+    "reveal": 1340,
+    "bold": 1376
+  },
+  "s9": {
+    "text": 1446,
+    "other": 1452,
+    "icons": [
+      1470,
+      1500,
+      1530
+    ],
+    "bold": 1574
+  },
+  "s10": {
+    "text": 1626,
+    "noteFall": 1630,
+    "noteLand": 1650,
+    "typeStart": 1660,
+    "framesPerChar": 1.38,
+    "typeText": "SE O DINHEIRO É FÁCIL DEMAIS,\nALGUÉM VAI PAGAR A CONTA.\nE PODE SER VOCÊ."
+  },
+  "s11": {
+    "text": 1776,
+    "pill1": 1792,
+    "ou": 1800,
+    "pill2": 1808,
+    "impact": 1818,
+    "fadeStart": 1875
+  },
+  "coursePill": [
+    [
+      120,
+      270
+    ],
+    [
+      1440,
+      1590
+    ],
+    [
+      1770,
+      99999
+    ]
+  ],
+  "captions": [
+    [
+      0,
+      ""
+    ],
+    [
+      111,
+      "PARECE FÁCIL."
+    ],
+    [
+      140,
+      "DINHEIRO CAINDO."
+    ],
+    [
+      172,
+      "SEM FAZER NADA."
+    ],
+    [
+      201,
+      "MAS OLHA O CAMINHO."
+    ],
+    [
+      250,
+      "ENTRA NA SUA CONTA…"
+    ],
+    [
+      296,
+      "E SE ESPALHA."
+    ],
+    [
+      340,
+      "EM SEGUNDOS."
+    ],
+    [
+      380,
+      "SUMIU O RASTRO."
+    ],
+    [
+      420,
+      ""
+    ],
+    [
+      531,
+      "FUNCIONA ASSIM."
+    ],
+    [
+      560,
+      "ENTRA SUJO."
+    ],
+    [
+      640,
+      "RODA, RODA…"
+    ],
+    [
+      705,
+      "SAI LIMPO."
+    ],
+    [
+      760,
+      "PARECE LEGAL."
+    ],
+    [
+      816,
+      "E VOCÊ?"
+    ],
+    [
+      858,
+      "VOCÊ É O LARANJA."
+    ],
+    [
+      900,
+      "A PEÇA DO ESQUEMA."
+    ],
+    [
+      930,
+      "COM SEU NOME."
+    ],
+    [
+      975,
+      "COM SEU CPF."
+    ],
+    [
+      1036,
+      "CONTA BLOQUEADA."
+    ],
+    [
+      1066,
+      "INVESTIGAÇÃO."
+    ],
+    [
+      1096,
+      "PROCESSO."
+    ],
+    [
+      1128,
+      "E PODE SER PRISÃO."
+    ],
+    [
+      1206,
+      "PELOS QUINHENTOS."
+    ],
+    [
+      1266,
+      "POR QUE TANTA GENTE CAI?"
+    ],
+    [
+      1290,
+      "O CÉREBRO VÊ ISSO…"
+    ],
+    [
+      1340,
+      "E ESQUECE ISSO."
+    ],
+    [
+      1376,
+      "O RISCO PESA MAIS."
+    ],
+    [
+      1446,
+      "AGORA OLHA ELE."
+    ],
+    [
+      1470,
+      "CONTA É PESSOAL."
+    ],
+    [
+      1500,
+      "FÁCIL DEMAIS? DESCONFIA."
+    ],
+    [
+      1530,
+      "PIX ESTRANHO? BANCO."
+    ],
+    [
+      1574,
+      "SIMPLES ASSIM."
+    ],
+    [
+      1626,
+      "ANOTA AÍ."
+    ],
+    [
+      1665,
+      "MANDA PRA QUEM PRECISA."
+    ],
+    [
+      1720,
+      "SÉRIO."
+    ],
+    [
+      1776,
+      "SEM MENTIR."
+    ],
+    [
+      1792,
+      "QUAL VOCÊ ESCOLHE?"
+    ],
+    [
+      1830,
+      "COMENTA AQUI."
+    ],
+    [
+      1855,
+      "E COMPARTILHA."
+    ]
+  ],
+  "fx": [
+    {
+      "f": 12,
+      "k": "gold",
+      "x": 540,
+      "y": 700
+    },
+    {
+      "f": 30,
+      "k": "impact",
+      "x": 540,
+      "y": 400
+    },
+    {
+      "f": 114,
+      "k": "gold",
+      "x": 540,
+      "y": 700
+    },
+    {
+      "f": 214,
+      "k": "gold",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 250,
+      "k": "spark",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 296,
+      "k": "spark",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 340,
+      "k": "spark",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 366,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 464,
+      "k": "impact",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 464,
+      "k": "spark",
+      "x": 540,
+      "y": 715
+    },
+    {
+      "f": 660,
+      "k": "gold",
+      "x": 860,
+      "y": 640
+    },
+    {
+      "f": 700,
+      "k": "gold",
+      "x": 880,
+      "y": 620
+    },
+    {
+      "f": 740,
+      "k": "gold",
+      "x": 860,
+      "y": 640
+    },
+    {
+      "f": 858,
+      "k": "impact",
+      "x": 540,
+      "y": 660
+    },
+    {
+      "f": 858,
+      "k": "spark",
+      "x": 540,
+      "y": 660
+    },
+    {
+      "f": 930,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1036,
+      "k": "impact",
+      "x": 540,
+      "y": 580
+    },
+    {
+      "f": 1066,
+      "k": "impact",
+      "x": 540,
+      "y": 680
+    },
+    {
+      "f": 1096,
+      "k": "impact",
+      "x": 540,
+      "y": 780
+    },
+    {
+      "f": 1128,
+      "k": "impact",
+      "x": 540,
+      "y": 960
+    },
+    {
+      "f": 1206,
+      "k": "impact",
+      "x": 540,
+      "y": 1430
+    },
+    {
+      "f": 1290,
+      "k": "gold",
+      "x": 330,
+      "y": 800
+    },
+    {
+      "f": 1340,
+      "k": "impact",
+      "x": 540,
+      "y": 700
+    },
+    {
+      "f": 1376,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1470,
+      "k": "spark",
+      "x": 270,
+      "y": 620
+    },
+    {
+      "f": 1500,
+      "k": "spark",
+      "x": 540,
+      "y": 620
+    },
+    {
+      "f": 1530,
+      "k": "spark",
+      "x": 810,
+      "y": 620
+    },
+    {
+      "f": 1574,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1808,
+      "k": "gold",
+      "x": 735,
+      "y": 722
+    },
+    {
+      "f": 1818,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    }
+  ],
+  "risers": [
+    [
+      398,
+      428
+    ]
+  ]
+}
