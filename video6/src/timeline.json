@@ -1,166 +1,166 @@
 {
   "fps": 30,
-  "durationInFrames": 1935,
+  "durationInFrames": 2421,
   "scenes": {
     "s1": [
       0,
-      150
+      202
     ],
     "s2": [
-      150,
-      240
+      202,
+      248
     ],
     "s3": [
-      240,
-      465
+      248,
+      524
     ],
     "s4": [
-      465,
-      570
+      524,
+      608
     ],
     "s5": [
-      570,
-      855
+      608,
+      830
     ],
     "s6": [
-      855,
-      1065
+      830,
+      1026
     ],
     "s7": [
-      1065,
-      1305
+      1026,
+      1490
     ],
     "s8": [
-      1305,
-      1485
+      1490,
+      1674
     ],
     "s9": [
-      1485,
-      1665
+      1674,
+      2012
     ],
     "s10": [
-      1665,
-      1815
+      2012,
+      2206
     ],
     "s11": [
-      1815,
-      1935
+      2206,
+      2421
     ]
   },
   "s1": {
     "phone": 0,
     "buzzEnd": 24,
-    "rollStart": 6,
-    "hit": 40,
-    "msg": 46,
-    "words": 54,
-    "wordStep": 5,
-    "ask": 92,
-    "buttons": 100,
+    "rollStart": 4,
+    "hit": 36,
+    "msg": 78,
+    "words": 12,
+    "wordStep": 12,
+    "ask": 164,
+    "buttons": 169,
     "count": [
-      104,
-      118,
-      132
+      172,
+      182,
+      192
     ],
-    "choose": 140
+    "choose": 198
   },
   "s2": {
-    "text": 156,
-    "rain": 159,
-    "glitch": 217
+    "text": 203,
+    "rain": 204,
+    "glitch": 236
   },
   "s3": {
-    "text": 246,
-    "block": 259,
+    "text": 250,
+    "block": 292,
     "splits": [
-      295,
-      341,
-      385
+      357,
+      447,
+      468
     ],
-    "bold": 411
+    "bold": 416
   },
   "s4": {
-    "label": 473,
-    "boxStart": 481,
-    "boxEnd": 507,
-    "reveal": 509
+    "label": 525,
+    "boxStart": 528,
+    "boxEnd": 552,
+    "reveal": 557
   },
   "s5": {
-    "text": 576,
-    "machine": 583,
-    "inStart": 601,
-    "inEnd": 675,
-    "spinStart": 601,
-    "spinEnd": 815,
-    "outStart": 685,
-    "outEnd": 805,
+    "text": 610,
+    "machine": 614,
+    "inStart": 693,
+    "inEnd": 768,
+    "spinStart": 693,
+    "spinEnd": 822,
+    "outStart": 780,
+    "outEnd": 819,
     "steps": [
-      605,
-      685,
-      750
+      693,
+      729,
+      783
     ]
   },
   "s6": {
-    "text": 861,
-    "zoom": 871,
-    "laranja": 903,
-    "bold": 975
+    "text": 833,
+    "zoom": 846,
+    "laranja": 894,
+    "bold": 919
   },
   "s7": {
     "stamps": [
-      1081,
-      1111,
-      1141
+      1030,
+      1068,
+      1104
     ],
-    "cuffs": 1173,
-    "law1": 1195,
-    "law2": 1223,
-    "bold": 1251
+    "cuffs": 1296,
+    "law1": 1137,
+    "law2": 1321,
+    "bold": 1401
   },
   "s8": {
-    "text": 1311,
-    "scale": 1321,
-    "money": 1335,
-    "reveal": 1385,
-    "bold": 1421
+    "text": 1494,
+    "scale": 1500,
+    "money": 1548,
+    "reveal": 1617,
+    "bold": 1548
   },
   "s9": {
-    "text": 1491,
-    "other": 1497,
+    "text": 1677,
+    "other": 1686,
     "icons": [
-      1515,
-      1545,
-      1575
+      1741,
+      1820,
+      1882
     ],
-    "bold": 1619
+    "bold": 1952
   },
   "s10": {
-    "text": 1671,
-    "noteFall": 1675,
-    "noteLand": 1695,
-    "typeStart": 1705,
-    "framesPerChar": 1.38,
+    "text": 2015,
+    "noteFall": 2018,
+    "noteLand": 2037,
+    "typeStart": 2056,
+    "framesPerChar": 1.903,
     "typeText": "SE O DINHEIRO É FÁCIL DEMAIS,\nALGUÉM VAI PAGAR A CONTA.\nE PODE SER VOCÊ."
   },
   "s11": {
-    "text": 1821,
-    "pill1": 1837,
-    "ou": 1845,
-    "pill2": 1853,
-    "impact": 1863,
-    "fadeStart": 1920
+    "text": 2210,
+    "pill1": 2237,
+    "ou": 2262,
+    "pill2": 2277,
+    "impact": 2312,
+    "fadeStart": 2406
   },
   "coursePill": [
     [
-      165,
-      315
+      129,
+      279
     ],
     [
-      1485,
-      1635
+      1674,
+      1830
     ],
     [
-      1815,
+      2208,
       99999
     ]
   ],
@@ -170,164 +170,224 @@
       ""
     ],
     [
-      156,
-      "PARECE FÁCIL."
+      202,
+      "PARECE DINHEIRO FÁCIL."
     ],
     [
-      185,
-      "DINHEIRO CAINDO."
-    ],
-    [
-      217,
-      "SEM FAZER NADA."
-    ],
-    [
-      246,
+      250,
       "MAS OLHA O CAMINHO."
     ],
     [
-      295,
-      "ENTRA NA SUA CONTA…"
+      292,
+      "O DINHEIRO ENTRA"
     ],
     [
-      341,
-      "E SE ESPALHA."
+      322,
+      "NA SUA CONTA…"
     ],
     [
-      385,
-      "EM SEGUNDOS."
+      352,
+      "E SAI EM SEGUNDOS."
     ],
     [
-      425,
-      "SUMIU O RASTRO."
+      416,
+      "PRA CINCO, QUINZE,"
     ],
     [
-      465,
+      452,
+      "TRINTA CONTAS DIFERENTES."
+    ],
+    [
+      525,
       ""
     ],
     [
-      576,
-      "FUNCIONA ASSIM."
+      557,
+      ""
     ],
     [
-      605,
+      610,
+      "O CRIME PRECISA QUE"
+    ],
+    [
+      642,
+      "O DINHEIRO PAREÇA LIMPO."
+    ],
+    [
+      693,
       "ENTRA SUJO."
     ],
     [
-      685,
-      "RODA, RODA…"
+      723,
+      "RODA POR VÁRIAS CONTAS."
     ],
     [
-      750,
-      "SAI LIMPO."
+      783,
+      "E SAI PARECENDO LEGAL."
     ],
     [
-      805,
-      "PARECE LEGAL."
+      833,
+      "E QUEM EMPRESTA"
     ],
     [
-      861,
-      "E VOCÊ?"
+      865,
+      "A CONTA VIRA O LARANJA."
     ],
     [
-      903,
-      "VOCÊ É O LARANJA."
+      919,
+      "O NOME QUE APARECE"
     ],
     [
-      945,
-      "A PEÇA DO ESQUEMA."
+      957,
+      "É O SEU."
     ],
     [
-      975,
-      "COM SEU NOME."
+      982,
+      "O CPF TAMBÉM."
     ],
     [
-      1020,
-      "COM SEU CPF."
-    ],
-    [
-      1081,
+      1030,
       "CONTA BLOQUEADA."
     ],
     [
-      1111,
+      1068,
       "INVESTIGAÇÃO."
     ],
     [
-      1141,
+      1104,
       "PROCESSO."
     ],
     [
-      1173,
-      "E PODE SER PRISÃO."
+      1137,
+      "DESDE 2026,"
     ],
     [
-      1251,
-      "PELOS DOIS MIL."
+      1150,
+      "CEDER A CONTA"
     ],
     [
-      1311,
-      "POR QUE TANTA GENTE CAI?"
+      1188,
+      "PRA DINHEIRO DO CRIME"
     ],
     [
-      1335,
-      "O CÉREBRO VÊ ISSO…"
+      1240,
+      "PODE DAR"
     ],
     [
-      1385,
-      "E ESQUECE ISSO."
+      1265,
+      "DE 1 A 5 ANOS DE PRISÃO."
     ],
     [
-      1421,
-      "O RISCO PESA MAIS."
+      1321,
+      "SE FOR LAVAGEM,"
     ],
     [
-      1491,
-      "AGORA OLHA ELE."
+      1359,
+      "DE 3 A 10 ANOS."
     ],
     [
-      1515,
-      "CONTA É PESSOAL."
+      1401,
+      "OS DOIS MIL SOMEM."
     ],
     [
-      1545,
-      "FÁCIL DEMAIS? DESCONFIA."
+      1446,
+      "O PROCESSO FICA."
     ],
     [
-      1575,
-      "PIX ESTRANHO? BANCO."
+      1494,
+      "POR QUE"
     ],
     [
-      1619,
-      "SIMPLES ASSIM."
+      1519,
+      "TANTA GENTE CAI?"
     ],
     [
-      1671,
-      "ANOTA AÍ."
+      1548,
+      "O CÉREBRO VÊ"
     ],
     [
-      1710,
-      "MANDA PRA QUEM PRECISA."
+      1582,
+      "OS DOIS MIL AGORA."
     ],
     [
-      1765,
-      "SÉRIO."
+      1610,
+      "E NÃO ENXERGA"
     ],
     [
-      1821,
-      "SEM MENTIR."
+      1638,
+      "O PREÇO DEPOIS."
     ],
     [
-      1837,
-      "QUAL VOCÊ ESCOLHE?"
+      1677,
+      "QUEM PROTEGE"
     ],
     [
-      1875,
-      "COMENTA AQUI."
+      1701,
+      "O NOME FAZ DIFERENTE."
     ],
     [
-      1900,
-      "E COMPARTILHA."
+      1741,
+      "NUNCA EMPRESTA CONTA"
+    ],
+    [
+      1802,
+      "NEM CPF."
+    ],
+    [
+      1820,
+      "DESCONFIA DE DINHEIRO FÁCIL."
+    ],
+    [
+      1882,
+      "PIX ESTRANHO?"
+    ],
+    [
+      1914,
+      "FALA COM O BANCO."
+    ],
+    [
+      1952,
+      "DINHEIRO FÁCIL TEM DONO."
+    ],
+    [
+      2015,
+      "GUARDA ESSA REGRA:"
+    ],
+    [
+      2056,
+      "SE O DINHEIRO"
+    ],
+    [
+      2083,
+      "É FÁCIL DEMAIS,"
+    ],
+    [
+      2110,
+      "ALGUÉM VAI PAGAR"
+    ],
+    [
+      2137,
+      "A CONTA."
+    ],
+    [
+      2164,
+      "E PODE SER VOCÊ."
+    ],
+    [
+      2210,
+      "E VOCÊ?"
+    ],
+    [
+      2237,
+      "PEGA OS DOIS MIL,"
+    ],
+    [
+      2264,
+      "OU PROTEGE SEU NOME?"
+    ],
+    [
+      2312,
+      "COMENTA AQUI EMBAIXO."
     ]
   ],
   "fx": [
@@ -338,205 +398,175 @@
       "y": 760
     },
     {
-      "f": 40,
+      "f": 36,
       "k": "gold",
       "x": 540,
       "y": 720
     },
     {
-      "f": 40,
+      "f": 36,
       "k": "impact",
       "x": 540,
       "y": 720
     },
     {
-      "f": 92,
+      "f": 164,
       "k": "impact",
       "x": 540,
-      "y": 520
+      "y": 1040
     },
     {
-      "f": 104,
-      "k": "spark",
-      "x": 540,
-      "y": 1250
-    },
-    {
-      "f": 118,
-      "k": "spark",
-      "x": 540,
-      "y": 1250
-    },
-    {
-      "f": 132,
-      "k": "spark",
-      "x": 540,
-      "y": 1250
-    },
-    {
-      "f": 159,
+      "f": 204,
       "k": "gold",
       "x": 540,
       "y": 700
     },
     {
-      "f": 259,
+      "f": 292,
       "k": "gold",
       "x": 540,
-      "y": 820
+      "y": 800
     },
     {
-      "f": 295,
+      "f": 357,
       "k": "spark",
       "x": 540,
-      "y": 820
+      "y": 800
     },
     {
-      "f": 341,
-      "k": "spark",
-      "x": 540,
-      "y": 820
-    },
-    {
-      "f": 385,
-      "k": "spark",
-      "x": 540,
-      "y": 820
-    },
-    {
-      "f": 411,
+      "f": 416,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 509,
+      "f": 447,
+      "k": "spark",
+      "x": 540,
+      "y": 800
+    },
+    {
+      "f": 468,
+      "k": "spark",
+      "x": 540,
+      "y": 800
+    },
+    {
+      "f": 557,
       "k": "impact",
       "x": 540,
       "y": 715
     },
     {
-      "f": 509,
+      "f": 557,
       "k": "spark",
       "x": 540,
       "y": 715
     },
     {
-      "f": 705,
+      "f": 800,
       "k": "gold",
       "x": 860,
       "y": 640
     },
     {
-      "f": 745,
+      "f": 817,
       "k": "gold",
       "x": 880,
       "y": 620
     },
     {
-      "f": 785,
-      "k": "gold",
-      "x": 860,
-      "y": 640
-    },
-    {
-      "f": 903,
+      "f": 894,
       "k": "impact",
       "x": 540,
-      "y": 660
+      "y": 600
     },
     {
-      "f": 903,
+      "f": 894,
       "k": "spark",
       "x": 540,
-      "y": 660
+      "y": 600
     },
     {
-      "f": 975,
+      "f": 919,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1081,
+      "f": 1030,
       "k": "impact",
       "x": 540,
       "y": 580
     },
     {
-      "f": 1111,
+      "f": 1068,
       "k": "impact",
       "x": 540,
       "y": 680
     },
     {
-      "f": 1141,
+      "f": 1104,
       "k": "impact",
       "x": 540,
       "y": 780
     },
     {
-      "f": 1173,
+      "f": 1296,
       "k": "impact",
       "x": 540,
-      "y": 960
+      "y": 1030
     },
     {
-      "f": 1251,
+      "f": 1401,
       "k": "impact",
       "x": 540,
-      "y": 1430
+      "y": 1410
     },
     {
-      "f": 1335,
+      "f": 1548,
       "k": "gold",
       "x": 330,
       "y": 800
     },
     {
-      "f": 1385,
+      "f": 1617,
       "k": "impact",
       "x": 540,
       "y": 700
     },
     {
-      "f": 1421,
-      "k": "impact",
-      "x": 540,
-      "y": 1400
-    },
-    {
-      "f": 1515,
+      "f": 1741,
       "k": "spark",
       "x": 270,
       "y": 620
     },
     {
-      "f": 1545,
+      "f": 1820,
       "k": "spark",
       "x": 540,
       "y": 620
     },
     {
-      "f": 1575,
+      "f": 1882,
       "k": "spark",
       "x": 810,
       "y": 620
     },
     {
-      "f": 1619,
+      "f": 1952,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1853,
+      "f": 2277,
       "k": "gold",
       "x": 735,
       "y": 722
     },
     {
-      "f": 1863,
+      "f": 2312,
       "k": "impact",
       "x": 540,
       "y": 422
@@ -544,8 +574,8 @@
   ],
   "risers": [
     [
-      443,
-      473
+      498,
+      525
     ]
   ]
 }

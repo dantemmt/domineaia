@@ -266,7 +266,7 @@ const glitch = (t, dur = 0.22, amp = 0.28) => {
   impact(fr(s1.ask), 1.0);
   pop(fr(s1.buttons), 0.3);
   // coração acelerado durante a escolha + bipes da contagem subindo
-  for (let k = 0; k < 6; k++) {
+  for (let k = 0; k < 3; k++) {
     const tt = fr(s1.buttons) + k * 0.32;
     tone(sfx, tt, 0.2, 70, 0.4, { freqEnd: 45, attack: 0.004, decay: 0.06 });
     tone(sfx, tt + 0.13, 0.2, 60, 0.25, { freqEnd: 40, attack: 0.004, decay: 0.05 });
