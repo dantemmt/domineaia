@@ -1,6 +1,6 @@
 # Vídeo 5 — "Você tem 4 dívidas e R$ 300 sobrando. Qual você paga primeiro?"
 
-Vídeo vertical 1080x1920, 30fps, 63s (sem voz), feito em Remotion. Tema: método bola de neve para sair das dívidas.
+Narração em `public/narracao.mp3` (voz Drew); timeline reajustada para acompanhar a voz (82s), legendas seguem a fala. Vídeo vertical 1080x1920, 30fps, feito em Remotion. Tema: método bola de neve para sair das dívidas.
 Trilha e efeitos 100% sintetizados (90 BPM, Ré menor, tique-taque de tensão até a resposta, piano de alívio depois).
 
 Contas do exemplo (sem juros): mínimos R$ 60 + 90 + 240 + 280 = R$ 670 + R$ 300 extra = R$ 970/mês.

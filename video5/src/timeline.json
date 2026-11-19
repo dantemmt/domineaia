@@ -1,149 +1,149 @@
 {
   "fps": 30,
-  "durationInFrames": 1890,
+  "durationInFrames": 2466,
   "scenes": {
     "s1": [
       0,
-      105
+      160
     ],
     "s2": [
-      105,
-      195
+      160,
+      322
     ],
     "s3": [
-      195,
-      405
+      322,
+      648
     ],
     "s4": [
-      405,
-      525
+      648,
+      714
     ],
     "s5": [
-      525,
-      735
+      714,
+      966
     ],
     "s6": [
-      735,
-      1035
+      966,
+      1308
     ],
     "s7": [
-      1035,
-      1215
+      1308,
+      1614
     ],
     "s8": [
-      1215,
-      1365
+      1614,
+      1899
     ],
     "s9": [
-      1365,
-      1545
+      1899,
+      2061
     ],
     "s10": [
-      1545,
-      1725
+      2061,
+      2264
     ],
     "s11": [
-      1725,
-      1890
+      2264,
+      2466
     ]
   },
   "s1": {
     "cards": [
       6,
-      14,
-      22,
-      30
+      12,
+      18,
+      24
     ],
-    "question": 38
+    "question": 2
   },
   "s2": {
-    "text": 111,
-    "spot": 126
+    "text": 164,
+    "spot": 238
   },
   "s3": {
-    "text": 201,
-    "bar": 208,
-    "coin": 226,
-    "coinLand": 246,
-    "shrinkEnd": 276,
-    "month": 282,
-    "bold": 336
+    "text": 326,
+    "bar": 330,
+    "coin": 345,
+    "coinLand": 366,
+    "shrinkEnd": 405,
+    "month": 449,
+    "bold": 558
   },
   "s4": {
-    "answerLabel": 411,
-    "answer": 420,
-    "glow": 432
+    "answerLabel": 652,
+    "answer": 685,
+    "glow": 693
   },
   "s5": {
-    "text": 531,
-    "card": 538,
-    "pourStart": 552,
-    "pourEnd": 592,
-    "stamp": 600,
-    "brain": 630,
-    "bold": 672
+    "text": 717,
+    "card": 720,
+    "pourStart": 738,
+    "pourEnd": 795,
+    "stamp": 861,
+    "brain": 888,
+    "bold": 896
   },
   "s6": {
-    "text": 741,
-    "rollStart": 768,
+    "text": 970,
+    "rollStart": 1116,
     "hits": [
-      800,
-      880,
-      960
+      1179,
+      1194,
+      1203
     ],
-    "rollEnd": 990,
-    "bold": 998,
-    "note": 1012
+    "rollEnd": 1218,
+    "bold": 1238,
+    "note": 1254
   },
   "s7": {
-    "text": 1041,
-    "boxStart": 1055,
-    "boxEnd": 1090,
-    "reveal": 1093,
-    "study": 1125
+    "text": 1311,
+    "boxStart": 1320,
+    "boxEnd": 1341,
+    "reveal": 1342,
+    "study": 1396
   },
   "s8": {
-    "text": 1221,
-    "card": 1232,
-    "bold": 1290
+    "text": 1617,
+    "card": 1652,
+    "bold": 1823
   },
   "s9": {
-    "text": 1371,
+    "text": 1903,
     "steps": [
-      1392,
-      1418,
-      1444,
-      1470
+      1920,
+      1938,
+      1956,
+      1974
     ],
-    "bold": 1500
+    "bold": 1984
   },
   "s10": {
-    "text": 1551,
-    "noteFall": 1555,
-    "noteLand": 1575,
-    "typeStart": 1588,
-    "framesPerChar": 1.6,
+    "text": 2064,
+    "noteFall": 2067,
+    "noteLand": 2085,
+    "typeStart": 2101,
+    "framesPerChar": 2.014,
     "typeText": "PAGUE O MÍNIMO EM TODAS.\nJOGUE O RESTO NA MENOR.\nACABOU? ROLA PRA PRÓXIMA."
   },
   "s11": {
-    "text": 1731,
-    "pill1": 1752,
-    "ou": 1760,
-    "pill2": 1768,
-    "impact": 1780,
-    "fadeStart": 1875
+    "text": 2268,
+    "pill1": 2291,
+    "ou": 2313,
+    "pill2": 2322,
+    "impact": 2354,
+    "fadeStart": 2451
   },
   "coursePill": [
     [
-      120,
-      270
+      209,
+      397
     ],
     [
-      1365,
-      1515
+      1899,
+      2009
     ],
     [
-      1725,
+      2264,
       99999
     ]
   ],
@@ -153,333 +153,409 @@
       ""
     ],
     [
-      111,
-      "PENSA RÁPIDO."
+      164,
+      "QUASE TODO MUNDO"
     ],
     [
-      140,
-      "A MAIOR DÁ MAIS MEDO."
+      198,
+      "ESCOLHE A MAIOR."
     ],
     [
-      170,
+      237,
+      "DÁ MAIS MEDO,"
+    ],
+    [
+      259,
       "ENTÃO VOCÊ ATACA ELA."
     ],
     [
-      201,
-      "VOCÊ PAGA…"
+      326,
+      "VOCÊ PAGA, PAGA…"
     ],
     [
-      236,
-      "E PAGA…"
+      387,
+      "E A BARRA"
     ],
     [
-      282,
-      "UM MÊS DEPOIS…"
+      411,
+      "MAL SE MEXE."
     ],
     [
-      310,
-      "FALTA QUASE TUDO."
+      449,
+      "UM MÊS DEPOIS,"
     ],
     [
-      336,
-      "E A VONTADE SOME."
+      475,
+      "AINDA FALTAM"
     ],
     [
-      370,
-      "VOCÊ DESISTE."
+      506,
+      "DOIS MIL E QUATROCENTOS."
     ],
     [
-      405,
+      558,
+      "SEM NENHUMA VITÓRIA,"
+    ],
+    [
+      601,
+      "A MAIORIA DESISTE."
+    ],
+    [
+      652,
       ""
     ],
     [
-      531,
-      "OLHA ISSO."
+      685,
+      ""
     ],
     [
-      552,
-      "TREZENTOS NA MENOR."
+      717,
+      "TREZENTOS REAIS NA DÍVIDA"
     ],
     [
-      600,
+      759,
+      "DE CENTO E OITENTA."
+    ],
+    [
+      806,
+      "EM UM MÊS,"
+    ],
+    [
+      826,
+      "ELA SOME."
+    ],
+    [
+      861,
       "QUITADA."
     ],
     [
-      630,
-      "PRIMEIRA VITÓRIA."
+      891,
+      "E O SEU CÉREBRO"
     ],
     [
-      672,
-      "E O CÉREBRO GOSTA."
+      920,
+      "SENTE QUE ESTÁ GANHANDO."
     ],
     [
-      705,
-      "QUER MAIS."
-    ],
-    [
-      741,
+      970,
       "AGORA VEM O TRUQUE."
     ],
     [
-      768,
-      "O DINHEIRO ROLA."
+      1016,
+      "O QUE VOCÊ PAGAVA"
     ],
     [
-      800,
-      "CELULAR. FOI."
+      1058,
+      "NA DÍVIDA QUE ACABOU,"
     ],
     [
-      880,
-      "CARTÃO. FOI."
+      1115,
+      "VAI PRA PRÓXIMA."
     ],
     [
-      960,
-      "EMPRÉSTIMO. FOI."
+      1153,
+      "A BOLA CRESCE."
     ],
     [
-      998,
+      1179,
+      "CELULAR."
+    ],
+    [
+      1194,
+      "CARTÃO."
+    ],
+    [
+      1203,
+      "EMPRÉSTIMO."
+    ],
+    [
+      1238,
+      "QUATRO DÍVIDAS,"
+    ],
+    [
+      1272,
       "SETE MESES."
     ],
     [
-      1041,
-      "ISSO TEM NOME."
+      1311,
+      "ISSO TEM NOME:"
     ],
     [
-      1093,
-      "BOLA DE NEVE."
+      1342,
+      "MÉTODO BOLA DE NEVE."
     ],
     [
-      1125,
-      "E FOI ESTUDADO."
+      1396,
+      "UM ESTUDO"
     ],
     [
-      1165,
-      "SEIS MIL PESSOAS."
+      1428,
+      "DA KELLOGG"
     ],
     [
-      1190,
-      "FUNCIONA."
+      1446,
+      "COM SEIS MIL PESSOAS:"
     ],
     [
-      1221,
-      "MAS ATENÇÃO."
+      1493,
+      "QUEM QUITAVA"
     ],
     [
-      1250,
-      "ROTATIVO. CHEQUE ESPECIAL."
+      1520,
+      "AS MENORES PRIMEIRO"
     ],
     [
-      1290,
-      "ESSES VÊM PRIMEIRO."
+      1563,
+      "TINHA MAIS CHANCE"
     ],
     [
-      1330,
-      "NEGOCIA."
+      1584,
+      "DE ZERAR TUDO."
     ],
     [
-      1371,
-      "OLHA A ESCADA."
+      1617,
+      "SÓ UMA EXCEÇÃO:"
     ],
     [
-      1392,
-      "UM DEGRAU."
+      1652,
+      "ROTATIVO DO CARTÃO"
     ],
     [
-      1418,
-      "DOIS."
+      1688,
+      "E CHEQUE ESPECIAL."
     ],
     [
-      1444,
-      "TRÊS."
+      1730,
+      "OS JUROS PASSAM"
     ],
     [
-      1470,
-      "QUATRO."
+      1756,
+      "DE QUATROCENTOS"
     ],
     [
-      1500,
-      "LIVRE."
+      1782,
+      "POR CENTO AO ANO."
     ],
     [
-      1551,
-      "ANOTA AÍ."
+      1823,
+      "ESSES VOCÊ NEGOCIA"
     ],
     [
-      1590,
-      "PRINTA ISSO."
+      1863,
+      "ANTES DE TUDO."
     ],
     [
-      1640,
-      "LÊ COMIGO."
+      1903,
+      "QUEM SAI"
     ],
     [
-      1690,
-      "SIMPLES ASSIM."
+      1921,
+      "DAS DÍVIDAS"
     ],
     [
-      1731,
-      "SEM MENTIR."
+      1946,
+      "NÃO É QUEM GANHA MAIS."
     ],
     [
-      1752,
-      "QUAL VOCÊ FAZ?"
+      1984,
+      "É QUEM COMEÇA PELA"
     ],
     [
-      1790,
-      "COMENTA AQUI."
+      2021,
+      "VITÓRIA MAIS PERTO."
     ],
     [
-      1835,
-      "E SALVA PRA DEPOIS."
+      2064,
+      "GUARDA ESSA REGRA:"
+    ],
+    [
+      2101,
+      "PAGUE O MÍNIMO"
+    ],
+    [
+      2131,
+      "EM TODAS."
+    ],
+    [
+      2154,
+      "JOGUE O RESTO"
+    ],
+    [
+      2179,
+      "NA MENOR."
+    ],
+    [
+      2203,
+      "ACABOU?"
+    ],
+    [
+      2226,
+      "ROLA PRA PRÓXIMA."
+    ],
+    [
+      2268,
+      "E VOCÊ?"
+    ],
+    [
+      2291,
+      "ATACA A MAIOR"
+    ],
+    [
+      2321,
+      "OU QUITA A MENOR?"
+    ],
+    [
+      2354,
+      "COMENTA AQUI EMBAIXO."
     ]
   ],
   "fx": [
     {
-      "f": 38,
+      "f": 2,
       "k": "impact",
       "x": 540,
       "y": 400
     },
     {
-      "f": 126,
+      "f": 238,
       "k": "spark",
       "x": 840,
       "y": 680
     },
     {
-      "f": 246,
+      "f": 366,
       "k": "gold",
       "x": 540,
       "y": 675
     },
     {
-      "f": 336,
+      "f": 558,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 420,
+      "f": 685,
       "k": "impact",
       "x": 540,
       "y": 470
     },
     {
-      "f": 432,
+      "f": 693,
       "k": "gold",
       "x": 240,
       "y": 680
     },
     {
-      "f": 600,
+      "f": 861,
       "k": "gold",
       "x": 540,
       "y": 720
     },
     {
-      "f": 600,
+      "f": 861,
       "k": "impact",
       "x": 540,
       "y": 720
     },
     {
-      "f": 630,
+      "f": 888,
       "k": "spark",
       "x": 540,
       "y": 720
     },
     {
-      "f": 672,
+      "f": 896,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 800,
+      "f": 1179,
       "k": "gold",
       "x": 330,
       "y": 1090
     },
     {
-      "f": 880,
+      "f": 1194,
       "k": "gold",
       "x": 580,
       "y": 1090
     },
     {
-      "f": 960,
+      "f": 1203,
       "k": "gold",
       "x": 830,
       "y": 1090
     },
     {
-      "f": 998,
+      "f": 1238,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1093,
+      "f": 1342,
       "k": "impact",
       "x": 540,
       "y": 715
     },
     {
-      "f": 1093,
+      "f": 1342,
       "k": "spark",
       "x": 540,
       "y": 715
     },
     {
-      "f": 1232,
+      "f": 1652,
       "k": "spark",
       "x": 540,
       "y": 760
     },
     {
-      "f": 1290,
+      "f": 1823,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1392,
+      "f": 1920,
       "k": "spark",
       "x": 265,
       "y": 1080
     },
     {
-      "f": 1418,
+      "f": 1938,
       "k": "spark",
       "x": 435,
       "y": 1010
     },
     {
-      "f": 1444,
+      "f": 1956,
       "k": "spark",
       "x": 605,
       "y": 940
     },
     {
-      "f": 1470,
+      "f": 1974,
       "k": "gold",
       "x": 775,
       "y": 870
     },
     {
-      "f": 1500,
+      "f": 1984,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1768,
+      "f": 2322,
       "k": "gold",
       "x": 735,
       "y": 722
     },
     {
-      "f": 1780,
+      "f": 2354,
       "k": "impact",
       "x": 540,
       "y": 422
@@ -487,8 +563,8 @@
   ],
   "risers": [
     [
-      380,
-      420
+      606,
+      652
     ]
   ]
 }

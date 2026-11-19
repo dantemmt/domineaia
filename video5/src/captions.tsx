@@ -15,6 +15,7 @@ export const Captions: React.FC = () => {
   for (let i = 0; i < CAPS.length; i++) if (CAPS[i][0] <= frame) idx = i;
   if (idx < 0 || frame >= END) return null;
   const [start, text] = CAPS[idx];
+  if (!text) return null;
   const words = text.split(' ');
   const sweep = Math.min(1, Math.max(0, (frame - start) / 7));
   const ease = 1 - Math.pow(1 - sweep, 3);
