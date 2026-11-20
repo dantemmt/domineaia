@@ -1,157 +1,157 @@
 {
   "fps": 30,
-  "durationInFrames": 1890,
+  "durationInFrames": 2475,
   "scenes": {
     "s1": [
       0,
-      150
+      104
     ],
     "s2": [
-      150,
-      240
+      104,
+      192
     ],
     "s3": [
-      240,
-      480
+      192,
+      472
     ],
     "s4": [
-      480,
-      600
+      472,
+      672
     ],
     "s5": [
-      600,
-      810
+      672,
+      1170
     ],
     "s6": [
-      810,
-      1020
+      1170,
+      1466
     ],
     "s7": [
-      1020,
-      1260
+      1466,
+      1760
     ],
     "s8": [
-      1260,
-      1440
+      1760,
+      1992
     ],
     "s9": [
-      1440,
-      1620
+      1992,
+      2073
     ],
     "s10": [
-      1620,
-      1770
+      2073,
+      2264
     ],
     "s11": [
-      1770,
-      1890
+      2264,
+      2475
     ]
   },
   "s1": {
     "cal": 0,
-    "calHit": 16,
-    "gift": 26,
-    "burst": 50,
-    "label": 58,
-    "words": 62,
-    "wordStep": 6,
-    "drainStart": 72
+    "calHit": 10,
+    "gift": 16,
+    "burst": 34,
+    "label": 42,
+    "words": 3,
+    "wordStep": 5,
+    "drainStart": 50
   },
   "s2": {
-    "text": 156,
-    "glitch": 205
+    "text": 107,
+    "glitch": 177
   },
   "s3": {
-    "text": 246,
-    "total": 252,
+    "text": 196,
+    "total": 198,
     "items": [
-      276,
-      306,
-      336,
-      366,
-      396
+      236,
+      267,
+      300,
+      332,
+      364
     ],
-    "cal": 420,
-    "bold": 428
+    "cal": 399,
+    "bold": 408
   },
   "s4": {
-    "label": 486,
-    "answer": 494,
-    "sub": 530
+    "label": 476,
+    "answer": 511,
+    "sub": 608
   },
   "s5": {
-    "text": 606,
-    "boxStart": 616,
-    "boxEnd": 646,
-    "reveal": 648,
-    "jars": 682,
-    "study": 724,
-    "bold": 766
+    "text": 676,
+    "boxStart": 684,
+    "boxEnd": 705,
+    "reveal": 709,
+    "jars": 775,
+    "study": 866,
+    "bold": 1094
   },
   "s6": {
-    "text": 816,
-    "cal": 826,
+    "text": 1174,
+    "cal": 1188,
     "stamps": [
-      850,
-      878,
-      906,
-      934
+      1223,
+      1269,
+      1312,
+      1355
     ],
-    "bold": 966
+    "bold": 1402
   },
   "s7": {
-    "text": 1026,
-    "stack": 1034,
-    "split": 1066,
+    "text": 1468,
+    "stack": 1479,
+    "split": 1530,
     "fills": [
-      1080,
-      1110,
-      1140
+      1548,
+      1628,
+      1681
     ],
-    "bold": 1196
+    "bold": 1728
   },
   "s8": {
-    "text": 1266,
+    "text": 1763,
     "items": [
-      1286,
-      1318,
-      1350,
-      1382
+      1808,
+      1857,
+      1902,
+      1940
     ]
   },
   "s9": {
-    "text": 1446,
-    "left": 1460,
-    "right": 1490,
-    "bold": 1540
+    "text": 1994,
+    "left": 1995,
+    "right": 2007,
+    "bold": 1998
   },
   "s10": {
-    "text": 1626,
-    "noteFall": 1630,
-    "noteLand": 1650,
-    "typeStart": 1660,
-    "framesPerChar": 1.18,
+    "text": 2078,
+    "noteFall": 2079,
+    "noteLand": 2097,
+    "typeStart": 2115,
+    "framesPerChar": 1.901,
     "typeText": "DINHEIRO EXTRA NÃO É\nDINHEIRO GRÁTIS.\nDÊ UM DESTINO ANTES\nQUE ELE CAIA."
   },
   "s11": {
-    "text": 1776,
-    "pill1": 1792,
-    "ou": 1800,
-    "pill2": 1808,
-    "impact": 1818,
-    "fadeStart": 1875
+    "text": 2267,
+    "pill1": 2291,
+    "ou": 2316,
+    "pill2": 2331,
+    "impact": 2365,
+    "fadeStart": 2460
   },
   "coursePill": [
     [
-      120,
-      270
+      129,
+      279
     ],
     [
-      1440,
-      1590
+      1760,
+      1905
     ],
     [
-      1770,
+      2264,
       99999
     ]
   ],
@@ -161,383 +161,419 @@
       ""
     ],
     [
-      156,
-      "TODO ANO É IGUAL."
+      107,
+      "TODO ANO VOCÊ JURA"
     ],
     [
-      186,
-      "\"ESSE ANO VAI SER DIFERENTE.\""
+      148,
+      "QUE VAI SER DIFERENTE."
     ],
     [
-      214,
-      "NÃO É."
+      196,
+      "OLHA PRA ONDE"
     ],
     [
-      246,
-      "OLHA PRA ONDE ELE VAI."
+      212,
+      "ELE VAI."
     ],
     [
-      276,
+      236,
       "PRESENTES."
     ],
     [
-      306,
+      267,
       "A CEIA."
     ],
     [
-      336,
+      300,
       "ROUPA NOVA."
     ],
     [
-      366,
+      332,
       "A VIAGEM."
     ],
     [
-      396,
+      364,
       "AS COMPRINHAS."
     ],
     [
-      428,
-      "ZERO."
+      408,
+      "ANTES DO NATAL, ACABOU."
     ],
     [
-      455,
-      "EM DEZEMBRO."
-    ],
-    [
-      480,
+      476,
       ""
     ],
     [
-      606,
-      "ISSO TEM NOME."
+      511,
+      ""
     ],
     [
-      648,
-      "DINHEIRO DA CASA."
+      608,
+      ""
     ],
     [
-      690,
+      676,
+      ""
+    ],
+    [
+      709,
+      ""
+    ],
+    [
+      775,
       "O SALÁRIO TEM DONO."
     ],
     [
-      724,
+      818,
       "O BÔNUS, NÃO."
     ],
     [
-      766,
+      866,
+      "NUM EXPERIMENTO,"
+    ],
+    [
+      897,
+      "QUEM RECEBEU O DINHEIRO"
+    ],
+    [
+      942,
+      "CHAMADO DE BÔNUS"
+    ],
+    [
+      978,
+      "GASTOU MAIS"
+    ],
+    [
+      993,
+      "DO QUE QUEM RECEBEU"
+    ],
+    [
+      1017,
+      "O MESMO VALOR"
+    ],
+    [
+      1038,
+      "CHAMADO DE DEVOLUÇÃO."
+    ],
+    [
+      1094,
       "MESMO DINHEIRO."
     ],
     [
-      790,
+      1127,
       "RÓTULO DIFERENTE."
     ],
     [
-      816,
-      "AÍ VIRA O ANO."
+      1174,
+      "E AÍ CHEGA JANEIRO."
     ],
     [
-      850,
+      1223,
       "IPVA."
     ],
     [
-      878,
+      1269,
       "IPTU."
     ],
     [
-      906,
+      1312,
       "MATERIAL ESCOLAR."
     ],
     [
-      934,
+      1355,
       "A FATURA DO NATAL."
     ],
     [
-      966,
-      "E O 13º? JÁ ERA."
+      1402,
+      "COM O 13º JÁ GASTO."
     ],
     [
-      1026,
-      "AGORA OLHA ELE."
+      1468,
+      "QUEM ACUMULA DIVIDE"
     ],
     [
-      1066,
-      "DIVIDE ANTES."
+      1512,
+      "ANTES DE GASTAR."
     ],
     [
-      1080,
-      "METADE PRO QUE VEM."
+      1548,
+      "METADE PRAS DÍVIDAS"
     ],
     [
-      1110,
-      "UM PEDAÇO GUARDADO."
+      1585,
+      "E PRAS CONTAS DE JANEIRO."
     ],
     [
-      1140,
-      "E O RESTO É PRA CURTIR."
+      1628,
+      "30% PRA RESERVA."
     ],
     [
-      1196,
+      1681,
+      "E 20% PRA CURTIR,"
+    ],
+    [
+      1722,
       "SEM CULPA."
     ],
     [
-      1266,
+      1763,
       "A ORDEM IMPORTA."
     ],
     [
-      1286,
+      1808,
       "PRIMEIRO, O JURO CARO."
     ],
     [
-      1318,
+      1857,
       "DEPOIS, JANEIRO."
     ],
     [
-      1350,
+      1902,
       "AÍ A RESERVA."
     ],
     [
-      1382,
-      "E SÓ ENTÃO, A FESTA."
+      1940,
+      "E SÓ ENTÃO,"
     ],
     [
-      1446,
-      "COMPARA OS DOIS."
+      1968,
+      "A FESTA."
     ],
     [
-      1460,
-      "JANEIRO NO VERMELHO."
-    ],
-    [
-      1490,
-      "JANEIRO EM PAZ."
-    ],
-    [
-      1540,
+      1996,
       "MESMO 13º."
     ],
     [
-      1575,
+      2046,
       "OUTRO ANO."
     ],
     [
-      1626,
-      "ANOTA AÍ."
+      2078,
+      "GUARDA ESSA REGRA:"
     ],
     [
-      1665,
-      "MANDA PRA QUEM VAI RECEBER."
+      2115,
+      "DINHEIRO EXTRA"
     ],
     [
-      1725,
-      "ESSA SEMANA."
+      2152,
+      "NÃO É DINHEIRO GRÁTIS."
     ],
     [
-      1776,
-      "SEM MENTIR."
+      2197,
+      "DÊ UM DESTINO"
     ],
     [
-      1792,
-      "QUAL VAI SER O SEU?"
+      2232,
+      "ANTES QUE ELE CAIA."
     ],
     [
-      1830,
-      "COMENTA AQUI."
+      2267,
+      "E VOCÊ?"
     ],
     [
-      1855,
-      "E SALVA PRA DIA 30."
+      2291,
+      "GASTA ATÉ O NATAL,"
+    ],
+    [
+      2325,
+      "OU DIVIDE ANTES?"
+    ],
+    [
+      2365,
+      "COMENTA AQUI EMBAIXO."
     ]
   ],
   "fx": [
     {
-      "f": 16,
-      "k": "impact",
-      "x": 540,
-      "y": 600
-    },
-    {
-      "f": 50,
-      "k": "gold",
-      "x": 540,
-      "y": 820
-    },
-    {
-      "f": 50,
-      "k": "impact",
-      "x": 540,
-      "y": 820
-    },
-    {
-      "f": 62,
+      "f": 3,
       "k": "impact",
       "x": 540,
       "y": 400
     },
     {
-      "f": 276,
+      "f": 10,
+      "k": "impact",
+      "x": 540,
+      "y": 600
+    },
+    {
+      "f": 34,
+      "k": "gold",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 34,
+      "k": "impact",
+      "x": 540,
+      "y": 820
+    },
+    {
+      "f": 236,
       "k": "gold",
       "x": 230,
       "y": 900
     },
     {
-      "f": 306,
+      "f": 267,
       "k": "gold",
       "x": 850,
       "y": 900
     },
     {
-      "f": 336,
+      "f": 300,
       "k": "gold",
       "x": 230,
       "y": 900
     },
     {
-      "f": 366,
+      "f": 332,
       "k": "gold",
       "x": 850,
       "y": 900
     },
     {
-      "f": 396,
+      "f": 364,
       "k": "gold",
       "x": 540,
       "y": 900
     },
     {
-      "f": 428,
+      "f": 408,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 494,
+      "f": 511,
       "k": "impact",
       "x": 540,
-      "y": 520
+      "y": 540
     },
     {
-      "f": 494,
+      "f": 511,
       "k": "spark",
       "x": 540,
-      "y": 520
+      "y": 540
     },
     {
-      "f": 648,
+      "f": 709,
       "k": "impact",
       "x": 540,
       "y": 590
     },
     {
-      "f": 766,
+      "f": 1094,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 850,
+      "f": 1223,
       "k": "impact",
       "x": 540,
-      "y": 620
+      "y": 830
     },
     {
-      "f": 878,
+      "f": 1269,
       "k": "impact",
       "x": 540,
-      "y": 710
+      "y": 922
     },
     {
-      "f": 906,
+      "f": 1312,
       "k": "impact",
       "x": 540,
-      "y": 800
+      "y": 1014
     },
     {
-      "f": 934,
+      "f": 1355,
       "k": "impact",
       "x": 540,
-      "y": 890
+      "y": 1106
     },
     {
-      "f": 966,
+      "f": 1402,
       "k": "impact",
       "x": 540,
       "y": 1400
     },
     {
-      "f": 1066,
+      "f": 1530,
       "k": "gold",
       "x": 540,
-      "y": 760
+      "y": 600
     },
     {
-      "f": 1080,
+      "f": 1548,
       "k": "gold",
       "x": 250,
       "y": 980
     },
     {
-      "f": 1110,
+      "f": 1628,
       "k": "gold",
       "x": 540,
       "y": 980
     },
     {
-      "f": 1140,
+      "f": 1681,
       "k": "gold",
       "x": 830,
       "y": 980
     },
     {
-      "f": 1196,
+      "f": 1728,
       "k": "impact",
       "x": 540,
-      "y": 1400
-    },
-    {
-      "f": 1286,
-      "k": "spark",
-      "x": 180,
-      "y": 620
-    },
-    {
-      "f": 1318,
-      "k": "spark",
-      "x": 180,
-      "y": 740
-    },
-    {
-      "f": 1350,
-      "k": "spark",
-      "x": 180,
-      "y": 860
-    },
-    {
-      "f": 1382,
-      "k": "spark",
-      "x": 180,
-      "y": 980
-    },
-    {
-      "f": 1490,
-      "k": "gold",
-      "x": 800,
-      "y": 900
-    },
-    {
-      "f": 1540,
-      "k": "impact",
-      "x": 540,
-      "y": 1400
+      "y": 1420
     },
     {
       "f": 1808,
+      "k": "spark",
+      "x": 172,
+      "y": 610
+    },
+    {
+      "f": 1857,
+      "k": "spark",
+      "x": 172,
+      "y": 735
+    },
+    {
+      "f": 1902,
+      "k": "spark",
+      "x": 172,
+      "y": 860
+    },
+    {
+      "f": 1940,
+      "k": "spark",
+      "x": 172,
+      "y": 985
+    },
+    {
+      "f": 1998,
+      "k": "impact",
+      "x": 540,
+      "y": 1420
+    },
+    {
+      "f": 2007,
+      "k": "gold",
+      "x": 810,
+      "y": 900
+    },
+    {
+      "f": 2331,
       "k": "gold",
       "x": 735,
       "y": 722
     },
     {
-      "f": 1818,
+      "f": 2365,
       "k": "impact",
       "x": 540,
       "y": 422
@@ -545,8 +581,8 @@
   ],
   "risers": [
     [
-      456,
-      486
+      447,
+      476
     ]
   ]
 }

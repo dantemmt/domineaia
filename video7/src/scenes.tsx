@@ -100,7 +100,7 @@ export const Scene1: React.FC = () => {
   return (
     <SceneFrame start={T.scenes.s1[0]} duration={dur('s1')} ground={false}>
       {/* calendário */}
-      <div style={{ position: 'absolute', inset: 0, opacity: interpolate(f, [T1.words - 6, T1.words + 4], [1, 0], clamp), transform: `translate(${calUp * 300}px, ${calUp * -120}px) scale(${1 - calUp * 0.55})`, transformOrigin: '540px 600px' }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: interpolate(f, [T1.burst, T1.burst + 8], [1, 0], clamp), transform: `translate(${calUp * 300}px, ${calUp * -120}px) scale(${1 - calUp * 0.55})`, transformOrigin: '540px 600px' }}>
         <CalPage x={540} y={470} month="NOV" day={String(days[di])} s={1 + hit * 0.12 * Math.exp(-(f - T1.calHit) / 8)} flip={f < T1.calHit ? (f % 2) * 0.35 : 0} />
       </div>
       {/* raios dourados quando o presente abre */}
