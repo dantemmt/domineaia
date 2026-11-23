@@ -1,0 +1,526 @@
+{
+  "fps": 30,
+  "durationInFrames": 1935,
+  "scenes": {
+    "s1": [
+      0,
+      150
+    ],
+    "s2": [
+      150,
+      240
+    ],
+    "s3": [
+      240,
+      480
+    ],
+    "s4": [
+      480,
+      600
+    ],
+    "s5": [
+      600,
+      810
+    ],
+    "s6": [
+      810,
+      1020
+    ],
+    "s7": [
+      1020,
+      1200
+    ],
+    "s8": [
+      1200,
+      1410
+    ],
+    "s9": [
+      1410,
+      1590
+    ],
+    "s10": [
+      1590,
+      1770
+    ],
+    "s11": [
+      1770,
+      1935
+    ]
+  },
+  "s1": {
+    "neon": 0,
+    "product": 8,
+    "tag": 16,
+    "strike": 26,
+    "strikeEnd": 36,
+    "newPrice": 38,
+    "badge": 44,
+    "timer": 48,
+    "stock": 56,
+    "words": 64,
+    "wordStep": 6,
+    "buttons": 100,
+    "count": [
+      104,
+      118,
+      132
+    ],
+    "choose": 140
+  },
+  "s2": {
+    "text": 156,
+    "glitch": 205
+  },
+  "s3": {
+    "text": 246,
+    "graph": 254,
+    "drawStart": 262,
+    "drawEnd": 404,
+    "jump": 330,
+    "drop": 390,
+    "bold": 430
+  },
+  "s4": {
+    "label": 486,
+    "answer": 494,
+    "sub": 530
+  },
+  "s5": {
+    "text": 606,
+    "boxStart": 616,
+    "boxEnd": 646,
+    "reveal": 648,
+    "anchor": 684,
+    "sub": 722,
+    "bold": 770
+  },
+  "s6": {
+    "text": 816,
+    "timer": 828,
+    "stock": 868,
+    "banner": 906,
+    "bold": 958
+  },
+  "s7": {
+    "text": 1026,
+    "stamp": 1040,
+    "stat": 1086,
+    "bold": 1140
+  },
+  "s8": {
+    "text": 1206,
+    "other": 1212,
+    "icons": [
+      1232,
+      1264,
+      1296
+    ],
+    "bold": 1340
+  },
+  "s9": {
+    "text": 1416,
+    "left": 1430,
+    "right": 1460,
+    "bold": 1510
+  },
+  "s10": {
+    "text": 1596,
+    "noteFall": 1600,
+    "noteLand": 1620,
+    "typeStart": 1632,
+    "framesPerChar": 1.4,
+    "typeText": "NÃO PERGUNTE DE QUANTO\nÉ O DESCONTO.\nPERGUNTE QUANTO CUSTAVA\nHÁ 30 DIAS."
+  },
+  "s11": {
+    "text": 1776,
+    "pill1": 1796,
+    "ou": 1804,
+    "pill2": 1812,
+    "impact": 1824,
+    "fadeStart": 1920
+  },
+  "coursePill": [
+    [
+      150,
+      300
+    ],
+    [
+      1410,
+      1560
+    ],
+    [
+      1770,
+      99999
+    ]
+  ],
+  "captions": [
+    [
+      0,
+      ""
+    ],
+    [
+      156,
+      "VOCÊ NEM PENSOU."
+    ],
+    [
+      186,
+      "O CÉREBRO DISSE SIM."
+    ],
+    [
+      214,
+      "NA HORA."
+    ],
+    [
+      246,
+      "AGORA OLHA ISSO."
+    ],
+    [
+      262,
+      "OUTUBRO: 1.999."
+    ],
+    [
+      330,
+      "NOVEMBRO: SUBIU."
+    ],
+    [
+      390,
+      "BLACK FRIDAY: \"CAIU\"."
+    ],
+    [
+      430,
+      "PRO MESMO PREÇO."
+    ],
+    [
+      460,
+      "DE SEMPRE."
+    ],
+    [
+      480,
+      ""
+    ],
+    [
+      606,
+      "ISSO TEM NOME."
+    ],
+    [
+      648,
+      "ÂNCORA."
+    ],
+    [
+      684,
+      "O PREÇO RISCADO…"
+    ],
+    [
+      722,
+      "VIRA A SUA RÉGUA."
+    ],
+    [
+      770,
+      "É A ISCA."
+    ],
+    [
+      816,
+      "E AINDA TEM MAIS."
+    ],
+    [
+      828,
+      "O CRONÔMETRO."
+    ],
+    [
+      868,
+      "\"SÓ RESTAM 2\"."
+    ],
+    [
+      906,
+      "\"ÚLTIMAS HORAS\"."
+    ],
+    [
+      958,
+      "PRESSA."
+    ],
+    [
+      990,
+      "CALCULADORA DESLIGADA."
+    ],
+    [
+      1026,
+      "E PRESTA ATENÇÃO."
+    ],
+    [
+      1040,
+      "ISSO É ENGANOSO."
+    ],
+    [
+      1086,
+      "UM EM CADA CINCO."
+    ],
+    [
+      1140,
+      "FICOU MAIS CARO."
+    ],
+    [
+      1206,
+      "AGORA OLHA ELE."
+    ],
+    [
+      1232,
+      "OLHA O HISTÓRICO."
+    ],
+    [
+      1264,
+      "LEVA A LISTA."
+    ],
+    [
+      1296,
+      "SOMA O FRETE."
+    ],
+    [
+      1340,
+      "COMPARA. DEPOIS COMPRA."
+    ],
+    [
+      1416,
+      "COMPARA OS DOIS."
+    ],
+    [
+      1430,
+      "CARRINHO CHEIO."
+    ],
+    [
+      1460,
+      "SÓ O DA LISTA."
+    ],
+    [
+      1510,
+      "E O RESTO NO BOLSO."
+    ],
+    [
+      1596,
+      "ANOTA AÍ."
+    ],
+    [
+      1640,
+      "MANDA PRA QUEM VAI COMPRAR."
+    ],
+    [
+      1715,
+      "ESSA SEXTA."
+    ],
+    [
+      1776,
+      "SEM MENTIR."
+    ],
+    [
+      1796,
+      "COMO VOCÊ COMPRA?"
+    ],
+    [
+      1840,
+      "COMENTA AQUI."
+    ],
+    [
+      1870,
+      "E SALVA PRA SEXTA."
+    ]
+  ],
+  "fx": [
+    {
+      "f": 0,
+      "k": "impact",
+      "x": 540,
+      "y": 500
+    },
+    {
+      "f": 8,
+      "k": "impact",
+      "x": 540,
+      "y": 780
+    },
+    {
+      "f": 38,
+      "k": "gold",
+      "x": 540,
+      "y": 1040
+    },
+    {
+      "f": 38,
+      "k": "impact",
+      "x": 540,
+      "y": 1040
+    },
+    {
+      "f": 44,
+      "k": "spark",
+      "x": 800,
+      "y": 640
+    },
+    {
+      "f": 100,
+      "k": "impact",
+      "x": 540,
+      "y": 1250
+    },
+    {
+      "f": 104,
+      "k": "spark",
+      "x": 540,
+      "y": 1250
+    },
+    {
+      "f": 118,
+      "k": "spark",
+      "x": 540,
+      "y": 1250
+    },
+    {
+      "f": 132,
+      "k": "spark",
+      "x": 540,
+      "y": 1250
+    },
+    {
+      "f": 330,
+      "k": "spark",
+      "x": 560,
+      "y": 700
+    },
+    {
+      "f": 390,
+      "k": "gold",
+      "x": 860,
+      "y": 900
+    },
+    {
+      "f": 430,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 494,
+      "k": "impact",
+      "x": 540,
+      "y": 540
+    },
+    {
+      "f": 494,
+      "k": "spark",
+      "x": 540,
+      "y": 540
+    },
+    {
+      "f": 648,
+      "k": "impact",
+      "x": 540,
+      "y": 590
+    },
+    {
+      "f": 684,
+      "k": "impact",
+      "x": 540,
+      "y": 900
+    },
+    {
+      "f": 770,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 828,
+      "k": "spark",
+      "x": 270,
+      "y": 760
+    },
+    {
+      "f": 868,
+      "k": "spark",
+      "x": 810,
+      "y": 760
+    },
+    {
+      "f": 906,
+      "k": "impact",
+      "x": 540,
+      "y": 1000
+    },
+    {
+      "f": 958,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1040,
+      "k": "impact",
+      "x": 540,
+      "y": 640
+    },
+    {
+      "f": 1086,
+      "k": "impact",
+      "x": 540,
+      "y": 920
+    },
+    {
+      "f": 1140,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1232,
+      "k": "spark",
+      "x": 270,
+      "y": 620
+    },
+    {
+      "f": 1264,
+      "k": "spark",
+      "x": 540,
+      "y": 620
+    },
+    {
+      "f": 1296,
+      "k": "spark",
+      "x": 810,
+      "y": 620
+    },
+    {
+      "f": 1340,
+      "k": "impact",
+      "x": 540,
+      "y": 1400
+    },
+    {
+      "f": 1460,
+      "k": "gold",
+      "x": 810,
+      "y": 1250
+    },
+    {
+      "f": 1510,
+      "k": "impact",
+      "x": 540,
+      "y": 1420
+    },
+    {
+      "f": 1812,
+      "k": "gold",
+      "x": 735,
+      "y": 722
+    },
+    {
+      "f": 1824,
+      "k": "impact",
+      "x": 540,
+      "y": 422
+    }
+  ],
+  "risers": [
+    [
+      456,
+      486
+    ]
+  ]
+}
