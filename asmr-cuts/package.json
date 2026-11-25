@@ -1,0 +1,16 @@
+{
+  "name": "asmr-cuts",
+  "version": "1.0.0",
+  "description": "Gerador de videos ASMR 1 corte vs 1000 cortes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fontsource/baloo-2": "5.1.0",
+    "three": "0.170.0"
+  }
+}

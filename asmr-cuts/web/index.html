@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>ASMR Cuts</title>
+<script type="importmap">
+{ "imports": {
+    "three": "/node_modules/three/build/three.module.js",
+    "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+<style>
+  @font-face { font-family: 'B2'; font-weight: 800;
+    src: url('/node_modules/@fontsource/baloo-2/files/baloo-2-latin-800-normal.woff2') format('woff2'); }
+  html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden;
+    background: radial-gradient(ellipse 120% 70% at 50% 32%, #3b3e45 0%, #24262b 45%, #121316 100%); }
+  #c { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #ov { position: absolute; inset: 0; pointer-events: none; }
+  .t { position: absolute; left: 50%; white-space: nowrap; font-family: 'B2', sans-serif; font-weight: 800;
+    font-size: 118px; line-height: 1; color: #fff; transform-origin: 50% 60%;
+    text-shadow: 0 5px 0 rgba(0,0,0,.35), 0 0 34px rgba(0,0,0,.55); letter-spacing: 1px; }
+  .hi { color: var(--hi, #c4a3ff); }
+  .c { position: absolute; left: 50%; font-family: 'B2', sans-serif; font-weight: 800; font-size: 58px;
+    color: #fff; white-space: nowrap; text-shadow: 0 3px 0 rgba(0,0,0,.35), 0 0 20px rgba(0,0,0,.6); }
+  #outro { font-size: 84px; text-align: center; white-space: normal; width: 900px; line-height: 1.05; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div id="ov">
+  <div id="h1" class="t" style="top:200px"></div>
+  <div id="vs" class="t" style="top:318px; font-size:96px"></div>
+  <div id="h3" class="t hi" style="top:418px"></div>
+  <div id="cnt" class="c" style="top:322px"></div>
+  <div id="outro" class="t" style="top:640px"></div>
+</div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
