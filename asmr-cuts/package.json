@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@fontsource/baloo-2": "5.1.0",
+    "@fontsource/montserrat": "5.1.0",
+    "@fontsource/noto-color-emoji": "5.1.0",
     "three": "0.170.0"
   }
 }

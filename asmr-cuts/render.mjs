@@ -28,7 +28,7 @@ const outro = opt('outro', undefined);
 const target = opt('target', undefined);
 const music = !flag('no-music');
 
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.woff2': 'font/woff2', '.json': 'application/json' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.woff2': 'font/woff2', '.woff': 'font/woff', '.css': 'text/css', '.json': 'application/json' };
 const server = http.createServer((req, res) => {
   const p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
   if (!p.startsWith(ROOT) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); return res.end(); }
@@ -40,6 +40,7 @@ const port = server.address().port;
 
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+page.setDefaultTimeout(300000);
 page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
 page.on('pageerror', e => console.log('[pageerror]', e.message));
 await page.goto(`http://127.0.0.1:${port}/web/index.html`);
@@ -62,7 +63,7 @@ if (stills) {
 // áudio
 const tmpDir = fs.mkdtempSync(path.join(path.dirname(out), '.tmp-'));
 const cuesFile = path.join(tmpDir, 'cues.json'), wav = path.join(tmpDir, 'audio.wav');
-fs.writeFileSync(cuesFile, JSON.stringify({ duration: info.duration, cues: info.cues, music, seed }));
+fs.writeFileSync(cuesFile, JSON.stringify({ duration: info.duration, cues: info.cues, sound: info.sound, music, seed }));
 const py = spawnSync('python3', [path.join(ROOT, 'sfx.py'), cuesFile, wav], { stdio: 'inherit' });
 if (py.status !== 0) throw new Error('sfx.py falhou');
 
