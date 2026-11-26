@@ -40,7 +40,7 @@ const port = server.address().port;
 
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-page.setDefaultTimeout(300000);
+page.setDefaultTimeout(1800000);
 page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
 page.on('pageerror', e => console.log('[pageerror]', e.message));
 await page.goto(`http://127.0.0.1:${port}/web/index.html`);

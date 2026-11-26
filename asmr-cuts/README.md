@@ -37,13 +37,14 @@ Gerar todos os temas de uma vez:
 
 ## Temas prontos
 
-`abacate`, `melancia`, `laranja`, `limao`, `kiwi`, `tomate`, `ovo`, `sabao`, `queijo`
+Frutas: `pitaya`, `morango`, `melancia`, `laranja`, `limao`, `kiwi`, `maca`, `manga`, `pessego`, `abacate`, `tomate`
+Outros: `cebola`, `beterraba`, `bolo`, `chocolate`, `ovo`, `queijo`, `sabao`
 
 Para criar um tema novo, copie um bloco em `web/themes.js` e troque cores/formato:
 - `shape.scale` (tamanho em x, y, z), `shape.exp` (`[2,2]` = oval, `[5,5]` = barra/caixa, `[2,8]` = cilindro), `shape.taper` (afinar topo)
-- `skin` = casca (`speckle`, `stripes`, `dimple`, `blush`, `fuzzy`, `swirl`, `plain`)
+- `skin` = casca (`speckle`, `stripes`, `dimple`, `blush`, `fuzzy`, `swirl`, `plain`, `scales`, `achenes`, `veins`, `sprinkles`, `glossy`)
 - `layers` = camadas de dentro (casca → miolo), `core` = caroço/gema
-- `cap.pattern` = desenho do corte (`plain`, `segments` gomos, `seeds` sementes, `seedring` anel do kiwi, `swirl` mármore, `holes` furos de queijo)
+- `cap.pattern` = desenho do corte (`plain`, `segments` gomos, `seeds` sementes, `seedring` anel do kiwi, `swirl` mármore, `holes` furos de queijo, `rings` anéis de cebola/beterraba, `strata` camadas de bolo, `star` estrela da maçã, `radial`, `fibers`)
 
 ## Ideias de títulos/variações
 
